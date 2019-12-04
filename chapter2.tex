@@ -1,0 +1,580 @@
+
+\chapter{SDOG}
+
+\section{Introduction} \label{sec:intro}
+The amount of data available about the Earth is extensive, and more data is being collected daily. With such large volumes of available data, it is important to develop methods for the integration, processing, visualization, and analysis of said data in order to make informed decisions about the Earth. While two-dimensional (2D) maps have long been used as a common reference model when dealing with Earth data, they suffer from distortions that result from projecting the surface of the Earth onto the plane. This causes the shape and size of different regions of Earth to be misrepresented, and can affect the accuracy and efficiency of analysis if one is not careful.
+
+This is the main motivation behind the approach of Digital Earth (i.e. curved Earth), where data is assigned and accessed on a three-dimensional (3D) model of the surface of the Earth, which is usually approximated using a sphere or ellipsoid. Not only does this provide a more intuitive and realistic representation of the Earth, it also helps minimize projection errors by providing a closer approximation of the surface. By discretizing the surface of the Earth into a set of cells, data can be associated with a different regions of the Earth via assignment to appropriate cells. These cells are given unique indices that can be used for efficient data access and adjacency queries~\cite{amiri2015categorization}. Such discretization with a multiple resolution hierarchy of mostly regular cells are referred to as Discrete Global Grid Systems (DGGS), and are the foundation for many state-of-the-art Digital Earth systems~\cite{mahdavi2015survey, goodchild2018reimagining}. The Open Geospatial Consortium (OGC) has provided an abstract specification of DGGSs for use by the geospatial community~\cite{ogcDGGS}.
+
+While much of the available Earth data pertains to the surface, there also exists a large amount of data available about the atmosphere and regions below the surface. Some examples include atmospheric properties, lithospheric properties, earthquake locations, aircraft/satellite paths, and underground utility locations. Supporting all types of Earth data, including these volumetric data sets, is important for creating a complete and holistic model of the Earth. Flattening data onto the surface  of the Earth allows integration with a DGGS, however this comes with consequences. For example, an important benefit of DGGSs is the spatial relationship between data they provide, and by flattening everything we lose that relationship between data at different depths and altitudes. This makes many important queries less efficient, as data at all depths must be retrieved even if only a certain range is desired. 
+
+In order to address these issues, we need a more sophisticated model of the Earth that can represent not only the surface, but its entire volume. We call this Volumetric Digital Earth. To handle the data associated with a Volumetric Digital Earth system, we need to discretize the whole Earth as opposed to just the surface. Extending the DGGS, we can create a three dimensional version of this data structure for Volumetric Digital Earth systems, or a 3D DGGS.
+
+An important property for both DGGSs and their 3D counterparts is that cells at a given resolution of the grid have close to equal sizes to one another. This ensures that each resolution of the grid represents the whole Earth at a certain spatial resolution, and allows data to be inserted into the grid at its native resolution. It is especially problematic if cell sizes vary to the point that cells of a certain size appear at multiple resolutions of the grid, as this creates ambiguity as to which resolution of the grid best represents a certain spatial resolution. Having uniformly sized cells is also useful for certain statistical queries, as it allows cell data to be used directly without requiring normalization with respect to its area or volume. We use the term volume preservation to refer to how similar in size the cells of a given 3D DGGS are. 
+
+There are several additional properties that are also considered important for both a DGGS and its 3D counterpart \cite{mahdavi2015survey, goodchild2018reimagining, sahr2003geodesic}. Perfectly achieving all desired properties is not possible, so in practice different systems will prioritize certain ones depending on the needs of the target application. In addition to volume preservation, the other properties we are concerned with for this work are cell compactness and efficient indexing. Compact cells give better sampling and prevent data from regions far away being assigned to the same cell, and the indexing method of a DGGS defines many important operations which allow efficient data retrieval, neighbourhood queries, and calculation of cell geometry by index inversion. Overall, we wish to create a 3D DGGS characterized by good volume preservation while minimizing the impact on cell compactness and the efficiency of indexing.
+
+To accomplish this goal we modify an existing 3D DGGS, the Spheroid Degenerated-Octree Grid (SDOG), in order to improve the volume preservation properties of the resulting grid. Our main contribution is a set of modifications to the subdivision rules of SDOG which result in cells of more uniform volume across the entire grid. This is done by analyzing the placement of the surfaces used for subdividing cells, and finding ideal locations that result in cells of the most uniform volume possible given certain constraints. We also provide a pragmatic improvement to the standard implementation of SDOG, which results in the surface of the Earth being placed in a region where cells are much more uniform in both size and shape. The effect these modifications have on volume preservation is evaluated using two separate metrics, one that measures the maximum difference in cell volumes, and one that measures the distribution of volumes. We also measure the impact these changes have on the compactness of cells using a third metric. These results are all benchmarked and compared to that of standard SDOG subdivision.
+
+Remainder of the paper proceeds as follows: Section~\ref{sec:related} covers related works; Section~\ref{sec:sdog} covers the basics of SDOG, including analysis on the number of cells and formulations for cell volume and surface area; Section~\ref{sec:method} discusses our proposed modifications; Section~\ref{sec:results} analyzes the results of said modifications; and Section~\ref{sec:conclusion} concludes and provides possible areas for future work.
+
+
+% ***********************************************************
+% ***********************************************************
+\section{Related Work} \label{sec:related}
+When performing spatial modelling, analysis, and visualization on the sphere, there are three main approaches that are commonly applied which are projection, embedding, and the intrinsic approach \cite{raskin1994spatial, jupp1989unified}. While this classification was originally made for 2D methods on the sphere, they are just as applicable to recent 3D methods.
+
+Projection approaches work as the name would suggest, by projecting the surface of the spherical Earth ($S^{2}$) to the 2D Euclidean plane ($\mathbb{R}^{2}$) using some map projection. Standard methods in $\mathbb{R}^{2}$ space are then used for modelling, data analysis, and visualization. This approach can be extended for 3D applications by extruding the plane to create a prismatoid representation of the Earth. 2D maps have long been used for visualizing the Earth, with the earliest projection methods dating to circa 500 BC \cite{snyder1987map}. Despite their long history of use, projection comes with inevitable distortions that make them undesirable for many applications. 
+
+Embedding methods treat the surface of the sphere (for 2D applications) or the volume of the sphere (for 3D applications) as a constrained subset of 3D Euclidean space ($\mathbb{R}^{3}$). Again, standard methods in this Euclidean space are then applied for modelling, data analysis, and visualization of the Earth. This approach has been used in \cite{raskin1994spatial, braun2008douar}, however these works were largely limited to small scale objects or regions of the Earth. For large regions or the entire Earth, this method becomes cumbersome as it does not respect the inherent curvature of the globe.  
+
+Due to the largely spherical shape of the Earth, it becomes clear that it is desirable to operate on data directly in spherical space. This is the approach adopted by intrinsic methods, performing operations in spherical space for either the surface, or the entire volume, of the Earth. Some recent examples include techniques for offsetting spherical curves~\cite{alderson2018offsetting} and multiresolution algorithms for spherical B-Spline~\cite{alderson2016multiresolution} and NURBS~\cite{alderson2019multiscale} curves. Intrinsic approaches typically make use of a grid that is either defined directly on the sphere, or that closely approximates it. Most DGGS, both 2D and 3D, fall into this category. Some of the benefits of DGGSs are discussed in \cite{goodchild2018reimagining}, and a detailed overview of DGGSs, along with a review of many state of the art systems, can be found in \cite{mahdavi2015survey}.
+
+There are several existing 3D global grids, some of which are more suitable as a 3D DGGS for Volumetric Digital Earth than others. Google Earth makes use of a radial octree, or rocktree, centred on the Earth to handle three dimensional data \cite{rohlf2014system}. However this structure is built on a projected model of the Earth, and as such has inevitable distortions that we would rather avoid when storing Earth data.
+
+
+
+One of the most basic intrinsic grids is the 3D latitude-longitude grid (3D LLG), which is created by dividing the sphere into constant steps of latitude, longitude, and radius (Figure~\ref{fig:3dllg}). This type of grid is used in \cite{bassin2000current} to develop a global crust model, and in \cite{zhao2004global} to explore P-wave velocity in the mantle. While this type of grid is simple in construction, the nature of spherical coordinates leads to shrinking cells towards the poles and the centre of the Earth. As a result, 3D LLGs have both poor volume preservation and cell compactness, and because of this are not a good choice for a Volumetric Digital Earth application. 
+
+One attempt to solve the issues present with a simple 3D LLG is the Yin-Yang grid \cite{kageyama2004yin-yang}. The grid is composed of two identical component grids, called the Yin and Yang grids, which are rotated and placed on top of each other to fully cover the 3D space of the sphere. These component grids are simply 3D LLGs 90\textdegree~in latitude about the equator and 270\textdegree~in longitude. While this approach solves the issue of cells degenerating near the poles, it does not address the cells near the centre of the Earth. Additionally, this method causes cells to overlap near the border of the Yin and Yang grids, which can lead to redundancy and ambiguity when assigning data to cells. This approach has been successfully used for various geodynamo and mantle convection simulations \cite{kageyama2004yin-yang, yoshida2004application, kageyama2005geodynamo, tackley2008modelling}, however the overlapping cells make this grid undesirable for more general Digital Earth applications. 
+
+Another possibility for a 3D DGGS is Logically Rectangular Grids for spherical domains. Proposed by \cite{calhoun2008rectangluar}, the authors provide several different methods for creating these grids, all of which are based on a mapping from a uniform voxel grid in $\mathbb{R}^{3}$ to the space of a sphere. While one of these grids could be used as the foundation for a 3D DGGS, the intended use of the grids was in finite volume methods for solving partial differential equations, and were designed with that in mind.
+
+
+
+One promising approach for creating a 3D DGGS is the Spheroid Degenerated-Octree Grid (SDOG) (Figure~\ref{fig:sdog}) \cite{yu2009sdog}, which this work expands upon. The resulting grid of this method does a relatively good job of preserving the volume and compactness of cells, and has been used successfully in the modelling of large scale spatial objects \cite{yu2012large-scale} and multi-scale visualizations of the lithosphere \cite{yu2012lithosphere}. The method starts by dividing the sphere into eight identical octants as starting cells. Each cell is then split into children cells by using splitting surfaces at the midpoint between the maximum and minimum radius, latitude, and longitude of the cell. Each cell is split into either four, six, or eight children depending on if its degenerate at the centre, degenerate at a pole, or a normal (non-degenerate) cell respectively. Due to the desirable properties of the grid and its demonstrated use in Digital Earth applications, it is a good candidate for a 3D DGGS. There exists, however, the potential to improve the results of this method. We take the basic approach of SDOG and propose modifications to the subdivision rules and size of the grid that result in better volume preserving properties than that of the original method.
+
+Another approach similar to SDOG is the Sphere Shell Space 3D Grid \cite{gang2013sphere}, which also proposes degenerate octree subdivision for cells to better preserve volume. This method makes use of several individual sphere shell grids, as opposed to a single spherical grid, each one of which can represent a certain radial volume of the Earth. The exact volume preserving properties of this grid, however, are not discussed. It also has not been used as extensively for Digital Earth applications when compared to SDOG, and for these reasons we have chosen to base this work on the latter.
+
+
+% ***********************************************************
+% ***********************************************************
+\section{SDOG} \label{sec:sdog}
+SDOG is an extension of the traditional octree to a spherical, as opposed to Euclidean, volume. A sphere with twice the radius of the Earth is initially divided into eight equal octants via the equatorial plane and two perpendicular meridian planes. These octants are taken to be the most coarse cells of the grid and are then subdivided to create more fine discretizations of the sphere. An SDOG octant after four subdivisions can be seen in Figure~\ref{fig:sdog}.
+
+
+
+SDOG cells (including octants) are subdivided using the midpoint of each spherical coordinate: latitude, longitude, and radius. These midpoints create splitting surfaces that can be used to split parent cells into smaller children cells. To prevent excessive degeneration in cell compactness and size near the poles and centre of the sphere seen in standard 3D LLGs (Figure~\ref{fig:3dllg}), the extent of these splitting surfaces and the number of resulting children cells depends on the shape, or class, of cell that is being divided. The splitting surfaces for each type of SDOG cell are shown in Figure~\ref{fig:subRules}. We call a splitting surface symmetric if it creates the same number and type(s) of cells on both sides. Otherwise we call it degenerate.
+
+Cells that extend to the centre of the sphere and to one of the poles are referred to as Sphere-degenerated Grid (SG) cells (Figure~\ref{fig:subRules}a), and include the original eight octants. For these cells, the longitudinal splitting surface does not extend beyond the latitudinal one in the direction towards the pole. Also, neither the latitudinal nor longitudinal splitting surfaces extend beyond the radial one in the direction towards the centre of the sphere. The result of this subdivision is four children cells: another SG cell, one Latitude-degenerated Grid (LG) cell, and two Normal Grid (NG) cells. LG and NG cells are described below. Only the longitudinal splitting surface for SG cells is symmetric.
+
+LG cells (Figure~\ref{fig:subRules}b) are similar to SG ones, except that they only extend to one of the poles and not the centre of the sphere. Therefore, the longitudinal splitting surface does not extend beyond the latitudinal one in the direction towards the pole. This subdivision results in six children cells: two LG cells and four NG cells. The longitudinal and radial splitting surface for LG cells are symmetric.
+
+NG cells (Figure~\ref{fig:subRules}c) extend to neither the pole nor the centre of the sphere, and make up the majority of SDOG cells. These cells are fully subdivided into eight children NG cells, and are considered the regular case for SDOG subdivision. All splitting surfaces for NG cells are symmetric. 
+
+
+\subsection{Number of SDOG Cells} \label{sec:numCells}
+Being able to analyze the number of cells in the grid at each level of subdivision is useful not only for measuring volume preserving properties, such as quickly calculating the average cell volume, but also for analyzing the behavior of the grid as the level of subdivision increases. This type of analysis will prove useful in informing decisions about how to modify subdivision to improve volume preservation. 
+
+Due to the degenerate nature of SDOG subdivision, calculating the number of cells in the grid is more complicated than a simple exponential formulation. Despite this, we can use the above subdivision rules to derive recursive definitions for the number of cells in an SDOG grid (or a single octant) at a given level of subdivision. Let $S(k)$, $L(k)$, $N(k)$, and $T(k)$ be the number of SG, LG, NG, and total cells of an SDOG octant at subdivision level $k$, respectively. There is only ever one SG cell in an SDOG octant, so trivially
+%
+\begin{equation}
+S(k) = 1.
+\label{eq:sg-num}
+\end{equation}
+%
+We know each LG cell produces two new LG cells, and that the SG cell produces one new LG cell. From this we can say
+\begin{equation*}
+L(k) = 2L(k-1) + 1 \quad\text{and}\quad L(1) = 1.
+\label{eq:lg-recursive}
+\end{equation*}
+%
+Similarly, each NG cell produces eight new NG cells, each LG cell produces four, and the SG cell produces two. Thus
+\begin{equation*}
+N(k) = 8N(k-1) + 4L(k-1) + 2 \quad\text{and}\quad N(1) = 2.
+\label{eq:ng-recursive}
+\end{equation*}
+%
+$L(k)$ is a linear non-homogeneous recurrence which can be solved with standard techniques \cite{bellman1963differential}. Solving and substituting into $N(k)$ we get another linear non-homogeneous recurrence which can be solved similarly. Finally, we get the closed forms:
+%
+\begin{equation}
+L(k) = 2^{k} - 1,
+\label{eq:lg-closed}
+\end{equation}
+%
+\begin{equation}
+N(k) = \frac{1}{21} \left( 7*2^{k} + 8^{k+1} + 6 \right) - 2^{k}, \quad\text{and}
+\label{eq:ng-closed}
+\end{equation}
+%
+\begin{equation}
+T(k) = S(k) + L(k) + N(k) = \frac{1}{21} \left( 7*2^{k} + 8^{k+1} + 6 \right).
+\label{eq:t-closed}
+\end{equation}
+%
+As far as we are aware, these formulations have not been provided in any of the existing literature on SDOG.
+
+
+\subsection{Geometry of SDOG Cells}
+In order to measure the volume preservation properties of SDOG and its modifications, it is necessary to be able to measure the volume of individual cells in the grid. Since each SDOG cell can be expressed as a range of each spherical coordinate (latitude $\phi$, longitude $\lambda$, and radius $r$), calculating the volume of an individual cell is a straightforward task. Note that we use the geographic convention for spherical coordinates in this paper. Let the subscripts $2$ and $1$ denote the maximum and minimum of a given spherical coordinate for an SDOG cell, then the volume is given by \cite{yu2009sdog}
+%
+\begin{equation}
+V = \frac{1}{3} \left( \lambda_{2} - \lambda_{1} \right) \left(r_{2}^{3} - r_{1}^{3} \right) \left(\sin\phi_{2} - \sin\phi_{1} \right).
+\label{eq:volume}
+\end{equation}%
+%
+
+In addition to the volume of a cell, surface area is another useful property to be able to measure. Combined with the volume of cells, this allows us to measure the compactness of cells, which we use in Section \ref{sec:results} to help evaluate the consequences of our modifications. From the fact that SDOG cells are subdivided using spherical coordinates, each face of a cell is a section of a simple geometric shape. Faces created by radial splitting surfaces are spherical, with surface area given by
+%
+\begin{equation}
+r^{2} \left( \lambda_{2} - \lambda_{1} \right) \left( \sin\phi_{2} - \sin\phi_{1} \right).
+\end{equation}%
+%
+Faces created by longitudinal splitting surfaces are the difference of two circular sectors, and have an area of
+\begin{equation}
+\frac{1}{2} \left( \phi_{2} - \phi_{1} \right) \left( r_{2}^{2} - r_{1}^{2} \right).
+\end{equation}%
+%
+Finally, faces created by latitudinal splitting surfaces lie on a cone, with a surface area of
+\begin{equation}
+\frac{1}{2} \cos\phi \left( \lambda_{2} - \lambda_{1} \right) \left( r_{2}^{2} - r_{1}^{2} \right).
+\end{equation}%
+
+
+% ***********************************************************
+% ***********************************************************
+\section{Modified SDOG Refinement} \label{sec:method}
+
+
+The main goal of this work is to modify SDOG in such a way as to improve volume preservation while minimizing the impact on other desired properties of the grid. To aid in this task, we have developed a visualization framework for displaying and modifying SDOG grids. This framework allows for changes to subdivision to be quickly implemented and allows visual analysis of said modifications. All of the figures in the paper (except for the charts) were created using the output of this framework. As an example and a baseline, the distribution of cell volumes in standard SDOG subdivision is visualized in Figure~\ref{fig:sdog-vol}.
+
+As previously discussed, in conventional SDOG subdivision the location of the different splitting surfaces is always chosen to be at the midpoint of the respective spherical coordinate; we question if this should always be the case. For an octree in Euclidean space this type of subdivision is desirable, as it generates children cells of identical size and shape. In spherical space, however, this property does not transfer. Using midpoints to subdivide cells makes for a simple refinement scheme, but it makes no guarantees about the shape or size of the resulting children cells.
+
+
+
+By allowing the location of the splitting surfaces to be adjusted, we can modify the shape and size of children cells, and as a result affect the volume preservation, compactness, and other properties of the grid. Let $c_{s}$ be the location of the splitting surface, where $c$ is one of $\left\lbrace \phi, \lambda, r \right\rbrace$, then one way to express the location of the splitting surfaces used for subdivision is as a convex combination of maximum and minimum values
+%
+\begin{equation} \label{eq:convex}
+c_{s} = \alpha c_{2} + \left( 1-\alpha \right) c_{1}, \quad \alpha \in \left( 0, 1 \right),
+\end{equation}
+%
+where we call $\alpha$ the splitting factor. Conventional SDOG used midpoints (i.e. $\alpha = \frac{1}{2}$) for each spherical coordinate when subdividing, regardless of cell type. While a convex combination is the most straightforward, any function of the maximum and minimum such that the result is strictly between the two is a valid method for determining the location of the splitting surfaces (Figure~\ref{fig:functions}). Thus, the location of splitting surfaces can be modified by changing this function, either by using a different value of $\alpha$, or by using a different function all together. Furthermore, the function used can be different for each cell type and spherical coordinate.
+
+One useful function for improving volume preservation is one that results in one of the new ranges having a specific percentage of the volume of the original range. We start with the radial splitting surface: let $p \in (0,1)$ be the percentage we wish for the lower range to have, then
+%
+\begin{equation*}
+p \left( r_{2}^{3} - r_{1}^{3} \right) = r_{s}^{3} - r_{1}^{3}
+\end{equation*}%
+%
+\begin{equation*}
+p r_{2}^{3} - p r_{1}^{3} = r_{s}^{3} - r_{1}^{3}
+\end{equation*}%
+%
+\begin{equation*}
+r_{s}^{3} = p r_{2}^{3} + r_{1}^{3} - p r_{1}^{3}
+\end{equation*}%
+%
+\begin{equation*}
+r_{s}^{3} = p r_{2}^{3} + \left( 1 - p \right) r_{1}^{3}
+\end{equation*}%
+%
+\begin{equation} \label{eq:radVol}
+r_{s} = \sqrt[3]{ p r_{2}^{3} + \left( 1 - p \right) r_{1}^{3} }.
+\end{equation}%
+%
+The derivation for the latitudinal and longitudinal splitting surfaces follow the same, with results
+%
+\begin{equation} \label{eq:latVol}
+\phi_{s} = \sin^{-1} \left( p \sin\phi_{2} + \left( 1 - p \right) \sin\phi_{1} \right), \quad\text{and}
+\end{equation}%
+%
+\begin{equation} \label{eq:longVol}
+\lambda_{s} = p \lambda_{2} + \left( 1 - p \right) \lambda_{1}.
+\end{equation}%
+%
+
+The question then becomes which splitting surfaces can be modified, and in which ways, in order to improve the volume preservation of the grid. We first look at which splitting surfaces should \textit{not} be modified. From Eq. (\ref{eq:longVol}) it is clear a longitudinal splitting surface at the midpoint will always split a cell exactly in half, and therefore we should not change any of the longitudinal splitting surfaces. 
+
+
+
+Less trivially, the radial splitting surface for SG cells should also be left at the midpoint. Referring to Figure~\ref{fig:sg-rad-splits}, we can see that the radial splitting surfaces for SG cells separate the grid into spherical shells. Shell $n$ has a volume proportional to
+%
+\begin{equation}
+\alpha^{3n} - \alpha^{3 \left( n + 1 \right)},
+\end{equation}%
+%
+so then the ratio of the volume between shell $n+1$ and $n$ is:
+%
+\begin{equation}
+\frac{ \alpha^{3 \left(n + 1 \right)} - \alpha^{3\left( n + 2 \right)} }{ \alpha^{3n} - \alpha^{3 \left( n + 1 \right)} } = \frac{ \alpha^{3} \alpha^{3n} \left( 1 - \alpha^{3} \right) }{ \alpha^{3n} \left( 1 - \alpha^{3} \right) } = \alpha^{3}.
+\end{equation}%
+%
+From the self similar nature of SDOG subdivision we know that the cells in shell $n$ are simply the cells of shell $n+1$ subdivided once. We also know that in the limit, an SDOG grid at one level higher of subdivision will have eight times as many cells as the previous resolution $\left( \lim_{k \to \infty} \frac{ T(k+1) }{ T(k) }  = 8 \right)$. Therefore, in order for cells in the grid to be close to equal volume, it must be that shell $n+1$ has one eighth the volume of shell $n$, (since it will have one eighth the number of cells), which occurs exactly when $\alpha = \frac{1}{2}$.
+
+This leaves five possible splitting surfaces that can be modified: the radial splitting surface for LG and NG cells, and the latitudinal splitting surface for all SG, LG, and NG cells. An important decision then is whether to use convex combinations to calculate the location of these surfaces (Eq. (\ref{eq:convex})), or to use the functions parameterized by the ratio of volumes (Eq. (\ref{eq:radVol}) and (\ref{eq:latVol})). This is akin to a stationary subdivision scheme in comparison to a non-stationary one. A stationary scheme will maintain the simplicity of subdivision, however offers less overall ability to improve volume preservation. Because of this, we provide both a stationary and non-stationary set of modifications. 
+
+\subsection{Stationary Subdivision} \label{sec:stationary}
+One interesting property of SDOG subdivision is that if a cell subdivides symmetrically in a given spherical dimension, all children of that cell also subdivide symmetrically in that dimension. Thus, symmetric splitting surfaces result in non-degenerate binary (in the given dimension) subdivision at all further levels of subdivision, and it becomes clear that using any other value than the midpoint results in divergence as the level of subdivision gets large. Therefore, we should leave all symmetric splitting surfaces at the midpoint. This leaves only the latitudinal splitting surface for SG and LG cells to be modified. We use $\alpha_{\phi}^{SG}$ and $\alpha_{\phi}^{LG}$ to refer to the splitting factors used for calculating the location of these surfaces. 
+
+
+
+We first performed a simple search on the possible values of these splitting factors to see if it was possible to improve the volume preservation. We found that volume preservation could be improved by certain values of $\alpha_{\phi}^{SG}$, however it was always the case that $\alpha_{\phi}^{LG}$ was best left equal to one half. To understand why this is the case, we look at where the ideal placements for these splitting surfaces would be if not constrained by convex combinations. Notice that these two latitudinal splitting surfaces have a similar effect as the radial splitting surface for SG cells. Referring now to Figure~\ref{fig:lat-splits}, we see that these splitting surfaces further divide the spherical shells into spherical zones. Following as before, the volume of zone $n$ is proportional to 
+%
+\begin{equation*}
+\sin\phi_{n+1} - \sin\phi_{n}.
+\end{equation*}
+%
+Additionally, each zone is comprised entirely of NG cells. From this fact we conclude that zone $n-1$ has exactly four times as many cells as zone $n$, and thus in the ideal case would have exactly four times the volume as well. We can use Eq. (\ref{eq:latVol}) to find these ideal locations using the proper value for $p$. Zone $n$ has a percentage $\left( 1 - p \right)^{n} p$ of the initial volume of the octant, then setting the ratio between zone $n$ and $n-1$ to be equal to $\frac{1}{4}$ gives us $p = \frac{3}{4}$ and finally
+%
+\begin{equation} \label{eq:idealLat}
+\phi_{s} = \sin^{-1} \left( \frac{3}{4} \sin\phi_{2} + \frac{1}{4} \sin\phi_{1} \right).
+\end{equation}
+%
+
+From here, we can now see why the latitudinal splitting surfaces for LG cells should remain at the midpoint. As $\phi_{1}$ approaches $\pm \frac{\pi}{2}$, this function is very closely approximated by a convex combination with a factor of one half (see Appendix~\ref{app:lat}). Thus, as the level of subdivision gets large, using $\alpha_{\phi}^{LG} = \frac{1}{2}$ approaches the ideal placement for the splitting surfaces, and thus is the ideal factor to use for a convex combination.
+
+
+
+We can also use this formulation to find the theoretical ideal placement for the latitudinal splitting surface of SG cells. SG cells always have a minimum latitude of $0$ and a maximum of $\pm \frac{\pi}{2}$, thus Eq. (\ref{eq:idealLat}) will always evaluate to plus or minus the same value. Substituting back into Eq. (\ref{eq:convex}) we get
+%
+\begin{equation} \label{eq:latValue}
+\alpha_{\phi}^{SG} = \frac{ \sin^{-1} \left( \pm \frac{3}{4} \right) }{ \pm \frac{\pi}{2} } \approx 0.53989.
+\end{equation}
+%
+The grid resulting from using this value can be seen in Figure~\ref{fig:stationary}. Interestingly, our initial search also found $\alpha_{\phi}^{SG} = 0.57$ to give very good results that outperform the theoretical ideal in certain measurements of volume preservation (but performs worse in others). We compare these two schemes more closely in Section \ref{sec:results}. 
+
+
+\subsection{Non-Stationary Subdivision} \label{sec:nonStationary}
+By not limiting splitting surfaces to be calculated using convex combinations, we are allowed much more control over subdivision and the resulting properties. Using Eq. (\ref{eq:radVol}) and (\ref{eq:latVol}) to calculate the modifiable splitting surfaces, all that is needed is to determine the ideal value of $p$ for the different splitting surfaces and cell types. We have already done this for the latitudinal splitting surfaces of SG and LG cells in Section \ref{sec:stationary} with Eq. (\ref{eq:idealLat}), therefore all that is left is the radial splitting surfaces for LG and NG cells, and the latitudinal one for NG cells. However, since all of these remaining splitting surfaces are symmetric, we simply require that the volume on each side of these splitting surfaces be equal. In other words, we can simply set $p = \frac{1}{2}$ for these remaining splitting surfaces. 
+
+
+
+
+Figure~\ref{fig:perfect} shows the resulting grid from this method of calculating splitting surfaces. In this grid, all NG cells at the same level of subdivision have exactly the same volume as one another. This greatly improves the volume preservation, as only cells that extend to one of the poles (SG and LG cells) will have a different volume than the other cells in the grid. This does not come without consequence though; cells are stretched and squashed in order to achieve this volume preservation, which may be an undesirable effect depending on the application. To offset this reduction in cell compactness, it is possible to use splitting factors that are somewhere in between these ones ($c_{s}'$), which give ideal volume preservation, and the conventional SDOG ones ($c_{m}$), which give better compactness. One simple way to calculate this would be as a convex combination of the two
+%
+\begin{equation}
+c_{s} = \beta c_{s}' + \left( 1 - \beta \right)c_{m}, \quad \beta \in \left( 0,1 \right),
+\label {eq:beta}
+\end{equation}
+%
+however other methods could give better results. We show a simple result in Figure~\ref{fig:balanced} using $\beta = \frac{1}{2}$. 
+
+
+% ***********************************************************
+% ***********************************************************
+\section{Mapping Modified SDOG Grids} \label{sec:mapping}
+By modifying the splitting surfaces used for subdivision, any SDOG indexing operations that depend on the location of cells in the grid will no longer function properly. Examples of these operations include point to cell queries, which give the cell that contains a given point, and index inversion, which calculates the location and geometry of a cell from its index. The obvious solution is to simply redefine these operations on the new geometry, however this is not necessarily practical as it would have to be done individually for each modified grid. Additionally, the more complex geometry of the modified grids may make these algorithms more difficult to design and/or more computationally expensive to perform as compared to the ones for conventional SDOG. A better solution is to find a mapping (and corresponding inverse mapping) between a conventional SDOG grid and the grid resulting from the modified subdivision scheme. Given this mapping, all indexing operations can be done using the standard algorithms, with inputs and outputs converted between the conventional SDOG grid and the modified one accordingly. 
+
+For the stationary subdivision schemes this mapping is very straightforward. Since only the latitudinal splitting surface of SG cells is modified, latitudes in the range $[0, \frac{\pi}{4})$ should be mapped to the range $[0, \alpha_{\phi}^{SG} \frac{\pi}{2})$ and likewise the range $[\frac{\pi}{4}, \frac{\pi}{2}]$ to the range $[\alpha_{\phi}^{SG} \frac{\pi}{2}, \frac{\pi}{2}]$. This is be done with a simple linear map, and the inverse follows trivially. 
+
+For the non-stationary schemes this mapping is more complicated. We wish to define a function $T \colon (\phi, r) \rightarrow (\phi, r)$ that converts a latitude and radius in a conventional SDOG grid to the corresponding latitude and radius in the modified grid (longitude does not need to be mapped, as it is not changed between the two grids). The two coordinates act independently of each other, so we can split this function into its two components, $T_{\phi}(\phi)$ and $T_{r}(r)$, and derive each one and its inverse individually. We let $R_{m}$ be the radius of the grid. The final results are as follows, with the full derivation found in Appendix \ref{app:map}. Latitude forward:
+
+%
+\begin{equation*}
+T_{\phi}(\phi) = \sin^{-1} \left( d u_{v} + \left( 1 - d \right) \ell_{v} \right), \quad \text{where}
+\end{equation*}
+%
+\begin{equation*}
+d = \frac{\frac{2\phi}{\pi} - \ell_{c}}{u_{c} - \ell_{c}},
+\end{equation*}
+%
+\begin{equation*}
+u_{c} = 1 - \left( \frac{1}{2} \right)^{ \left\lceil \log_{0.5} \left( 1 - \frac{2\phi}{\pi} \right) \right\rceil }, \quad u_{v} = 2 u_{c} - u_{c}^{2}.
+\end{equation*}
+%
+\begin{equation*}
+\ell_{c} = 1 - \left( \frac{1}{2} \right)^{ \left\lfloor \log_{0.5} \left( 1 - \frac{2\phi}{\pi} \right) \right\rfloor }, \quad \text{and} \quad \ell_{v} = 2 \ell_{c} - \ell_{c}^{2}.
+\end{equation*}
+%
+%
+Radius forward:
+%
+\begin{equation*}
+T_{r}(r) = R_{m} \sqrt[3]{ d u^{3} + \left( 1 - d \right) \ell^{3} }, \quad \text{where}
+\end{equation*}
+%
+\begin{equation*}
+d = \frac{\frac{r}{R_{m}} - \ell}{u - \ell},
+\end{equation*}
+%
+\begin{equation*}
+u = \left( \frac{1}{2} \right)^{ \left\lceil \log_{0.5} \left( \frac{r}{R_{m}} \right) \right\rceil }, \quad \text{and} \quad
+\end{equation*}
+%
+\begin{equation*}
+\ell = \left( \frac{1}{2} \right)^{ \left\lfloor \log_{0.5} \left( \frac{r}{R_{m}} \right) \right\rfloor } ,
+\end{equation*}
+%
+%
+%
+Latitude inverse:
+%
+\begin{equation*}
+T^{-1}_{\phi}(\phi) = \frac{\pi}{2} \left( d u_{c} + \left( 1 - d \right) \ell_{c} \right), \quad \text{where}
+\end{equation*}
+%
+\begin{equation*}
+d = \frac{\sin \phi - \ell_{v}}{u_{v} - \ell_{v}},
+\end{equation*}
+%
+\begin{equation*}
+u_{c} = 1 - \left( \frac{1}{2} \right)^{ \left\lceil \log_{0.5} \left( \sqrt{1 - \sin \phi} \right) \right\rceil },
+\end{equation*}
+%
+\begin{equation*}
+\ell_{c} = 1 - \left( \frac{1}{2} \right)^{ \left\lfloor \log_{0.5} \left( \sqrt{1 - \sin \phi} \right) \right\rfloor },
+\end{equation*}
+%
+%
+and both $u_{v}$ and $\ell_{v}$ follow the same as the forward. Radius inverse:
+%
+\begin{equation*}
+T^{-1}_{r}(r) = d u + \left( 1 - d \right) \ell, \quad \text{where}
+\end{equation*}
+%
+\begin{equation*}
+d = \frac{ \left( \frac{r}{R_{m}} \right)^{3} - \ell^{3}}{u^{3} - \ell^{3}}
+\end{equation*}
+%
+and both $u$ and $\ell$ follow the same as the forward.
+
+In the case where a division by zero occurs, (i.e. when $u = \ell$ or $u_{c} = \ell_{c}$), the result is treated as zero. The latitude mappings assume $\phi \ge 0$, however from symmetry a negative value of $\phi$ can easily be accommodated by using the absolute value and negating the final result.
+
+Unfortunately, this mapping is only applicable to the first non-stationary scheme discussed in Section \ref{sec:nonStationary}. Schemes derived from using Eq (\ref{eq:beta}) cannot be mapped in this same way, as this formulation cannot easily be expressed in terms of a parameter. In the future other blending methods may be explored that allow for a similar mapping to be derived. 
+
+% ***********************************************************
+% ***********************************************************
+\section{Results and Evaluation} \label{sec:results}
+There are several potential methods for evaluating the volume preserving properties of a 3D DGGS. When first proposed in \cite{yu2009sdog}, the ratio between cells of largest and smallest volume was used to evaluate volume preserving properties of SDOG. This volume ratio is a useful measure for determining the worst case difference in the volume of cells, however it does not give any information about the distribution of said volumes. For example, a grid with all cells except one having equal volume, and a grid where every cell has a distinct volume, could end up having the same volume ratio. To get a more complete understanding of volume preservation, we should also examine statistics that give a measure of distribution. For this purpose we use the coefficient of variation (CV), which is simply the ratio between the standard deviation and the mean. We use the CV over the standard deviation as it a dimensionless quantity.
+
+In modifying the subdivision for volume preservation, it is also important to evaluate the impact these changes have on other properties of the grid. In Section \ref{sec:mapping}, we discussed how . Modifying the subdivision rules will also change the shape of cells, so we should measure the effect our changes have on the compactness of the resulting cells. To measure this we use the notion of sphericity, which quantifies how closely the shape of an object approximates a sphere~\cite{wadell1935volume}. It is defined as the ratio between the surface area of a sphere with the same volume as the object, and the surface area of the object itself. Therefore, a perfect sphere will have a sphericity of one, and any other object will have sphericity strictly less than one. Formally, given an object $p$ and a sphere $s$ such that $\operatorname{vol}(s) = \operatorname{vol}(p)$, the sphericity of $p$, $\Psi$, is given by $\frac{\operatorname{area}(s)}{\operatorname{area}(p)}$ , or equivalently 
+%
+\begin{equation}
+\Psi = \frac{\pi^{\frac{1}{3}}\left( 6\operatorname{vol}(p) \right)^{\frac{2}{3}}}{\operatorname{area}(p)}.
+\label{eq:sphericity}
+\end{equation}
+%
+We use the mean sphericity of all cells in the grid to evaluate compactness globally.
+
+
+
+As a baseline, we have calculated the value of these three measures at each subdivision level from one to fifteen for conventional SDOG. We then repeated this for the four modifications discussed in this paper: the two stationary modifications with $\alpha_{\phi}^{SG} \approx 0.54$ and $\alpha_{\phi}^{SG} = 0.57$, the non-stationary modification (referred to as $\beta = 1$), and finally the blending of the non-stationary with conventional SDOG using $\beta = \frac{1}{2}$. The results for each grid are displayed in Figures~\ref{fig:vr}, \ref{fig:cv}, and \ref{fig:sph} and show the volume ratio, CV of volume, and mean sphericity of each grid respectively. Table \ref{tab:results} summarizes these charts with the convergence value of each property for the four different grids. It is important to note that for volume ratio and CV of volume lower values are better, but for mean sphericity a higher value is better.
+
+\begin{table}[]
+	\centering
+	\caption{Convergence value of each measure for the five discussed grids}
+	\begin{tabular}{|c|c|c|c|c|c|}
+		\hline
+		& SDOG & $\alpha_{\phi}^{SG} \approx 0.54$ & $\alpha_{\phi}^{SG} = 0.57$ & $\beta = 1$ & $\beta = 0.5$ \\ \hline
+		Volume Ratio    & 8.88   & 8.17   & 8.15   & 2.63      & 4.37   \\ \hline
+		CV of Volume    & 0.412  & 0.399  & 0.409  & 6.44E-19  & 0.211  \\ \hline
+		Mean Sphericity & 0.799  & 0.797  & 0.795  & 0.767     & 0.787  \\ \hline
+	\end{tabular}
+	\label{tab:results}
+\end{table}
+
+The stationary scheme with $\alpha_{\phi}^{SG} \approx 0.54$ has a better volume ratio than conventional SDOG for all levels of subdivision except the first, and a lower CV of volume for all levels of subdivision after the second. Comparing this to the one with $\alpha_{\phi}^{SG} = 0.57$, both the volume ratio and CV of volume do not improve as compared to conventional SDOG until the fifth level of subdivision. Both of these methods also reduce the mean sphericity of cells at all levels of subdivision, with $\alpha_{\phi}^{SG} = 0.57$ having more than twice the reduction as $\alpha_{\phi}^{SG} \approx 0.54$. Using $\alpha_{\phi}^{SG} = 0.57$ does give a slightly better volume ratio than $\alpha_{\phi}^{SG} \approx 0.54$ as the level of subdivision gets large, however this difference is very small and likely not worth the lower cell compactness and higher variation in volume. 
+
+The non-stationary scheme gives a much larger improvement to both the volume ratio and the CV of volume. This is to be expected, as all NG cells in this scheme have exactly equal volume. As the level of subdivision gets large, the CV of volume quickly approaches zero since the number of NG cells is much larger than the number of LG and SG cells in the grid. The cost of this improved volume preservation is a much larger reduction in the compactness of cells, which is to be expected. The blending scheme has results in between that of conventional SDOG and the non-stationary scheme, which was also expected. The CV of volume and mean sphericity are both at about the halfway point, whereas the volume ratio still ends up being a significant improvement over conventional SDOG. 
+
+
+\subsection{Summary of Proposed Changes}
+Combining all of the above, we propose the following changes to be applied to SDOG for use in spatial modelling and Volumetric Digital Earth applications:
+%
+\begin{itemize}
+	\item Set the radius of the grid to be $\frac{4}{3}R$ as opposed to $2R$. If this does not give sufficient radial extent above the surface of the Earth, it can instead be set to one of $\frac{4*2^{k}}{3} R$ with $k \ge 1$
+	\item If stationary subdivision is important, use the ideal value of $\alpha_{\phi}^{SG}$ given by Eq. (\ref{eq:latValue})
+	\item If not, use the method proposed in Section \ref{sec:nonStationary}. The trade off between volume preservation and cell compactness can be controlled with $\beta$, or another blending method can be used depending on the needs of the application
+\end{itemize}
+%
+
+
+% ***********************************************************
+% ***********************************************************
+\section{Conclusion and Future Work} \label{sec:conclusion}
+In this work we have presented several methods for modifying the properties of SDOG to improve the volume preservation properties of the resulting grid. The modifications provide improved volume preservation as measured by two different metrics, both globally and for specific regions of interest, at the cost of reduced compactness of cells for higher levels of volume preservation. 
+
+A simple extension of this work could explore a method to set the value of $\beta$ directly based on some constraints for the desired volume preservation and/or compactness of cells. This could be accomplished with a simple optimization, however there may exist a more direct approach that could be useful. Other methods of blending between the volume preserving and default splitting surface locations can also be explored that may produce better results. As well, we have not explored any ways to directly improve the compactness of SDOG cells. Based on our experimentation it seems that any deviations from the conventional splitting surfaces will result in reduced compactness, however a rigorous justification to support this claim would require further research.
+
+There are several other interesting avenues for potential future work as well. The methods presented are all adjustments to SDOG that do not change the underlying structure of the grid. By making more radical changes, it may be possible to further improve the volume preservation and other properties of the grid. Such changes could include modifying the number and types of cells produced by subdivision, and adding new classes of cell types to the grid. Additionally, as far as we are aware, all applications of SDOG thus far \cite{yu2009sdog, yu2012large-scale, yu2012lithosphere} have used a sphere to approximate the Earth. As the sphere and ellipsoid share coordinate systems, SDOG could be easily extended to operate on a spheroid. The exact consequences this would have on the volume preservation and other properties of the grid is not clear at this time.
+
+It is also possible to create a 3D DGGS that is not based on latitude and longitude coordinates. In fact, many traditional DGGS use polyhedral approximations of the sphere as their reference models \cite{mahdavi2015survey}. This allows for a more uniform approximation of the sphere, and prevents issues with degeneracies and oddly shaped cells being present near the poles. By using a similar approach to create a 3D DGGS, it may be possible to achieve better volume preservation and compactness as compared to methods that are based only on latitude and longitude coordinates. 
+
+
+% ***********************************************************
+% ***********************************************************
+\section{Approximate Form for Ideal Latitudinal Splitting Surfaces} \label{app:lat}
+Considering first the case of LG cells north of the equator where $\phi_{2}$ is always $\frac{\pi}{2}$. Using Eq. (\ref{eq:idealLat}) the ideal location of latitudinal splitting surfaces for these LG cells is given by
+%
+\begin{equation*} \label{}
+\phi_{s} = \sin^{-1} \left( \frac{3}{4} + \frac{1}{4} \sin\phi_{1} \right).
+\end{equation*}
+%
+We wish to analyze the behaivour as $\phi_{1}$ approaches $\frac{\pi}{2}$, so we re-parameterize in terms of $\Delta\phi = \frac{\pi}{2} - \phi_{1}$ to get
+%
+\begin{align*} \label{}
+\phi_{s} & = \sin^{-1} \left( \frac{3}{4} + \frac{1}{4} \sin \left( \frac{\pi}{2} - \Delta\phi \right) \right) \\
+& = \sin^{-1} \left( \frac{3}{4} + \frac{1}{4} \cos \Delta\phi \right)
+\end{align*}
+%
+Truncating the Taylor expansion $\phi_{s}$, approaching zero from the right, to a second-order approximation gives
+%
+\begin{equation*} \label{}
+\frac{\pi}{2} -\frac{1}{2}\Delta\phi + 0 \cdot \Delta\phi^{2},
+\end{equation*}
+%
+and substituting back in for $\phi_{1}$ we get
+%
+\begin{equation*} \label{}
+\frac{\pi}{2} -\frac{1}{2} \left( \frac{\pi}{2} - \phi_{1} \right) = \frac{\pi}{4} + \frac{1}{2} \phi_{1},
+\end{equation*}
+%
+which is equivalent to a convex combination with a splitting factor of one half. The derivation follows the same for LG cells where $\phi_{2} = -\frac{\pi}{2}$, except we do the Taylor series expansion approaching from the left.
+
+
+% ***********************************************************
+% ***********************************************************
+\section{Derivation of Mappings for Non-Stationary Subdivision} \label{app:map}
+Recall our goal of defining a function $T \colon (\phi, r) \rightarrow (\phi, r)$ that converts a latitude and radius in a conventional SDOG grid to the corresponding latitude and radius in the modified grid. Comparing the convex combinations used in conventional SDOG (Eq. (\ref{eq:convex})) to the volume preserving functions used for our non-stationary modification (Eq. \ref{eq:radVol} and \ref{eq:latVol}), we notice that these equations all parameterize the range of an SDOG cell in the given spherical coordinate from zero to one. Therefore, a point $(\lambda, \phi, r)$ inside an SDOG cell can be parametrized in terms of the maximum and minimum of that cell in each spherical coordinate, which we find by solving these equations for $\alpha$ and $p$. For conventional SDOG we get
+%
+\begin{equation*}
+\alpha = \frac{c - c_{1}}{c_{2} - c_{1}},
+\end{equation*}
+%
+and for the modified grid we get
+%
+\begin{equation*}
+p_{r} = \frac{r^{3} - r_{1}^{3}}{r_{2}^{3} - r_{1}^{3}} \quad \text{and}
+\end{equation*}
+%
+\begin{equation*}
+p_{\phi} = \frac{\sin \phi - \sin \phi_{1}}{\sin \phi_{2} - \sin \phi_{1}}
+\end{equation*}
+%
+for radius and latitude respectively. Furthermore, if a point is inside a cell where all its children use the same formulations for splitting surfaces as the cell itself (i.e. NG cells), then this parametrization will be consistent with the ones given by the children, and therefore be consistent at all levels of subdivision.
+
+To create this parameterization then, we need to find the boundaries of the most coarse NG cell that contains the given point. Referring back to Figures \ref{fig:sg-rad-splits} and \ref{fig:lat-splits}, this is equivalent to finding the boundaries of the spherical shells and zones that contain the point. We use $u$ and $\ell$ to refer to the maximum and minimum of these boundaries respectively, expressed in the parameter domain. For the spherical shell these values are the same in both the conventional and modified grids, since they both use the same radial splitting surface for SG cells. For the spherical zone, however, these values will differ between the two grids due to the different latitudinal splitting surfaces used for SG and LG cells. Thus, we distinguish between these values in the conventional and modified grids by using subscripts $c$ and $v$ respectively.
+
+We can now begin to derive the mappings. Since NG cells use $\alpha = \frac{1}{2}$ and $p = \frac{1}{2}$, we directly equate these parameterizations using $d = \alpha = p$ to get
+
+\begin{equation*}
+T_{r}(r) = R_{m} \sqrt[3]{ d u^{3} + \left( 1 - d \right) \ell^{3} },
+\end{equation*}
+%
+\begin{equation*}
+d = \frac{\frac{r}{R_{m}} - \ell}{u - \ell},
+\end{equation*}
+%
+and
+%
+\begin{equation*}
+T_{\phi}(\phi) = \sin^{-1} \left( d u_{v} + \left( 1 - d \right) \ell_{v} \right), 
+\end{equation*}
+%
+\begin{equation*}
+d = \frac{\frac{2\phi}{\pi} - \ell_{c}}{u_{c} - \ell_{c}}.
+\end{equation*}
+%
+All that is left is to find values of $u$ and $\ell$; we start with the radius case. We first normalize the radius to the range of the grid ($\frac{r}{R_{m}}$). Since SG cells use a radial splitting factor of one half, we know $u$ and $\ell$ will be an integer power of one half. To find these exponents, we first find the exponent $x$ that gives exactly $\frac{r}{R_{m}}$:
+%
+\begin{equation*}
+\left( \frac{1}{2} \right)^{x} = \frac{r}{R_{m}}, 
+\end{equation*}
+%
+\begin{equation*}
+x = \log_{0.5} \left( \frac{r}{R_{m}} \right).
+\end{equation*}
+%
+By taking the floor and ceiling of $x$, we can find the closest powers of one half to our target $\frac{r}{R_{m}}$. The smaller exponent (floor) will give the larger final value and vice versa. Therefore, we conclude with
+%
+\begin{equation*}
+u = \left( \frac{1}{2} \right)^{ \left\lfloor \log_{0.5} \left( \frac{r}{R_{m}} \right) \right\rfloor} \quad \text{and}
+\end{equation*}
+%
+\begin{equation*}
+\ell = \left( \frac{1}{2} \right)^{ \left\lceil \log_{0.5} \left( \frac{r}{R_{m}} \right) \right\rceil}.
+\end{equation*}
+%
+
+The latitude case for the forward mapping follows similarly, the main difference being that SG and LG latitudinal splitting surfaces are located at one minus integer powers of one half, instead of the powers themselves. Again, we normalize the latitude ($\frac{2\phi}{\pi}$) and solve for x:
+%
+\begin{equation*}
+1 - \left( \frac{1}{2} \right)^{x} = \frac{2\phi}{\pi},
+\end{equation*}
+%
+\begin{equation*}
+x = \log_{0.5} \left(1 - \frac{2\phi}{\pi} \right).
+\end{equation*}
+%
+The smaller exponent (floor) now results in the smaller value and vice versa. Therefore, we conclude with
+%
+\begin{equation*}
+u_{c} = 1 - \left( \frac{1}{2} \right)^{ \left\lceil \log_{0.5} \left( 1 - \frac{2\phi}{\pi} \right) \right\rceil}, \quad \text{and}
+\end{equation*}
+%
+\begin{equation*}
+\ell_{c} = 1 - \left( \frac{1}{2} \right)^{ \left\lfloor \log_{0.5} \left( 1 - \frac{2\phi}{\pi} \right) \right\rfloor}.
+\end{equation*}
+%
+We now need to find the equivalent values $u_{c}$ and $\ell_{c}$ in the modified grid. We already know that for the conventional grid, these surfaces are located at one minus integer powers of one half. For the modified grid, this is instead one minus integer powers of one quarter. Thus, 
+%
+\begin{equation*}
+\alpha(x) = 1 - \left( \frac{1}{2} \right) ^{x} \quad \text{and} \quad p(x) = 1 - \left( \frac{1}{4} \right) ^{x}.
+\end{equation*}
+%
+Rearranging and solving for $p(x)$ we get
+%
+\begin{equation*}
+x = \log_{0.5} \left( 1 - a \left( x \right) \right) \quad \text{and}
+\end{equation*}
+%
+\begin{align*}
+p(x) & = 1 - \left( \frac{1}{4} \right) ^{\log_{0.5} \left( 1 - a \left( x \right) \right)} \\
+& = 1 - \left( 1 - a(x) \right)^{\log_{0.5} \left( \frac{1}{4} \right)} \\
+& = 1 - \left( 1 - a(x) \right) ^{2} \\
+& = 2 a(x) - a(x)^{2}.
+\end{align*}
+%
+Solving for $a(x)$ we get
+%
+\begin{equation} 
+a(x) = 1 \pm \sqrt{1 - p(x)},
+\label{eq:a(x)}
+\end{equation}
+%
+however we only require the smaller solution. We can now say 
+\begin{equation*}
+u_{v} = 2u_{c} - u_{c}^{2} \quad \text{and} \quad \ell_{v} = 2 \ell_{c} - \ell_{c}^{2},
+\end{equation*}
+and the forward mapping is complete. 
+
+The inverse mapping follow very similarly to the forward one. For radius we now have
+%
+\begin{equation*}
+T^{-1}_{r}(r) = d u + \left( 1 - d \right) \ell, \quad \text{where}
+\end{equation*}
+%
+\begin{equation*}
+d = \frac{ \left( \frac{r}{R_{m}} \right)^{3} - \ell^{3}}{u^{3} - \ell^{3}}
+\end{equation*}
+%
+with $u$ and $l$ the same as the forward. For latitude we have
+%
+\begin{equation*}
+T^{-1}_{\phi}(\phi) = \frac{\pi}{2} \left( d u_{c} + \left( 1 - d \right) \ell_{c} \right), \quad \text{where}
+\end{equation*}
+%
+\begin{equation*}
+d = \frac{\sin \phi - \ell_{v}}{u_{v} - \ell_{v}}.
+\end{equation*}
+%
+We still have $u_{v}$ and $\ell_{v}$ defined the same as the forward, however $u_{c}$ and $\ell_{c}$ are now calculated differently. We use Eq. (\ref{eq:a(x)}) to map $\phi$ to the appropriate parameter space, where $p(x) = \sin \phi$. Solving again for x:
+%
+\begin{equation*}
+1 - \left( \frac{1}{2} \right)^{x} = 1 - \sqrt{1 - \sin \phi},
+\end{equation*}
+%
+\begin{equation*}
+x = \log_{0.5} \left( \sqrt{1 - \sin \phi} \right).
+\end{equation*} 
+%
+The values of $u_{c}$ and $\ell_{c}$ then follow directly, giving
+%
+\begin{equation*}
+u_{c} = 1 - \left( \frac{1}{2} \right)^{ \left\lceil \log_{0.5} \left( \sqrt{1 - \sin \phi} \right) \right\rceil} \quad \text{and}
+\end{equation*}
+%
+\begin{equation*}
+\ell_{c} = 1 - \left( \frac{1}{2} \right)^{ \left\lfloor \log_{0.5} \left( \sqrt{1 - \sin \phi} \right) \right\rfloor}.
+\end{equation*}
+%
