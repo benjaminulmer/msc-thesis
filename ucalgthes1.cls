@@ -363,22 +363,21 @@
 
 
 \def\l@chapter#1#2{\pagebreak[3]
-   \vskip 1.0em plus 1pt  % space above chapter line
-   \@tempdima 1.5em       % width of box holding chapter number
+   \vskip 0.5em           % space above chapter line
+   \@tempdima 1.4em       % width of box holding chapter number
    \begingroup
      \parindent \z@ \rightskip \@pnumwidth
      \parfillskip -\@pnumwidth
-     %\bfseries                  % Boldface removed. 2006nm
+     \bfseries                  % Boldface removed. 2006nm
      \leavevmode          % TeX command to enter horizontal mode.
      #1\hfil \hbox to\@pnumwidth{\hss #2}\par
    \endgroup}
 
-\def\l@chapter{\@dottedtocline{0}{1.5em}{1.4em}}  %added this line 2006nm
-\def\l@section{\@dottedtocline{1}{2.9em}{2.3em}} %changed 1 to 0 2006nm
-\def\l@subsection{\@dottedtocline{2}{5.2em}{3.2em}}
-\def\l@subsubsection{\@dottedtocline{3}{8.4em}{4.1em}}
-\def\l@paragraph{\@dottedtocline{4}{12.5em}{5em}}
-\def\l@subparagraph{\@dottedtocline{5}{17.5em}{6em}}
+\def\l@section{\@dottedtocline{1}{1.4em}{2.3em}} %changed 1 to 0 2006nm
+\def\l@subsection{\@dottedtocline{2}{3.8em}{3.2em}}
+\def\l@subsubsection{\@dottedtocline{3}{7.0em}{4.1em}}
+\def\l@paragraph{\@dottedtocline{4}{11.1em}{5em}}
+\def\l@subparagraph{\@dottedtocline{5}{16.1em}{6em}}
 
 %\def\l@chapter{\@dottedtocline{0}{1.5em}{2.3em}}  %added this line 2006nm
 %\def\l@section{\@dottedtocline{1}{1.5em}{2.3em}} %changed 1 to 0 2006nm
@@ -395,7 +394,7 @@
    \@starttoc{lof}\if@restonecol\twocolumn
   \fi}
 
-\def\l@figure{\@dottedtocline{1}{1.5em}{2.3em}}
+\def\l@figure{\@dottedtocline{1}{0em}{2.3em}}
 
 % LIST OF TABLES
 %
