@@ -16,8 +16,30 @@
 %
 %    Define any commands you like in `lib/misc.tex`
 %
-\input{lib/misc}
 
+% Defines a command for multi-line comments.
+\newcommand{\comment}[1]{}
+\comment{
+	For example, this is a comment.
+}
+
+% Packages
+\usepackage{amsmath}
+
+\usepackage{mathspec}
+\defaultfontfeatures{Ligatures=Common, Numbers=Uppercase}
+\setallmainfonts{Cambria}
+\setmathsfont(Digits,Latin,Greek)[Numbers={Lining,Proportional}]{Georgia}
+
+\usepackage{graphicx}
+\usepackage{cite}
+\usepackage{amsfonts}
+\usepackage{textcomp}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{subcaption}
+
+\graphicspath{{./images/}}
 %
 %    Enter your own information in these fields
 %
@@ -40,51 +62,12 @@
 
 \include{chapter1}
 \include{chapter2}
-
-% temp structure for planning purposes
-\chapter{Volume Preserving SDOG Modifications}
-\section{SDOG Overview}
-\subsection{Number of SDOG Cells}
-\subsection{Geometry of SDOG Cells}
-\section{Modified SDOG Refinement}
-\subsection{Ideal Placement of Splitting Surfaces}
-\subsection{Blending Functions}
-\section{Results}
-\section{Summary}
-
-\chapter{Extending Geodesic DGGSs to Create 3D Prismatoid Grids}
-\section{Prismatoid Grid Generation and Refinement}
-\subsection{Initial 3D Discretization}
-\subsection{Regular Prismatoid Refinement}
-\subsection{Degenerate Prismatoid Refinement}
-\section{Refinement Extensions}
-\subsection{Other Surface Refinement Factors}
-\subsection{Cell Aspect Ratio}
-\section{Results}
-\section{Summary}
-
-\chapter{Mapping Techniques for SDOG and Prismatoid Grids}
-\section{Radial Mappings}
-\section{Latitude Mappings for SDOG}
-\section{Summary}
-
-\chapter{Efficient Encoding and Decoding}
-\section{SDOG}
-\subsection{Encoding Algorithm}
-\subsection{Decoding Algorithm}
-\subsection{Runtime Comparison}
-\section{Prismatoid Grids}
-\section{Summary}
-
-\chapter{Results}
-\section{Case Studies}
-\subsection{Aircraft and Satellite Paths}
-\subsection{Urban Planning}
-\subsection{Atmospheric Properties}
-
-\chapter{Conclusion}
-\section{Limitations and Future Work}
-\section{Closing Remarks}
+\include{chapter3}
+\include{chapter4}
+\include{chapter5}
+\include{chapter6}
+\include{chapter7}
+\include{chapter8}
 % end
 
 \appendix

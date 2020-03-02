@@ -24,9 +24,61 @@ Intro paragraph(s)
 
 \section{Global Grids}
 
-\subsection{DGGS}
+\subsection{DGGS} \label{sec:dggs}
+Three key elements are used to define any given DGGS: the initial discretization, the cell refinement method, and the projection and inverse projection.
+Additionally, each cell in a DGGS needs a unique identifier that is used to index data associated with the cell.
+Before we explore how to extend an arbitrary DGGS to 3D, we first provide a brief background on each of these components.
+A deeper discussion of these elements can be found in~\cite{mahdavi2015survey} and~\cite{alderson2020digital}.
 
-Refinement vs. subdivision: Both terms appear in the literature. In computer graphics, subdivision typically refers to subdivision surfaces which involve repositioning vertices. To avoid confusion, this thesis will use the term refinement to refer to the process of creating a set of children cells from parent cells. 
+
+\subsubsection{Initial Discretization} \label{sec:dggs:discretization}
+The initial discretization for a given DGGS is simply the initial set of cells used to discretize Earth.
+This set of cells determines both the number of cells in the most coarse representation of the Earth and the shape(s) of cells used in the grid system.
+Geodesic DGGSs make use of the planar equivalent of a spherical polyhedron that serves as the initial discretization.
+Some of the most common choices for these polyhedra include the platonic solids and the truncated icosahedron, however other polyhedra with more faces can also be used.
+A polyhedron with more faces provides a closer approximation of the sphere and therefore results in less distortion when projecting the surface of the Earth to the polyhedron.
+
+
+For our 3D DGGS, the initial discretization will consist of a set of prismatoid cells that are derived from the initial polyhedron of the input DGGS.
+
+
+\subsubsection{Refinement} \label{sec:dggs:refinement}
+Refinement vs. subdivision: Both terms appear in the literature.
+In computer graphics, subdivision typically refers to subdivision surfaces which involve repositioning vertices.
+To avoid confusion, this thesis will use the term refinement to refer to the process of creating a set of children cells from parent cells. 
+
+
+The refinement method of a DGGS defines the process by which a set of fine cells are produced from a set of coarse cells.
+This should be done in a consistent manner such that it can be applied successively to create increasingly fine discretizations of the Earth.
+These refinement schemes are classified by their input cell shape(s), which are given by the initial discretization; output cell shape(s), which are usually the same as the input; and their refinement factor, which is simply the ratio between the number of coarse cells and fine cells.
+For example, triangle 1-to-4 (1:4) refinement produces four triangle cells for each triangle in the set of coarse cells.
+The refinement factor determines how quickly the resolution of the grid increases with each application of the refinement method.
+
+
+Refinement should also maintain the relative shape of cells between different resolutions.
+For example, square cells should not be made increasingly rectangular during refinement.
+Two other important properties of refinement are \textit{congruency} and \textit{alignment}.
+With congruent refinement, each coarse cell is composed of a union of fine cells.
+Aligned refinement requires that each coarse cell shares a certain point with a fine cell, usually either a vertex or centroid.
+Our method can accommodate all refinement factors, non-congruent refinement, and any alignment type (including non-aligned).
+
+
+\subsubsection{Projection and Inverse Projection} \label{sec:dggs:projection}
+In order to take data defined on the surface of the Earth (e.g.
+latitude-longitude coordinates) and find the corresponding points on a DGGS, a projection method is used that maps the spherical domain of the Earth to the polyhedral domain of the grid~\cite{snyder1987map, snyder1992equal}.
+Likewise, to represent cells and their data on the surface fo the Earth, the inverse of this projection is used.
+These operations always come with some amount of distortion; however, special projection methods can eliminate certain types of distortion.
+Equal-area and conformal projections are two classes that preserve areas and angles, respectively~\cite{snyder1987map}.
+
+
+\subsubsection{Indexing Scheme} \label{sec::dggs:indexing}
+For grid and cell geometries to be useful as a DGGS, a mechanism for assigning a unique index to each cell is needed.
+Earth data is assigned to cells using these indices, which allows for efficient retrieval of all data associated with a specific cell or region of the Earth.
+Thus, in order to be able to insert new data into the grid efficiently, it is important to be able to quickly determine the cell (and associated index) that contains a point on the Earth after it has been projected.
+Likewise, given a cell index, it is important to be able to determine the geometry of the corresponding cell in the grid.
+This geometry can then be inverse projected to find the region of the Earth associated with the cell.
+These indices also allow for certain spatial relationship queries to be defined, such as the retrieval of neighbouring cells, and can be used to navigate up and down the hierarchy of the grid via parent and child relationships between cells in different resolutions.
+
 
 \subsection{3D Global Grids}
 
