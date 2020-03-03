@@ -9,16 +9,16 @@ Earth is diverse.
 %Given its significance to all of humanity, it is vital to understand and protect the Earth.
 
 One of the ways humanity works toward better understanding the Earth is by gathering data about it.
-Remote sensing satellites and aircraft along with various smart technologies have created a significant increase in the amount of geospatial data available and continually being collected.
-This has lead to the challenge of \textit{geospatial big data}, referring to the fact that the volume and complexity of data exceeds the capacity of current computing systems~\cite{lee2015geospatial}.
+Remote sensing satellites and aircraft, along with various smart technologies, have created a significant increase in the amount of geospatial data available and continually being collected.
+This has lead to the challenge of \textit{geospatial big data}, referring to the fact that the volume and complexity of data exceed the capacity of current computing systems~\cite{lee2015geospatial}.
 With applications in urban planning, agriculture, education, natural disaster prediction and management, and countless other fields, the development of technologies for managing geospatial is more important than ever. 
 These tools are needed to efficiently integrate, process, analyze, and visualize geospatial data in order to use it to make informed decisions.
 This has lead to the vision of Digital Earth, where all data regarding the Earth is available in a common reference used by the public to inform their decisions.
-The use of such a system would range from world governments informing policy by analyzing climate trends to home owners referencing local utility line locations when building a fence.
-In reality we have not yet achieved such a expansive and holistic system; however, many approaches for smaller scale Digital Earths exist. 
+The use of such a system would range from world governments informing policy by analyzing climate trends to homeowners referencing local utility line locations when building a fence.
+In reality, we have not yet achieved such an expansive and holistic system; however, many approaches for smaller-scale Digital Earths exist. 
 
 
-Geographic information systems (GIS) are one of the conventional approach used for creating a Digital Earth.
+Geographic information systems (GIS) are one of the conventional approaches used for creating a Digital Earth.
 With a GIS, different datasets are represented as individual map layers in a planar coordinate system, which acts as a proxy for the Earth.
 However, geospatial data exists in many different formats and resolutions and is created and gathered by disparate organizations.
 The conventional GIS pipeline---which requires experts to clean, process, integrate, and distribute data---is not sustainable in the face of geospatial big data.
@@ -26,12 +26,12 @@ Furthermore, even after data has been integrated with a GIS, overlay operations 
 Coordinate based representations of geospatial data also do not provide good facilities to represent the uncertainty or error of the data they are used to represent.
 
 
-An alternative to the coordinate-based approach of GIS's for managing geospatial data is an area, or cell, based one.
+An alternative to the coordinate-based approach of GIS's for managing geospatial data is an area or cell-based one.
 A partitioning of the Earth into a set of non-overlapping cells allows information to be associated with the cells(s) that correspond with the appropriate region(s) of the Earth.
 Such partitionings are termed discrete global grids (DGG).
 To accommodate different resolutions of data, a hierarchy of these DGG's at successively finer resolutions, referred to as a discrete global grid system (DGGS), can be used.
-Not only does this cell hierarchy allow multiple resolutions of data to be supported, it also provides a built in mechanism for representing data uncertainty.
-As opposed to storing locations as a mathematically precise points, a cell (or set of cells) can be used that represent the range of possible locations.
+Not only does this cell hierarchy allow multiple resolutions of data to be supported, but it also provides a inbuilt mechanism for representing data uncertainty.
+As opposed to storing locations as mathematically precise points, a cell (or set of cells) can be used that represent the range of possible locations.
 
 
 Another challenge with most traditional Digital Earth systems is the use of a flat map as the underlying representation.
@@ -46,7 +46,7 @@ Despite this, the ability for physical maps to be easily made and stored, displa
 With the advent of a Digital Earth, however, many the drawbacks of physical globes are lessened or negated.
 Computer graphics algorithms and hardware allow globes to be rendered in real-time, storage is no different than for a digital map, and interactive systems allow zooming and panning to show any part of the Earth at any scale.
 The only challenge not fully solved is displaying the entire Earth at once; however, even this can be partially addressed with multi-view focus plus context rendering techniques~\cite{mark-sherlock}.
-Because of this, there has been a recent push towards globe based Digital Earth systems, one of the most well known examples of which being Google Earth\footnote{url here}.
+Because of this, there has been a recent push towards globe based Digital Earth systems, one of the most well-known examples of which being Google Earth\footnote{url here}.
 In these systems, data is assigned and visualized on a 3D model of the Earth---approximated as a sphere or ellipsoid---as opposed to a traditional planar map.
 
 \textbf{kinda broken flow here}
@@ -54,8 +54,9 @@ In these systems, data is assigned and visualized on a 3D model of the Earth---a
 Many of today's geospatial sensors, along with other technologies such a numerical weather prediction, generate data with an associated altitude in addition to other dimensions.
 While DGGS's are an effective tool for integrating and managing geospatial data on the surface of the Earth, they have no inbuilt mechanism for supporting such 3D data.
 Instead, this data must be flattened with altitude stored only as an attribute.
-This negates any benefits of the grid system in the radial dimension and prevents 
-This has motivated the development of volumetric, or 3D, discrete global grids and grid systems to allow native support for 3D data. Going forward, we simply use 3D DGGS to refer to these technologies. 
+%This negates any benefits of the grid system in the radial dimension and prevents 
+This has motivated the development of volumetric, or 3D, discrete global grids and grid systems to allow native support for 3D data.
+Going forward, we use the term 3D DGGS to refer to these technologies collectively. 
 
 
 Most of human activity and interest, and correspondingly geospatial data, is located in a relatively small region above and below the surface of the Earth ($\pm$10 -- 500 km).
