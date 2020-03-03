@@ -1,54 +1,73 @@
 \chapter{Introduction}
-
 Hook paragraph. Main points:
-Earth is important (home to all of humanity/all life).
-Earth is vast.
+Earth is important (home to all of humanity/all life);
+Earth is vast;
 Earth is diverse.
-Minor/optional points:
-Earth is fragile.
-Earth is cosmically insignificant.
 
 %Yet despite the cosmic insignificance of the Earth, all of humanity---and in fact all life we are aware of---call this planet home. From the [] of the [] to the [] of the [], the Earth is both vast and diverse. Given that Earth is the [], humanity has collected large amounts of data the planet.  Likewise, the data available about the Earth is similarly vast and diverse. 
 
-Given its significance to all of humanity, it is vital to understand and protect the Earth.
-One of the ways we 
+%Given its significance to all of humanity, it is vital to understand and protect the Earth.
+
+One of the ways humanity works toward better understanding the Earth is by gathering data about it.
+Remote sensing satellites and aircraft along with various smart technologies have created a significant increase in the amount of geospatial data available and continually being collected.
+This has lead to the challenge of \textit{geospatial big data}, referring to the fact that the volume and complexity of data exceeds the capacity of current computing systems~\cite{lee2015geospatial}.
+With applications in urban planning, agriculture, education, natural disaster prediction and management, and countless other fields, the development of technologies for managing geospatial is more important than ever. 
+These tools are needed to efficiently integrate, process, analyze, and visualize geospatial data in order to use it to make informed decisions.
+This has lead to the vision of Digital Earth, where all data regarding the Earth is available in a common reference used by the public to inform their decisions.
+The use of such a system would range from world governments informing policy by analyzing climate trends to home owners referencing local utility line locations when building a fence.
+In reality we have not yet achieved such a expansive and holistic system; however, many approaches for smaller scale Digital Earths exist. 
 
 
-
-Large amounts of data being collected. Geospatial big data: data sets exceeding capacity of current computing systems~\cite{lee2015geospatial} Geospatial data has applications in urban planning, agriculture, education, natural disaster prediction and management, and countless other fields. Need tools to efficiently integrate, process, visualize, and analyze data in order to make informed decisions. \textbf{Digital Earth here}
-
-
-Geographic information systems (GIS) are the conventional approach used for these tasks in a computational environment.
+Geographic information systems (GIS) are one of the conventional approach used for creating a Digital Earth.
 With a GIS, different datasets are represented as individual map layers in a planar coordinate system, which acts as a proxy for the Earth.
 However, geospatial data exists in many different formats and resolutions and is created and gathered by disparate organizations.
 The conventional GIS pipeline---which requires experts to clean, process, integrate, and distribute data---is not sustainable in the face of geospatial big data.
-Furthermore, even after data has been integrated with a GIS, overlay operations such as intersections and data extraction are computationally expensive when many data layers are present.
+Furthermore, even after data has been integrated with a GIS, overlay operations such as intersections and data extraction are computationally expensive when many data layers are present~\cite{wang2015improving}.
 Coordinate based representations of geospatial data also do not provide good facilities to represent the uncertainty or error of the data they are used to represent.
 
-%Traditional approach is GIS which allows datasets to be represented as map layers in coordinate system which acts as proxy for the earth. However different datasets need to be integrated, which exist in different formats and resolutions created by disparate organization. The conventional GIS pipeline which requires experts to clean, process, integrate, and distribute data is not sustainable in the face of geospatial big data. Furthermore, even once data has been integrated into common format/coordinate system, overlay operations are still computationally expensive. Can also imply precision that does not exist---points represented exactly when in reality there is uncertainty. 
 
-Beyond these fundamental challenges of GIS, the use of planar coordinates as the underlying representation comes with its own problems. %TODO better word for challenges here (or above usage)?
+An alternative to the coordinate-based approach of GIS's for managing geospatial data is an area, or cell, based one.
+A partitioning of the Earth into a set of non-overlapping cells allows information to be associated with the cells(s) that correspond with the appropriate region(s) of the Earth.
+Such partitionings are termed discrete global grids (DGG).
+To accommodate different resolutions of data, a hierarchy of these DGG's at successively finer resolutions, referred to as a discrete global grid system (DGGS), can be used.
+Not only does this cell hierarchy allow multiple resolutions of data to be supported, it also provides a built in mechanism for representing data uncertainty.
+As opposed to storing locations as a mathematically precise points, a cell (or set of cells) can be used that represent the range of possible locations.
+
+
+Another challenge with most traditional Digital Earth systems is the use of a flat map as the underlying representation.
 Flattening the Earth produces inevitable map edges and distortion that impact the analysis and visualization of geospatial data.
 Map edges can cause serious misunderstanding of the continuity between different sides of the map---especially with young children~\cite{hennerdal2015beyond}---and also affect the estimation of distance even when the continuity is correctly understood~\cite{hruby20182000}.
 Distortion causes inaccuracies in calculations such as geodesics and buffering if planar geometry is used~\cite{flaterbuffering}, which is especially problematic when working with large distances and areas.
-These distortions can also affect the visual analysis of data by misrepresenting the area of regions and distances between points. 
+These distortions can also affect the visual analysis of data by misrepresenting the size and shape of different regions.
+
 
 Model globes avoid many of the shortcomings of planar maps by providing a more accurate reference model for the Earth.
 Despite this, the ability for physical maps to be easily made and stored, display the entire Earth at once, and accommodate any scale has made them the preferred option in many situations. 
 With the advent of a Digital Earth, however, many the drawbacks of physical globes are lessened or negated.
-Computer graphics algorithms and hardware allow globes to be rendered in real-time, storage is no different than for a digital flat map, and interactive systems allow zooming and panning to show any part of the Earth at any scale.
+Computer graphics algorithms and hardware allow globes to be rendered in real-time, storage is no different than for a digital map, and interactive systems allow zooming and panning to show any part of the Earth at any scale.
 The only challenge not fully solved is displaying the entire Earth at once; however, even this can be partially addressed with multi-view focus plus context rendering techniques~\cite{mark-sherlock}.
-Because of this, there has been a recent push towards globe based Digital Earth systems, where data is assigned and visualized on a 3D model of the Earth, typically approximated as either a sphere or ellipsoid. 
+Because of this, there has been a recent push towards globe based Digital Earth systems, one of the most well known examples of which being Google Earth\footnote{url here}.
+In these systems, data is assigned and visualized on a 3D model of the Earth---approximated as a sphere or ellipsoid---as opposed to a traditional planar map.
+
+\textbf{kinda broken flow here}
+
+Many of today's geospatial sensors, along with other technologies such a numerical weather prediction, generate data with an associated altitude in addition to other dimensions.
+While DGGS's are an effective tool for integrating and managing geospatial data on the surface of the Earth, they have no inbuilt mechanism for supporting such 3D data.
+Instead, this data must be flattened with altitude stored only as an attribute.
+This negates any benefits of the grid system in the radial dimension and prevents 
+This has motivated the development of volumetric, or 3D, discrete global grids and grid systems to allow native support for 3D data. Going forward, we simply use 3D DGGS to refer to these technologies. 
 
 
-To efficiently integrate data on such a 3D model, data can be assigned to an underlying discretization of the Earth into a set of non-overlapping cells (Discrete global grid). A hierarchy of such grids at successively finer resolutions allow different resolutions of data, and gives a built in representation for positional uncertainty (DGGS). 
-
-DGGS have shown to be an effective tool for managing geospatial data on the surface of the Earth---many state of the art systems. Despite this, many modern sensors are generating 3D data (associated altitude) which traditional DGGS have no built in mechanism for. Instead, such data must be flattened with altitude stored only as an attribute. This slows down accessing data. This has motivated push towards volumetric, or 3D discrete global grids and grid systems to allow native support for such data.
-
-Most 3D human activity and interest, and correspondingly geostatial data is in small region above and below surface of Earth (+= 10-500 km), and because of this most existing approaches to 3D grids have focused on this region. However, there a select processed such as seismic wave propagation and the magnetosphere the go much beyond (- ?? km and + 35000? km). Also high Earth orbit satellites. Because of this, need for grids that cover much larger range---high into atmosphere and all the way towards centre. 
+Most of human activity and interest, and correspondingly geospatial data, is located in a relatively small region above and below the surface of the Earth ($\pm$10 -- 500 km).
+Likewise, most existing approaches for 3D DGGS's have focused on this region.
+However, there are select processes such as seismic wave propagation and the magnetosphere that span much beyond this region. \textbf{figure?}
+Furthermore, the range of altitudes of different satellites is extensive, with satellites in high Earth orbit exceeding 36,000 km.
+Therefore, in order to support the full range of human activity and interest, there is a need for 3D DGGS's that extend all the way to the centre of the Earth and much beyond the atmosphere.
 
 
 \section{Problem Statement}
+
+
 
 Despite recent push for 3D grids, still underdeveloped compared to traditional DGGS and GIS. Of these, most focus on small vertical range of data/grid support. The main goal of this thesis is to further develop the technologies that exist for 3D global grid systems that can properly support a large vertical range of data.
 
