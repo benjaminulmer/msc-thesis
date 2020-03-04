@@ -30,7 +30,7 @@ An alternative to the coordinate-based approach of GIS's for managing geospatial
 A partitioning of the Earth into a set of non-overlapping cells allows information to be associated with the cells(s) that correspond with the appropriate region(s) of the Earth.
 Such partitionings are termed discrete global grids (DGG).
 To accommodate different resolutions of data, a hierarchy of these DGG's at successively finer resolutions, referred to as a discrete global grid system (DGGS), can be used.
-Not only does this cell hierarchy allow multiple resolutions of data to be supported, but it also provides a inbuilt mechanism for representing data uncertainty.
+Not only does this cell hierarchy allow multiple resolutions of data to be supported, but it also provides an inbuilt mechanism for representing data uncertainty.
 As opposed to storing locations as mathematically precise points, a cell (or set of cells) can be used that represent the range of possible locations.
 
 
@@ -55,7 +55,7 @@ Many of today's geospatial sensors, along with other technologies such a numeric
 While DGGS's are an effective tool for integrating and managing geospatial data on the surface of the Earth, they have no inbuilt mechanism for supporting such 3D data.
 Instead, this data must be flattened with altitude stored only as an attribute.
 %This negates any benefits of the grid system in the radial dimension and prevents 
-This has motivated the development of volumetric, or 3D, discrete global grids and grid systems to allow native support for 3D data.
+This has motivated the development of volumetric (3D) discrete global grids and grid systems to allow native support for 3D data.
 Going forward, we use the term 3D DGGS to refer to these technologies collectively.
 
 
@@ -67,36 +67,63 @@ Therefore, in order to support the full range of human activity and interest, th
 
 
 \section{Problem Statement}
-Despite the recent push for 3D DGGS's, the area of research is still underdeveloped compared to that of traditional DGGS and GIS technologies.
-Of the research that has been done, most has been focused on support for small ranges of altitudes.
-The main goal of this thesis is to further develop technologies for 3D DGGS's that can properly and adequately support large ranges of altitude. 
+Despite the recent push for 3D DGGS's, the area of research is still relatively unexplored compared to that of traditional DGGS and GIS technologies.
+Additionally, of the existing systems proposed, many are only appropriate for data with small altitude ranges, or data near the surface of the Earth.
+Thus, for data with more extensive altitude ranges, there are even fewer methods that are appropriate. 
+From this, we arrive at the primary goal of this thesis: to develop further technologies for 3D DGGS's that can properly and adequately support large ranges of altitude. 
 
 A simple approach for such a 3D DGGS would be to embed the Earth in a 3D Euclidean voxel partitioning, for which many efficient and well-tested algorithms exist.
 While such a system is simple in its construction, it does not respect the spherical nature of the Earth.
 Cells are not aligned with the surface of the Earth, which means there is no consistent orientation of up (increasing altitude) and down (decreasing altitude) with respect to a cell.
 Likewise, traversal along the surface of the Earth is not straightforward and requires ``zig-zagging'' up and down.
 This type of grid also does not provide a good approximation for the surface of the Earth, especially at low resolutions.
-For small scale regions where the curvature of the Earth is negligible, these issues are likewise negligible, and these types of systems have been used successfully for \textbf{things} [CN].
-However, for 3D DGGS's with global coverage, the underlying grid should be sphere-based and Earth-centric; cells should be aligned with the surface of the Earth and have a consistent orientation for increasing and decreasing altitude. 
+For small scale regions where the curvature of the Earth is negligible, these issues are similarly negligible, and these types of systems have been used successfully for \textbf{things} [CN].
+With these issues in mind, for a 3D DGGS with global coverage, the underlying grid should be sphere-based and Earth-centric; cells should be aligned with the surface of the Earth and have a consistent orientation for increasing and decreasing altitude. 
 
 The main challenge associated with such Earth-centric grids is the inevitable degeneration of cells toward the centre of the Earth.
 This effect is demonstrated in Figure~X---cells more near the centre of the grid become increasingly small and skinny and eventually degenerate to pyramids.
 For grids with a small radial extent, this is not a significant issue; however, for the range of altitudes we wish to support in this thesis, this issue cannot be ignored.
 The problem with this type of cell degeneration is two-fold.
 The first issue is that cells in the grid do not have a consistent aspect ratio (width divided by depth), meaning cells will bias surface and radial directions differently depending on their location.
-The second---and larger---issue, is that the difference in volume between cells is unbounded.
+The second---and larger---issue is that the difference in volume between cells is unbounded.
 Having cells of similar size is important to ensure the grid represents the Earth at a consistent spatial resolution.
 This is especially pertinent when dealing with a hierarchy of grids to ensure cells of the same size do not appear at different resolutions of the grid system itself.
 It is worth noting that this same issue presents itself in traditional latitude-longitude grids, also demonstrated in Figure~X. 
 
-Several works have used a special refinement strategy 
+Several works have used a special refinement strategy to address this issue, both for latitude-longitude grids and 3D grids~\cite{yu2009sdog, gang2013sphere}\cite{others}.
+These methods all have slight variations from one another, but the basic approach is the same.
+During refinement, degenerate cells are merged with other degenerate cells to create larger cells.
+Despite still being degenerate, these merged cells end up being much more similar in size to the non-degenerate cells in the grid.
+Figure~X illustrates this type of refinement in contrast to a regular refinement approach.
+The terminology used in the literature to describe this type of refinement varies; in this thesis, we use the term \textit{semiregular degenerate} or for brevity just \textit{semiregular}.
+A more in-depth explanation of this class of refinement methods is provided in Chapter~2.something.
 
 
-%Simple approach for such a grid would be to embed Earth in 3D Euclidean grid, which many efficient and well tested techniques exist for creating. Such a grid does not respect spherical nature of Earth however. Cells not aligned with surface, low resolutions are very poor approximation, traversal along surface not straightforward. This type of grid should only be used for local small scale grids where curvature is minimal/negligible. For global grid, needs to be sphere based---Earth centric. 
+\section{Goals and Scope}
+In addition to the main goal of supporting a large range of altitudes, there are several other desirable properties for a 3D DGGS we wish to explore in this thesis.
+We discuss these properties in the context of a 3D DGGS, but they are equally applicable to their conventional surface counterparts.
 
-The main challenge with such grids is the degeneration of cells towards the centre of the Earth due to the nature of spherical coordinates (figure)---cells become small, skinny, degenerate to triangular shaped/pyramids. This is not an issue for grids with small radial extent. This same effect happens with latitude longitude grids for similar reasons. Several works have used a special refinement strategy to address this issue, both for lat-long grids and 3D grids. (Further explained in Ch 2). Create grids we refer to as 'semiregular degenerate'. Such refinement strategies are the main tool used in this thesis for accomplishing the goal. For brevity, this class of refinement is simply referred to as semiregular refinement.  
 
-Other desired properties of resulting grids we are concerned with are volume preservation, interoperability between 2D and 3D grids, and efficient encoding and decoding (integration) of data. 
+Beyond just having similar sizes, a desirable property for 3D DGGS's is for all cells---at the same resolution---to have \textit{exactly} equal volumes.
+Calculating the volume of a cell is often an expensive operation, which can significantly impact the speed of analysis if this is needed frequently.
+If all cells have the same size, this calculation is replaced with a constant resulting in significant performance increases in certain applications.
+
+
+Another important component of a 3D DGGS is how geospatial data is integrated with the grid system.
+Likewise, the inverse process of mapping data associated with a set of cells back to the corresponding regions of the Earth is needed for visualizing data on the globe.
+These two operations are referred to as grid encoding and grid decoding (or simply encoding and decoding), respectively.
+Other important operations are spatial neighbourhood and hierarchy traversal, used in analyses such as region growing and data aggregation.
+Ensuring these operations are efficient allows quick integration, processing, analysis, and visualization of data with the 3D DGGS.
+
+
+The final property we wish for our 3D DGGS's to have is interoperability with conventional DGGS's.
+By this, we mean supporting efficient and straightforward transference of data between conventional and 3D DGGS's.
+Doing so allows easy migration from 2D to 3D systems while also providing backwards compatibility from 3D to 2D systems.
+
+
+We choose to explore these properties only for Earth-centric 3D DGGS's using semiregular refinement strategies.
+Limiting the scope in this manner allows a more thorough exploration of these properties in the 3D DGGS's we propose. Given these goals and scope, we can refine the goal of this thesis: create Earth-centric 3D DGGS's using semiregular refinement to support large ranges of altitude, equal volume cells, efficient operations, and interoperability with 2D DGGS's.
+
 
 \section{Methodology}
 
