@@ -11,7 +11,7 @@ Earth is diverse.
 One of the ways humanity works toward better understanding the Earth is by gathering data about it.
 Remote sensing satellites and aircraft, along with various smart technologies, have created a significant increase in the amount of geospatial data available and continually being collected.
 This has lead to the challenge of \textit{geospatial big data}, referring to the fact that the volume and complexity of data exceed the capacity of current computing systems~\cite{lee2015geospatial}.
-With applications in urban planning, agriculture, education, natural disaster prediction and management, and countless other fields, the development of technologies for managing geospatial is more important than ever.
+With applications in urban planning, agriculture, education, natural disaster prediction and management, and many other fields, the development of technologies for managing geospatial is more crucial than ever.
 These tools are needed to efficiently integrate, process, analyze, and visualize geospatial data in order to use it to make informed decisions.
 This has lead to the vision of Digital Earth, where all data regarding the Earth is available in a common reference used by the public to inform their decisions.
 The use of such a system would range from world governments informing policy by analyzing climate trends to homeowners referencing local utility line locations when building a fence.
@@ -20,14 +20,14 @@ In reality, we have not yet achieved such an expansive and holistic system; howe
 
 Geographic information systems (GIS) are one of the conventional approaches used for creating a Digital Earth.
 With a GIS, different datasets are represented as individual map layers in a planar coordinate system, which acts as a proxy for the Earth.
-However, geospatial data exists in many different formats and resolutions and is created and gathered by disparate organizations.
+However, geospatial data exists in many different formats and resolutions and is created and gathered by diverse organizations.
 The conventional GIS pipeline---which requires experts to clean, process, integrate, and distribute data---is not sustainable in the face of geospatial big data.
 Furthermore, even after data has been integrated with a GIS, overlay operations such as intersections and data extraction are computationally expensive when many data layers are present~\cite{wang2015improving}.
-Coordinate based representations of geospatial data also do not provide good facilities to represent the uncertainty or error of the data they are used to represent.
+Coordinate based representations of geospatial data also do not provide proper facilities to represent the uncertainty or error of the data they are used to represent.
 
 
 An alternative to the coordinate-based approach of GIS's for managing geospatial data is an area or cell-based one.
-A partitioning of the Earth into a set of non-overlapping cells allows information to be associated with the cells(s) that correspond with the appropriate region(s) of the Earth.
+A partition of the Earth into a set of non-overlapping cells allows information to be associated with the cells(s) that correspond with the appropriate region(s) of the Earth.
 Such partitionings are termed discrete global grids (DGG).
 To accommodate different resolutions of data, a hierarchy of these DGG's at successively finer resolutions, referred to as a discrete global grid system (DGGS), can be used.
 Not only does this cell hierarchy allow multiple resolutions of data to be supported, but it also provides an inbuilt mechanism for representing data uncertainty.
@@ -70,7 +70,7 @@ Therefore, in order to support the full range of human activity and interest, th
 Despite the recent push for 3D DGGS's, the area of research is still relatively unexplored compared to that of traditional DGGS and GIS technologies.
 Additionally, of the existing systems proposed, many are only appropriate for data with small altitude ranges, or data near the surface of the Earth.
 Thus, for data with more extensive altitude ranges, there are even fewer methods that are appropriate. 
-From this, we arrive at the primary goal of this thesis: to develop further technologies for 3D DGGS's that can properly and adequately support large ranges of altitude. 
+From this, we arrive at the primary goal of this thesis: to develop further technologies for 3D DGGS's that can adequately support large ranges of altitude. 
 
 A simple approach for such a 3D DGGS would be to embed the Earth in a 3D Euclidean voxel partitioning, for which many efficient and well-tested algorithms exist.
 While such a system is simple in its construction, it does not respect the spherical nature of the Earth.
@@ -85,12 +85,12 @@ This effect is demonstrated in Figure~X---cells more near the centre of the grid
 For grids with a small radial extent, this is not a significant issue; however, for the range of altitudes we wish to support in this thesis, this issue cannot be ignored.
 The problem with this type of cell degeneration is two-fold.
 The first issue is that cells in the grid do not have a consistent aspect ratio (width divided by depth), meaning cells will bias surface and radial directions differently depending on their location.
-The second---and larger---issue is that the difference in volume between cells is unbounded.
-Having cells of similar size is important to ensure the grid represents the Earth at a consistent spatial resolution.
+The second---more notable---issue is that the difference in volume between cells is unbounded.
+Having cells of similar size is required to ensure the grid represents the Earth at a consistent spatial resolution.
 This is especially pertinent when dealing with a hierarchy of grids to ensure cells of the same size do not appear at different resolutions of the grid system itself.
 It is worth noting that this same issue presents itself in traditional latitude-longitude grids, also demonstrated in Figure~X. 
 
-Several works have used a special refinement strategy to address this issue, both for latitude-longitude grids and 3D grids~\cite{yu2009sdog, gang2013sphere}\cite{others}.
+Several works have used a particular refinement strategy to address this issue, both for latitude-longitude grids and 3D grids~\cite{yu2009sdog, gang2013sphere}\cite{others}.
 These methods all have slight variations from one another, but the basic approach is the same.
 During refinement, degenerate cells are merged with other degenerate cells to create larger cells.
 Despite still being degenerate, these merged cells end up being much more similar in size to the non-degenerate cells in the grid.
@@ -100,7 +100,7 @@ A more in-depth explanation of this class of refinement methods is provided in C
 
 
 \section{Goals and Scope}
-In addition to the main goal of supporting a large range of altitudes, there are several other desirable properties for a 3D DGGS we wish to explore in this thesis.
+In addition to the initial goal of supporting a large range of altitudes, there are several other desirable properties for a 3D DGGS we wish to explore in this thesis.
 We discuss these properties in the context of a 3D DGGS, but they are equally applicable to their conventional surface counterparts.
 
 
@@ -109,16 +109,16 @@ Calculating the volume of a cell is often an expensive operation, which can sign
 If all cells have the same size, this calculation is replaced with a constant resulting in significant performance increases in certain applications.
 
 
-Another important component of a 3D DGGS is how geospatial data is integrated with the grid system.
+Another essential component of a 3D DGGS is how geospatial data is integrated with the grid system.
 Likewise, the inverse process of mapping data associated with a set of cells back to the corresponding regions of the Earth is needed for visualizing data on the globe.
-These two operations are referred to as grid encoding and grid decoding (or simply encoding and decoding), respectively.
-Other important operations are spatial neighbourhood and hierarchy traversal, used in analyses such as region growing and data aggregation.
+These two operations are referred to as grid encoding and grid decoding (or just encoding and decoding), respectively.
+Other fundamental operations are spatial neighbourhood and hierarchy traversal, used in analyses such as region growing and data aggregation.
 Ensuring these operations are efficient allows quick integration, processing, analysis, and visualization of data with the 3D DGGS.
 
 
 The final property we wish for our 3D DGGS's to have is interoperability with conventional DGGS's.
-By this, we mean supporting efficient and straightforward transference of data between conventional and 3D DGGS's.
-Doing so allows easy migration from 2D to 3D systems while also providing backwards compatibility from 3D to 2D systems.
+By this, we mean supporting the efficient and straightforward transference of data between conventional and 3D DGGS's.
+Doing so allows smooth migration from 2D to 3D systems while also providing backwards compatibility from 3D to 2D systems.
 
 
 We choose to explore these properties only for Earth-centric 3D DGGS's using semiregular refinement strategies.
