@@ -11,11 +11,11 @@ Earth is diverse.
 One of the ways humanity works toward better understanding the Earth is by gathering data about it.
 Remote sensing satellites and aircraft, along with various smart technologies, have created a significant increase in the amount of geospatial data available and continually being collected.
 This has lead to the challenge of \textit{geospatial big data}, referring to the fact that the volume and complexity of data exceed the capacity of current computing systems~\cite{lee2015geospatial}.
-With applications in urban planning, agriculture, education, natural disaster prediction and management, and countless other fields, the development of technologies for managing geospatial is more important than ever. 
+With applications in urban planning, agriculture, education, natural disaster prediction and management, and countless other fields, the development of technologies for managing geospatial is more important than ever.
 These tools are needed to efficiently integrate, process, analyze, and visualize geospatial data in order to use it to make informed decisions.
 This has lead to the vision of Digital Earth, where all data regarding the Earth is available in a common reference used by the public to inform their decisions.
 The use of such a system would range from world governments informing policy by analyzing climate trends to homeowners referencing local utility line locations when building a fence.
-In reality, we have not yet achieved such an expansive and holistic system; however, many approaches for smaller-scale Digital Earths exist. 
+In reality, we have not yet achieved such an expansive and holistic system; however, many approaches for smaller-scale Digital Earths exist.
 
 
 Geographic information systems (GIS) are one of the conventional approaches used for creating a Digital Earth.
@@ -42,7 +42,7 @@ These distortions can also affect the visual analysis of data by misrepresenting
 
 
 Model globes avoid many of the shortcomings of planar maps by providing a more accurate reference model for the Earth.
-Despite this, the ability for physical maps to be easily made and stored, display the entire Earth at once, and accommodate any scale has made them the preferred option in many situations. 
+Despite this, the ability for physical maps to be easily made and stored, display the entire Earth at once, and accommodate any scale has made them the preferred option in many situations.
 With the advent of a Digital Earth, however, many the drawbacks of physical globes are lessened or negated.
 Computer graphics algorithms and hardware allow globes to be rendered in real-time, storage is no different than for a digital map, and interactive systems allow zooming and panning to show any part of the Earth at any scale.
 The only challenge not fully solved is displaying the entire Earth at once; however, even this can be partially addressed with multi-view focus plus context rendering techniques~\cite{mark-sherlock}.
@@ -56,7 +56,7 @@ While DGGS's are an effective tool for integrating and managing geospatial data 
 Instead, this data must be flattened with altitude stored only as an attribute.
 %This negates any benefits of the grid system in the radial dimension and prevents 
 This has motivated the development of volumetric, or 3D, discrete global grids and grid systems to allow native support for 3D data.
-Going forward, we use the term 3D DGGS to refer to these technologies collectively. 
+Going forward, we use the term 3D DGGS to refer to these technologies collectively.
 
 
 Most of human activity and interest, and correspondingly geospatial data, is located in a relatively small region above and below the surface of the Earth ($\pm$10 -- 500 km).
@@ -67,12 +67,32 @@ Therefore, in order to support the full range of human activity and interest, th
 
 
 \section{Problem Statement}
+Despite the recent push for 3D DGGS's, the area of research is still underdeveloped compared to that of traditional DGGS and GIS technologies.
+Of the research that has been done, most has been focused on support for small ranges of altitudes.
+The main goal of this thesis is to further develop technologies for 3D DGGS's that can properly and adequately support large ranges of altitude. 
+
+A simple approach for such a 3D DGGS would be to embed the Earth in a 3D Euclidean voxel partitioning, for which many efficient and well-tested algorithms exist.
+While such a system is simple in its construction, it does not respect the spherical nature of the Earth.
+Cells are not aligned with the surface of the Earth, which means there is no consistent orientation of up (increasing altitude) and down (decreasing altitude) with respect to a cell.
+Likewise, traversal along the surface of the Earth is not straightforward and requires ``zig-zagging'' up and down.
+This type of grid also does not provide a good approximation for the surface of the Earth, especially at low resolutions.
+For small scale regions where the curvature of the Earth is negligible, these issues are likewise negligible, and these types of systems have been used successfully for \textbf{things} [CN].
+However, for 3D DGGS's with global coverage, the underlying grid should be sphere-based and Earth-centric; cells should be aligned with the surface of the Earth and have a consistent orientation for increasing and decreasing altitude. 
+
+The main challenge associated with such Earth-centric grids is the inevitable degeneration of cells toward the centre of the Earth.
+This effect is demonstrated in Figure~X---cells more near the centre of the grid become increasingly small and skinny and eventually degenerate to pyramids.
+For grids with a small radial extent, this is not a significant issue; however, for the range of altitudes we wish to support in this thesis, this issue cannot be ignored.
+The problem with this type of cell degeneration is two-fold.
+The first issue is that cells in the grid do not have a consistent aspect ratio (width divided by depth), meaning cells will bias surface and radial directions differently depending on their location.
+The second---and larger---issue, is that the difference in volume between cells is unbounded.
+Having cells of similar size is important to ensure the grid represents the Earth at a consistent spatial resolution.
+This is especially pertinent when dealing with a hierarchy of grids to ensure cells of the same size do not appear at different resolutions of the grid system itself.
+It is worth noting that this same issue presents itself in traditional latitude-longitude grids, also demonstrated in Figure~X. 
+
+Several works have used a special refinement strategy 
 
 
-
-Despite recent push for 3D grids, still underdeveloped compared to traditional DGGS and GIS. Of these, most focus on small vertical range of data/grid support. The main goal of this thesis is to further develop the technologies that exist for 3D global grid systems that can properly support a large vertical range of data.
-
-Simple approach for such a grid would be to embed Earth in 3D Euclidean grid, which many efficient and well tested techniques exist for creating. Such a grid does not respect spherical nature of Earth however. Cells not aligned with surface, low resolutions are very poor approximation, traversal along surface not straightforward. This type of grid should only be used for local small scale grids where curvature is minimal/negligible. For global grid, needs to be sphere based---Earth centric. 
+%Simple approach for such a grid would be to embed Earth in 3D Euclidean grid, which many efficient and well tested techniques exist for creating. Such a grid does not respect spherical nature of Earth however. Cells not aligned with surface, low resolutions are very poor approximation, traversal along surface not straightforward. This type of grid should only be used for local small scale grids where curvature is minimal/negligible. For global grid, needs to be sphere based---Earth centric. 
 
 The main challenge with such grids is the degeneration of cells towards the centre of the Earth due to the nature of spherical coordinates (figure)---cells become small, skinny, degenerate to triangular shaped/pyramids. This is not an issue for grids with small radial extent. This same effect happens with latitude longitude grids for similar reasons. Several works have used a special refinement strategy to address this issue, both for lat-long grids and 3D grids. (Further explained in Ch 2). Create grids we refer to as 'semiregular degenerate'. Such refinement strategies are the main tool used in this thesis for accomplishing the goal. For brevity, this class of refinement is simply referred to as semiregular refinement.  
 
