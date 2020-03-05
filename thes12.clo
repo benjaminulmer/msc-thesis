@@ -441,12 +441,12 @@
 % For efficiency, level-one list's values are defined at top level, and
 % \@listi is defined to set only \leftmargin.
 
-\leftmargini 1in
-\leftmarginii 1in     % > \labelsep + width of '(m)'
-\leftmarginiii 1in   % > \labelsep + width of 'vii.'
-\leftmarginiv 1in     % > \labelsep + width of 'M.'
-\leftmarginv 1in
-\leftmarginvi 1in
+\leftmargini 3em
+\leftmarginii 3em     % > \labelsep + width of '(m)'
+\leftmarginiii 3em   % > \labelsep + width of 'vii.'
+\leftmarginiv 3em     % > \labelsep + width of 'M.'
+\leftmarginv 3em
+\leftmarginvi 3em
 
 \leftmargin\leftmargini
 \labelwidth\leftmargini\advance\labelwidth-\labelsep
