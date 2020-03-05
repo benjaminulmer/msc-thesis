@@ -1,8 +1,9 @@
 \chapter{Introduction} \label{chap:introduction}
-Hook paragraph. Main points:
-Earth is important (home to all of humanity/all life);
+Hook paragraph; work in progress.
+Main points will be:
 Earth is vast;
-Earth is diverse.
+Earth is diverse;
+Earth is important (home to all of humanity/all life).
 Therefore, important to understand the Earth so we can make informed decisions regarding it.
 
 %Yet despite the cosmic insignificance of the Earth, all of humanity---and in fact all life we are aware of---call this planet home. From the [] of the [] to the [] of the [], the Earth is both vast and diverse. Given that Earth is the [], humanity has collected large amounts of data the planet.  Likewise, the data available about the Earth is similarly vast and diverse. 
@@ -62,7 +63,7 @@ Going forward, we use the term 3D DGGS to refer to these technologies collective
 
 Most of human activity and interest, and correspondingly geospatial data, is located in a relatively small region above and below the surface of the Earth ($\pm$10 -- 500 km).
 Likewise, most existing approaches for 3D DGGS's have focused on this region.
-However, there are select processes such as seismic wave propagation and the magnetosphere that span much beyond this region. \textbf{figure?}
+However, there are select processes such as seismic wave propagation and the magnetosphere that span much beyond this region (\textbf{figure?}).
 Furthermore, the range of altitudes satellites orbit at is extensive, with satellites in high Earth orbit exceeding 36,000 km.
 Therefore, in order to support the full range of human activity and interest, there is a need for 3D DGGS's that extend all the way to the centre of the Earth and much beyond the atmosphere.
 
@@ -83,15 +84,23 @@ While these issues are negligible for small scale regions of the Earth, for a 3D
 Cells should be aligned with the surface of the Earth and have a consistent orientation for increasing and decreasing altitude.
 
 
+\begin{figure}[h]
+	\includegraphics[width=\textwidth]{Fig1.pdf}
+	\caption{placeholder figure.
+		Caption describing degeneration in cells toward centre and poles}
+	\label{fig:3dllg}
+\end{figure}
+
+
 The main challenge associated with such Earth-centric grids is the inevitable degeneration of cells toward the centre of the Earth.
-This effect is demonstrated in Figure~X---cells more near the centre of the grid become increasingly small and skinny and eventually degenerate to pyramids.
+This effect is demonstrated in Figure~\ref{fig:3dllg}---cells more near the centre of the grid become increasingly small and skinny and eventually degenerate to pyramids.
 For grids with a small radial extent, this is not a significant issue; however, for the range of altitudes we wish to support in this thesis, this issue cannot be ignored.
 The problem with this type of cell degeneration is two-fold.
 The first issue is that cells in the grid do not have a consistent aspect ratio (width divided by depth), meaning cells will bias surface and radial directions differently depending on their location.
 The second---more notable---issue is that the difference in volume between cells is unbounded.
 Having cells of similar size is required to ensure the grid represents the Earth at a consistent spatial resolution.
 This is especially pertinent when dealing with a hierarchy of grids to ensure cells of the same size do not appear at different resolutions of the grid system itself.
-It is worth noting that this same issue presents itself in traditional latitude-longitude grids, also demonstrated in Figure~X. 
+It is worth noting that this same issue presents itself in traditional latitude-longitude grids, also demonstrated in Figure~\ref{fig:3dllg}.
 
 
 Several works have used a particular refinement strategy to address this issue, both for latitude-longitude grids and 3D grids~\cite{yu2009sdog, gang2013sphere}\cite{others}.
@@ -128,24 +137,24 @@ Doing so allows smooth migration from 2D to 3D systems while also providing back
 
 We choose to explore these properties only for Earth-centric 3D DGGS's using semiregular refinement strategies.
 Limiting the scope in this manner allows a more thorough exploration of these properties in the 3D DGGS's we propose.
-Given these goals and scope, we can refine the goal of this thesis: develop methods Earth-centric 3D DGGS's using semiregular refinement to support large ranges of altitude, equal volume cells, efficient operations, and interoperability with 2D DGGS's.
+Given these goals and scope, we can refine the goal of this thesis: develop methods for Earth-centric 3D DGGS's using semiregular refinement to support large ranges of altitude, equal volume cells, efficient operations, and interoperability with 2D DGGS's.
 
 
 \section{Methodology}
 In this thesis, we use two different approaches to create 3D DGGS's with our desired properties.
-The first approach modifies the refinement rules of an existing 3D DGGS, the Spheroid Degenerated-Octree Grid (SDOG)~\cite{yu2009sdog}, to improve its volume preserving properties.
+The first approach modifies the refinement rules of an existing 3D DGGS, the Spheroid Degenerated-Octree Grid (SDOG)~\cite{yu2009sdog}, to improve its volume-preserving properties.
 This is done by analyzing the placement of the surfaces used for refining cells and finding ideal locations that result in cells of the most uniform volume possible given certain constraints.
 
 
 The second approach is a general method for creating a 3D DGGS that uses a conventional DGGS as a starting point and specification.
 Such an approach allows the research, development, and data collection achieved with conventional DGGS to be leveraged when creating a 3D one.
 We take care to perform this extension in such a way that desired properties of the 3D DGGS can be achieved regardless of the 2D one used.
-It also allows for an additional property, target aspect ratio of cells, to be attained.
+It also allows for an additional property, a target aspect ratio for cells, to be attained.
 
 
 For both of these approaches, we define mappings between physical points and their corresponding locations in grid space, which are used to implement efficient encoding and decoding operations.
 For the SDOG based approach, we provide constant time encoding and decoding algorithms that outperform the standard versions of these algorithms at high levels of refinement.
-These new algorithms can be used both with conventional SDOG and, by using the provided mappings, the volume preserving one.
+These new algorithms can be used both with conventional SDOG and, by using the provided mappings, the volume-preserving one.
 We also provide similar algorithms for the 3D DGGS's that result from the extension method.
 
 
@@ -169,7 +178,7 @@ This main contributions of this thesis fall into three groups:
 	
 	\item Method for extending 2D DGGS to 3D.
 	This method is fully general and can support any valid DGGS, including any refinement factor and non-congruent refinement.
-	Furthermore, clearly defined parameters allow for target aspect ratio of cells and---like the SDOG modifications---a balanced trade-off between volume preservation and cell compactness.
+	Furthermore, clearly defined parameters allow for a target aspect ratio for cells and---like the SDOG modifications---a balanced trade-off between volume preservation and cell compactness.
 	A set of sample use cases is used to evaluate the method.
 	
 	\item Mapping functions (for modified SDOG \textit{and} extended grids).
@@ -177,21 +186,21 @@ This main contributions of this thesis fall into three groups:
 	For SDOG, we also propose new constant time encoding and decoding algorithms and benchmark their performance against the standard versions.
 \end{enumerate}
 
-The methods for modified SDOG refinement along with its mappings and analysis have been published in the journal \textit{Geoinformatica}~\cite{ulmertoward2020}.
+The methods for modified SDOG refinement, along with its mappings and analysis, have been published in the journal \textit{Geoinformatica}~\cite{ulmertoward2020}.
 The efficient encoding and decoding algorithms are an unpublished extension of this work.
-The grid extension method along with its mappings and use case results have been submitted to the journal \textit{ISPRS International Journal of Geo-Information}.
+The grid extension method, along with its mappings and use case results, has been submitted to the journal \textit{ISPRS International Journal of Geo-Information}.
 
 
 \section{Thesis Overview}
 \textbf{Draft based on current outline; may change.}
 The outline for the remaining chapters of this thesis is as follows:
 Chapter~\ref{chap:background} covers background information on map projections, Digital Earth systems, and global grids. 
-Chapter~\ref{chap:sdog} introduces SDOG and provides an analysis for the number of cells in SDOG at a given resolution.
+Chapter~\ref{chap:sdog} introduces SDOG and provides an analysis of the number of cells in SDOG at a given resolution.
 We then provided the modified refinement rules that improve volume preservation and the analysis of said rules.
 Chapter~\ref{chap:extension} covers the grid extension method for creating a 3D DGGS from a 2D one.
 We start with a basic version of the method for 1-to-4 refinement factors, and then introduce extensions for other factors and targeting a specific cell aspect ratio.
 Chapter~\ref{chap:mapping} derives the mapping functions used for modified SDOG and the extended grids.
 Chapter~\ref{chap:coding} then details how these mappings can be used for efficient encoding and decoding operations.
 This is also where we introduce and compare the improved encoding and decoding algorithms for SDOG.
-Chapter~\ref{chap:usecases} showcases three sample use cases for the grid extensions method along with the 3D DGGS's used for said use cases.
+Chapter~\ref{chap:usecases} showcases three sample use cases for the grid extensions method, as well as the 3D DGGS's used for said use cases.
 Finally, Chapter~\ref{chap:conclusion} concludes with a summary along with limitations and directions for future work.
