@@ -1,51 +1,113 @@
 \chapter{Background and Related Work} \label{chap:background}
+Intro paragraph(s):
+Background on history of maps, globes, and map projections and polyhedral projections.
+Pros, cons, challenges, related work for different Digital Earth systems.
+GIS and then globe based systems.
+Discuss spherical spatial analysis for globe based systems.
+Discrete global grids background and related work.
+How to make, properties, challenges, etc. etc.
 
-Intro paragraph(s)
 
 \section{Traditional Maps and Globes}
+First maps and globes date to \textbf{some date}.
+Earth is spheroid shape, and because of this, natural to represent on spheroid or sphere globe.
+However, physical constraints make globes undesirable in many situations.
+
+
+Alternative is flat map.
+Easy to make, store transport, etc.
+Accommodate any scale.
+Show entire earth at once.
+Produces issues with map edges and distortion.
+Despite issues, benefits have made it de facto choice in many situations for thousands of years.
+
 
 \subsection{Map Projections}
+Producing flat map requires projection to map spheroidal/spherical Earth to plane.
+Study of map projections goes back to circa 500 BC.
+
 
 \subsubsection{Polyhedral Projections}
+Using more planes can reduce distortion.
+Method known and used since at least \textbf{date}.
+Drawback of introduces additional map edges when flattened.
+Benefit of can be folded back into pseudo globe.
 
 
+\section{Digital Earth Systems}
+Many existing systems for creating Digital Earth.
+Many different flavours for different tasks.
+Maps, streetview, Earth, GIS, etc.
 
-
-\section{Digital Maps and Globes}
 
 \subsection{GIS}
-
-\subsection{Digital Earth}
-
-\subsubsection{Spherical Spatial Analysis}
-
-
-
-
-\section{Global Grids}
-
-\subsection{DGGS} \label{sec:dggs}
-Three key elements are used to define any given DGGS: the initial discretization, the cell refinement method, and the projection and inverse projection.
-Additionally, each cell in a DGGS needs a unique identifier that is used to index data associated with the cell.
-Before we explore how to extend an arbitrary DGGS to 3D, we first provide a brief background on each of these components.
-A deeper discussion of these elements can be found in~\cite{mahdavi2015survey} and~\cite{alderson2020digital}.
+Digital Earth based on principles and techniques of traditional geography.
+Based on 2D maps.
+Use map ``layers'' to represent different data sets.
+Layers can be combined and used for different analysis, visualizations, etc.
+Distortion can cause errors in this analysis; must use spherical analysis
+Most systems require some amount of user expertise to clean, integrate, process data.
 
 
-\subsubsection{Initial Discretization} \label{sec:dggs:discretization}
-The initial discretization for a given DGGS is simply the initial set of cells used to discretize Earth.
-This set of cells determines both the number of cells in the most coarse representation of the Earth and the shape(s) of cells used in the grid system.
-Geodesic DGGSs make use of the planar equivalent of a spherical polyhedron that serves as the initial discretization.
-Some of the most common choices for these polyhedra include the platonic solids and the truncated icosahedron, however other polyhedra with more faces can also be used.
-A polyhedron with more faces provides a closer approximation of the sphere and therefore results in less distortion when projecting the surface of the Earth to the polyhedron.
+\subsection{Globe Based Digital Earth}
+Use globe as reference model as opposed to flat map.
+Two approaches:
+(1) use underlying flat representation and map to globe for visualization.
+Does not solve issues of distortion for analysis purposes, only visualization
 
 
-For our 3D DGGS, the initial discretization will consist of a set of prismatoid cells that are derived from the initial polyhedron of the input DGGS.
+Other approach is to do analysis directly in spherical or ellipsoidal space.
+More computational expensive than planar equivalents, but much more accurate.
+Ellipsoidal is challenging due to issues of elliptic integrals; various well known techniques for sphere however.
+Raskin paper, Troy's papers, points on sphere paper, maybe others.
 
 
-\subsubsection{Refinement} \label{sec:dggs:refinement}
-Refinement vs. subdivision: Both terms appear in the literature.
-In computer graphics, subdivision typically refers to subdivision surfaces which involve repositioning vertices.
-To avoid confusion, this thesis will use the term refinement to refer to the process of creating a set of children cells from parent cells. 
+\section{Discrete Global Grids}
+Spatial partitioning structures have long been used in computer graphics for managing spatial information.
+Reasons and benefits of such.
+Same techniques can be used for geospatial data.
+Uses of global grids varies.
+From structure for speeding up queries to foundation for entire Digital Earth system (pyxis/ggs).
+Many different techniques exist for creating such grids (and by extension grid systems).
+
+
+\subsection{Spherical Grids}
+Lat-long grids.
+Semiregular/igloo lat-long grids (DQG).
+Small circle arc grids.
+Yin-yang grid.
+
+
+\subsection{Polyhedral Grids}
+Main idea is to use polyhedron as approximation for sphere.
+Projection maps spherical domain to polyhedral one.
+Avoids polar degeneracies.
+Area preserving projections allow equal area cells without significantly reducing compactness.
+
+
+\subsection{3D Grids}
+Same as regular grids but with altitude dimension.
+Can be made from any of the above by extrusion method.
+Lat-long -> 3D LLG -> GeoSOT3D.
+Yin-yang -> 3D yin-yang.
+Polyhedral -> frustum/prismatoid.
+
+
+Issue of radial degeneration.
+Methods have been proposed that use method similar to igloo in radial dimension.
+DQG -> SDOG.
+SSS 3DG.
+
+
+\subsection{Discrete Global Grid Systems}
+A discrete global grid only represents Earth at one spatial resolution.
+Geospatial data comes in large range of resolutions.
+This can be addressed by creating a hierarchy of DGG's.
+This hierarchy is what we a DGGS.
+
+
+Start with initial discretization and then refine.
+Discretization can be any DGG.
 
 
 The refinement method of a DGGS defines the process by which a set of fine cells are produced from a set of coarse cells.
@@ -55,20 +117,17 @@ For example, triangle 1-to-4 (1:4) refinement produces four triangle cells for e
 The refinement factor determines how quickly the resolution of the grid increases with each application of the refinement method.
 
 
-Refinement should also maintain the relative shape of cells between different resolutions.
-For example, square cells should not be made increasingly rectangular during refinement.
-Two other important properties of refinement are \textit{congruency} and \textit{alignment}.
-With congruent refinement, each coarse cell is composed of a union of fine cells.
-Aligned refinement requires that each coarse cell shares a certain point with a fine cell, usually either a vertex or centroid.
-Our method can accommodate all refinement factors, non-congruent refinement, and any alignment type (including non-aligned).
+Refinement vs. subdivision: Both terms appear in the literature.
+In computer graphics, subdivision typically refers to subdivision surfaces which involve repositioning vertices.
+To avoid confusion, this thesis will use the term refinement to refer to the process of creating a set of children cells from parent cells. 
 
 
-\subsubsection{Projection and Inverse Projection} \label{sec:dggs:projection}
-In order to take data defined on the surface of the Earth (e.g.
-latitude-longitude coordinates) and find the corresponding points on a DGGS, a projection method is used that maps the spherical domain of the Earth to the polyhedral domain of the grid~\cite{snyder1987map, snyder1992equal}.
-Likewise, to represent cells and their data on the surface fo the Earth, the inverse of this projection is used.
-These operations always come with some amount of distortion; however, special projection methods can eliminate certain types of distortion.
-Equal-area and conformal projections are two classes that preserve areas and angles, respectively~\cite{snyder1987map}.
+\subsection{Grid Encoding and Decoding}
+Need to map data/features to grid cells.
+Most simple encoding is for points: find cell that contains point.
+Inverse also needed: take cell and get geometry on reference model.
+Call these encoding and decoding.
+As part of this, need way to refer to cells uniquely.
 
 
 \subsubsection{Indexing Scheme} \label{sec::dggs:indexing}
@@ -80,17 +139,9 @@ This geometry can then be inverse projected to find the region of the Earth asso
 These indices also allow for certain spatial relationship queries to be defined, such as the retrieval of neighbouring cells, and can be used to navigate up and down the hierarchy of the grid via parent and child relationships between cells in different resolutions.
 
 
-\subsection{3D Global Grids}
-
-\subsection{Semiregular Refinement}
-
-Terminology:
-
-SDOG: degenerate subdivision (refinement). SSS 3DG: degraded subdivision (refinement).
-
-\subsection{Grid Encoding and Decoding}
-
-
-
-
 \section{Summary}
+Maps and globes have been around for thousands of years.
+With advent of computer, GIS was born which carried over conventions of traditional cartography.
+Recently, global grids have become popular as a replacement/augmentation of GIS.
+Many different approached for DGG and DGGS.
+3D DGGS are the next step of this evolution; techniques exist but still underdeveloped comparatively.
