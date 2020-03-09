@@ -1,9 +1,37 @@
 \chapter{Approaches for 3D DGGS's} \label{chap:3ddggs}
+This chapter look at different method for 3D DGGS and why they are needed.
+First look at why flattening not good enough solution to problem.
+Explain drawbacks of embedded approach.
+Challenges with Earth-Centric.
+How semiregular refinement can be used to lessen these drawbacks.
+
 
 \section{Data Flattening}
+No partitioning in radial dimension.
+This means slower data retrieval for specific altitudes, lack of spatial neighbourhood relationships, and other issues???
+Furthermore, no hierarchy in radial dimension.
+This means no automatic aggregation in this dimension.
+Also loose any other benefits of grid in this dimension.
+In general you simply loose all the benefits of a grid in the radial dimension.
+
 
 \section{Embedded Grids}
+No ``up'' and ``down''.
+Likewise, jagged surface traversal and poor approximation of Earth.
+Does not respect spherical/multisphere nature of Earth.
+Requires lat-long-alt to be converted to Cartesian (trig = expensive): some Earth-centric require as well, but unavoidable for embedded.
+Less efficient possibly---cannot reuse surface stuff at different altitude.
+Use figures to showcase these issues.
+
 
 \section{Earth-Centric Grids}
+Issue of degeneration similar to lat-long grids.
+Use figures to showcase size difference and aspect ratio/compactness problem.
+
 
 \subsection{Semiregular Refinement}
+Describe idea of method.
+Useful for 3D and lat-long grids.
+Cite works where type of refinement is used.
+Allows for more uniform cells at cost of degenerate grid connectivity and slightly more complicated grid structure in general.
+Main tool employed in this thesis.

@@ -27,6 +27,14 @@ Producing flat map requires projection to map spheroidal/spherical Earth to plan
 Study of map projections goes back to circa 500 BC.
 
 
+Come with inevitable distortion. Certain projections can eliminate certain types of distortion i.e. equal area, conformal, etc.
+Despite this, cannot completely remove all distortion.
+Cannot perfectly preserve all distances.
+
+
+Map edges can also introduce issues with understanding maps.
+
+
 \subsubsection{Polyhedral Projections}
 Using more planes can reduce distortion.
 Method known and used since at least \textbf{date}.
@@ -45,7 +53,7 @@ Digital Earth based on principles and techniques of traditional geography.
 Based on 2D maps.
 Use map ``layers'' to represent different data sets.
 Layers can be combined and used for different analysis, visualizations, etc.
-Distortion can cause errors in this analysis; must use spherical analysis
+Distortion can cause errors in this analysis; must use spherical analysis sometimes to avoid this.
 Most systems require some amount of user expertise to clean, integrate, process data.
 
 
@@ -53,7 +61,7 @@ Most systems require some amount of user expertise to clean, integrate, process 
 Use globe as reference model as opposed to flat map.
 Two approaches:
 (1) use underlying flat representation and map to globe for visualization.
-Does not solve issues of distortion for analysis purposes, only visualization
+Does not solve issues of distortion for analysis purposes, only visualization.
 
 
 Other approach is to do analysis directly in spherical or ellipsoidal space.
@@ -67,7 +75,8 @@ Spatial partitioning structures have long been used in computer graphics for man
 Reasons and benefits of such.
 Same techniques can be used for geospatial data.
 Uses of global grids varies.
-From structure for speeding up queries to foundation for entire Digital Earth system (pyxis/ggs).
+From structure for speeding up queries to foundation for entire Digital Earth system (pyxis/ggs) as alternative to GIS system.
+However DGG can also be used in tandem with traditional GIS technologies.
 Many different techniques exist for creating such grids (and by extension grid systems).
 
 
@@ -80,7 +89,7 @@ Yin-yang grid.
 
 \subsection{Polyhedral Grids}
 Main idea is to use polyhedron as approximation for sphere.
-Projection maps spherical domain to polyhedral one.
+Polyhedral projection as described earlier maps spherical domain to polyhedral one.
 Avoids polar degeneracies.
 Area preserving projections allow equal area cells without significantly reducing compactness.
 
@@ -103,7 +112,7 @@ SSS 3DG.
 A discrete global grid only represents Earth at one spatial resolution.
 Geospatial data comes in large range of resolutions.
 This can be addressed by creating a hierarchy of DGG's.
-This hierarchy is what we a DGGS.
+This hierarchy is what we call a DGGS.
 
 
 Start with initial discretization and then refine.
