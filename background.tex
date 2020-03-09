@@ -20,19 +20,28 @@ Accommodate any scale.
 Show entire earth at once.
 Produces issues with map edges and distortion.
 Despite issues, benefits have made it de facto choice in many situations for thousands of years.
+\cite{hruby20182000}
 
 
 \subsection{Map Projections}
 Producing flat map requires projection to map spheroidal/spherical Earth to plane.
 Study of map projections goes back to circa 500 BC.
+\cite{snyder1987map}
+\cite{snyder1997flattening}
 
 
-Come with inevitable distortion. Certain projections can eliminate certain types of distortion i.e. equal area, conformal, etc.
+Come with inevitable distortion.
+Certain projections can eliminate certain types of distortion i.e. equal area, conformal, etc.
 Despite this, cannot completely remove all distortion.
 Cannot perfectly preserve all distances.
+\cite{mathematics paper on distortion}
+\cite{planar area preserving}
+\cite{planar conformal}
 
 
 Map edges can also introduce issues with understanding maps.
+\cite{hennerdal2015beyond}
+\cite{hruby2016journey}
 
 
 \subsubsection{Polyhedral Projections}
@@ -40,12 +49,21 @@ Using more planes can reduce distortion.
 Method known and used since at least \textbf{date}.
 Drawback of introduces additional map edges when flattened.
 Benefit of can be folded back into pseudo globe.
+\cite{bradley1946equal}
+\cite{snyder1992equal}
+\cite{van2006slice}
+\cite{rocsca2011uniform}
+\cite{rocsca2012area}
+\cite{holhocs2014octahedral}
+\cite{harrison2011optimization}
 
 
 \section{Digital Earth Systems}
 Many existing systems for creating Digital Earth.
 Many different flavours for different tasks.
 Maps, streetview, Earth, GIS, etc.
+\cite{mahdavi2015survey}
+\cite{alderson2020digital}
 
 
 \subsection{GIS}
@@ -55,6 +73,7 @@ Use map ``layers'' to represent different data sets.
 Layers can be combined and used for different analysis, visualizations, etc.
 Distortion can cause errors in this analysis; must use spherical analysis sometimes to avoid this.
 Most systems require some amount of user expertise to clean, integrate, process data.
+\cite{foresman1998history}
 
 
 \subsection{Globe Based Digital Earth}
@@ -62,12 +81,18 @@ Use globe as reference model as opposed to flat map.
 Two approaches:
 (1) use underlying flat representation and map to globe for visualization.
 Does not solve issues of distortion for analysis purposes, only visualization.
+\cite{goodchild2018reimagining}
 
 
 Other approach is to do analysis directly in spherical or ellipsoidal space.
 More computational expensive than planar equivalents, but much more accurate.
 Ellipsoidal is challenging due to issues of elliptic integrals; various well known techniques for sphere however.
 Raskin paper, Troy's papers, points on sphere paper, maybe others.
+\cite{raskin1994spatial}
+\cite{bahrdt2017rational}
+\cite{alderson2016multiresolution}
+\cite{alderson2019multiscale}
+\cite{alderson2018offsetting}
 
 
 \section{Discrete Global Grids}
@@ -78,34 +103,8 @@ Uses of global grids varies.
 From structure for speeding up queries to foundation for entire Digital Earth system (pyxis/ggs) as alternative to GIS system.
 However DGG can also be used in tandem with traditional GIS technologies.
 Many different techniques exist for creating such grids (and by extension grid systems).
-
-
-\subsection{Spherical Grids}
-Lat-long grids.
-Semiregular/igloo lat-long grids (DQG).
-Small circle arc grids.
-Yin-yang grid.
-
-
-\subsection{Polyhedral Grids}
-Main idea is to use polyhedron as approximation for sphere.
-Polyhedral projection as described earlier maps spherical domain to polyhedral one.
-Avoids polar degeneracies.
-Area preserving projections allow equal area cells without significantly reducing compactness.
-
-
-\subsection{3D Grids}
-Same as regular grids but with altitude dimension.
-Can be made from any of the above by extrusion method.
-Lat-long -> 3D LLG -> GeoSOT3D.
-Yin-yang -> 3D yin-yang.
-Polyhedral -> frustum/prismatoid.
-
-
-Issue of radial degeneration.
-Methods have been proposed that use method similar to igloo in radial dimension.
-DQG -> SDOG.
-SSS 3DG.
+\cite{sahr1998discrete}
+\cite{sahr2003geodesic}
 
 
 \subsection{Discrete Global Grid Systems}
@@ -115,6 +114,7 @@ This can be addressed by creating a hierarchy of DGG's.
 This hierarchy is what we call a DGGS.
 
 
+\subsubsection{Refinement}
 Start with initial discretization and then refine.
 Discretization can be any DGG.
 
@@ -128,7 +128,55 @@ The refinement factor determines how quickly the resolution of the grid increase
 
 Refinement vs. subdivision: Both terms appear in the literature.
 In computer graphics, subdivision typically refers to subdivision surfaces which involve repositioning vertices.
-To avoid confusion, this thesis will use the term refinement to refer to the process of creating a set of children cells from parent cells. 
+To avoid confusion, this thesis will use the term refinement to refer to the process of creating a set of children cells from parent cells.
+
+
+\subsection{Spherical Grids}
+Lat-long grids.
+Semiregular/igloo lat-long grids (DQG).
+Small circle arc grids.
+Yin-yang grid.
+\cite{leopardi2006partition}
+\cite{sun2008global}
+\cite{song2002developing}
+\cite{kageyama2004yin-yang}
+
+
+\subsection{Polyhedral Grids}
+Main idea is to use polyhedron as approximation for sphere.
+Polyhedral projection as described earlier maps spherical domain to polyhedral one.
+Avoids polar degeneracies.
+Area preserving projections allow equal area cells without significantly reducing compactness.
+\cite{fekete1990sphere}
+\cite{dutton1996encoding}
+\cite{gorski2005healpix}
+\cite{holhocs2014octahedral}
+\cite{mahdavi2013one} % TODO ???
+\cite{mahdavi2015hexagonal} % TODO ???
+
+
+\subsection{3D Grids}
+Same as regular grids but with altitude dimension.
+Can be made from any of the above by extrusion method.
+Lat-long -> 3D LLG -> GeoSOT3D.
+Yin-yang -> 3D yin-yang.
+Polyhedral -> frustum/prismatoid.
+\cite{yoo2019concept}
+\cite{sun20153d}
+\cite{yoshida2004application}
+\cite{kageyama2005geodynamo}
+\cite{tackley2008modelling}
+
+
+Issue of radial degeneration---see Chapter 3.something
+Methods have been proposed that use method similar to igloo in radial dimension.
+DQG -> SDOG.
+SSS 3DG.
+\cite{yu2009sdog}
+\cite{yu2012large-scale}
+\cite{yu2012lithosphere}
+\cite{gang2013sphere} 
+\cite{wang2013global}
 
 
 \subsection{Grid Encoding and Decoding}
@@ -137,6 +185,7 @@ Most simple encoding is for points: find cell that contains point.
 Inverse also needed: take cell and get geometry on reference model.
 Call these encoding and decoding.
 As part of this, need way to refer to cells uniquely.
+\cite{du2018duality}
 
 
 \subsubsection{Indexing Scheme} \label{sec::dggs:indexing}
@@ -146,6 +195,10 @@ Thus, in order to be able to insert new data into the grid efficiently, it is im
 Likewise, given a cell index, it is important to be able to determine the geometry of the corresponding cell in the grid.
 This geometry can then be inverse projected to find the region of the Earth associated with the cell.
 These indices also allow for certain spatial relationship queries to be defined, such as the retrieval of neighbouring cells, and can be used to navigate up and down the hierarchy of the grid via parent and child relationships between cells in different resolutions.
+\cite{yu2009coding}
+\cite{vince2006indexing}
+\cite{tong2013efficient}
+\cite{mahdavi2015categorization}
 
 
 \section{Summary}
