@@ -31,10 +31,6 @@
 \setallmainfonts{Cambria}
 \setmathsfont(Digits,Latin,Greek)[Numbers={Lining,Proportional}]{Georgia}
 
-\usepackage{url}
-\usepackage[backend=biber, style=numeric, sorting=none]{biblatex}
-\addbibresource{sources.bib}
-
 \usepackage{graphicx}
 \usepackage{amsfonts}
 \usepackage{textcomp}
@@ -75,8 +71,8 @@
 % end
 
 \appendix
-\include{appendix1}
+\bibliographystyle{ieeetr}
 %\nocite{*}
-\printbibliography
+\bibliography{sources}
 
 \end{document}
