@@ -15,56 +15,53 @@ In the 3rd century BCE, the ancient Greeks established that the Earth is spheric
 Despite this discovery, maps still were---and continue to be---the primary method for representing the Earth and geospatial data~\cite{hruby20182000}.
 Compared to maps, globes are more expensive to manufacture and more difficult to store, transport, and make measurements on.
 Maps can also represent the entire Earth at once and easily accommodate any scale.
-The benefits of a flat map do not come without their disadvantages, however.
-Producing a map requires flattening the spherical Earth to a flat plane, an operation known as a map projection (or simply projection), which introduces inevitable distortions and map edges.
-These issues are not present on globes, and because of this, they provide a more accurate representation of the Earth than is possible with any map.
 
 
 \subsection{Map Projections}
-Despite the fundamental challenges associated with map projections, the many benefits of maps over globes have motivated the use and study of these operations.
-Distortions in a projection (or more generally in any mapping) are measured by their effect on angles, areas, and distances.
-While eliminating all distortion is impossible, specialized projection methods exist that can remove certain types of distortion.
+The above benefits of a flat map do not come without their disadvantages
+Producing a map requires flattening the spherical Earth to a flat plane---an operation known as map projection (or simply projection)---which introduces inevitable distortions and map edges.
+These issues are not present on globes, and because of this, they provide a more accurate representation of the Earth than is possible with any map.
+Despite these fundamental challenges, the many benefits of maps have motivated the use and study of these operations~\cite{snyder1987map, snyder1997flattening}.
+
+
+Distortions in a map projection (or more generally in any mapping) are measured by their effect on angles, areas, and distances.
+While eliminating all distortion is impossible, specialized projection methods exist that remove certain types of distortion.
 Commonly used conformal [] and area-preserving [] projections preserve angles and areas, respectively.
-Isometric projections---which preserve distances---also remove angle and area distortion, and therefore do not exist between the sphere and the plane.
-However, projections that preserve only certain distances, such as all those to a certain point, are possible. []
-Alternatively, some methods aim for a balanced trade-off between the different types of distortion, as opposed to eliminating a specific class. []
-
-Since distortion cannot be completely removed,
-
-Map edges introduced by projection can also impact people's understanding 
-
-
-Map projections introduce inevitable distortion and map edges
-\cite{snyder1987map}
-\cite{snyder1997flattening}
-
-
-Come with inevitable distortion.
-Certain projections can eliminate certain types of distortion i.e. equal area, conformal, etc.
-Despite this, cannot completely remove all distortion.
-Cannot perfectly preserve all distances.
+Preserving distance also removes all other distortion, and since the sphere in non-developable, isometric projections between the sphere and the plane are impossible.
+However, projections that preserve only certain distances, such as all those to a certain point, are achievable. []
+Alternatively, some methods aim for a balanced trade-off between the different types of distortion, as opposed to eliminating a specific type. []
 \cite{mathematics paper on distortion}
 \cite{planar area preserving}
 \cite{planar conformal}
 
 
-Map edges can also introduce issues with understanding maps.
-\cite{hennerdal2015beyond}
-\cite{hruby2016journey}
+Since distortion cannot be completely removed, measurements and analyses done on flat maps can produce errors.
+Straight lines may not map to the actual shortest path, distortions of area may misrepresent the density of phenomena, and locations may appear much closer together or farther apart than they genuinely are.
+The amount and type of errors depend both on the projections used and the type of analysis performed, with certain maps being better suited for certain operations.
+For example, the Mercator projection---designed for navigation---maps straight lines to rhumb lines.
+However, the severely distorted area makes this projection a poor choice for representing the frequency of earthquakes in different regions.
+It is, therefore, important to use an appropriate map projection for each intended use case, with no one projection being ideal in all circumstances.
+
+
+Another significant challenge with flat maps is the edges (or boundaries) introduced.
+Such edges can have a significant impact on a person's understanding of a map when phenomena cross these boundaries.
+A study by Henneral asked participants to predict the location and direction of an airplane crossing the boundary of different map projections~\cite{hennerdal2015beyond}.
+The study found that participants would often incorrectly place the airplane at the point of \textit{linear} peripheral continuity (the intersection of the straight line tangent to the initial aircraft location and the opposite map edge) as opposed to the correct location.
+The occurrence of this mistake decreased with age; however, the effect was still prominent and significant with adult participants. Another study by Hruby et al. measured how such edges impact the estimation of distance~\cite{hruby2016journey}.
+Two groups of participants, given either a Eurocentric or Americentirc map, were asked to estimate the distance between various Asian and American cities.
+While both groups overestimated distances on average, the group with the Americentric map (where the shortest distances crossed the map boundary), had larger estimation errors than the other group.
+These studies further show that the projection used for a map must be chosen and centred carefully to ensure readers correctly understand how the map relates to the actual Earth.
 
 
 \subsubsection{Polyhedral Projections}
-Using more planes can reduce distortion.
-Method known and used since at least \textbf{date}.
-Drawback of introduces additional map edges when flattened.
-Benefit of can be folded back into pseudo globe.
-\cite{bradley1946equal}
-\cite{snyder1992equal}
-\cite{van2006slice}
-\cite{rocsca2011uniform}
-\cite{rocsca2012area}
-\cite{holhocs2014octahedral}
-\cite{harrison2011optimization}
+At the cost of introducing additional map edges, cutting a map can reduce the amount of distortion introduced by projection~\cite{soliman2018optimal}.
+Such cuts are analogous to projecting the sphere to an underlying polyhedron, the net of which produces the final flat map.
+Aside from reducing distortion, this type of map can serve as a pseudo-globe by folding the net into the corresponding polyhedron.
+
+
+As will be discussed later, this class of projection methods is also a core component of any polyhedron based discretization of the Earth.
+Since equal-area cells are often desired for such discretizations, many area-preserving projections between the sphere and various polyhedron have been developed~\cite{bradley1946equal, snyder1992equal, van2006slice, rocsca2011uniform, rocsca2012area, holhocs2014octahedral}.
+There has also been work to improve the efficiency of these projections for use with Digital Earth systems~\cite{harrison2011optimization}.
 
 
 \section{Digital Earth Systems}
