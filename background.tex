@@ -1,31 +1,40 @@
 \chapter{Background and Related Work} \label{chap:background}
-Intro paragraph(s):
-Background on history of maps, globes, and map projections and polyhedral projections.
-Pros, cons, challenges, related work for different Digital Earth systems.
-GIS and then globe based systems.
-Discuss spherical spatial analysis for globe based systems.
-Discrete global grids background and related work.
-How to make, properties, challenges, etc. etc.
+Providing a complete history of map and globe making (cartography) is much beyond both the scope and ability of this thesis.
+Instead, we provide a brief background to illuminate how these disciplines influenced the developments of Digital Earth systems.
+We discuss the different approaches for a Digital Earth, starting with traditional GIS and then discussing techniques used for globe based systems and analysis.
+We also provide background and related work on discrete global grids and grid systems, looking at different methods for constructing both 2D and 3D versions of these data structures.
 
 
 \section{Traditional Maps and Globes}
-First maps and globes date to \textbf{some date}.
-Earth is spheroid shape, and because of this, natural to represent on spheroid or sphere globe.
-However, physical constraints make globes undesirable in many situations.
+Cartography, the study and practice of making maps, is a mature and diverse discipline.
+While there is no agreement on what is the earliest known map, several examples dating back to the 4th millennium BCE exist.
+World maps are not quite as old; however, there are surviving specimens from 9th century BCE Babylonia.
 
 
-Alternative is flat map.
-Easy to make, store transport, etc.
-Accommodate any scale.
-Show entire earth at once.
-Produces issues with map edges and distortion.
-Despite issues, benefits have made it de facto choice in many situations for thousands of years.
-\cite{hruby20182000}
+In the 3rd century BCE, the ancient Greeks established that the Earth is spherical; with this came the first globes of Earth.
+Despite this discovery, maps still were---and continue to be---the primary method for representing the Earth and geospatial data~\cite{hruby20182000}.
+Compared to maps, globes are more expensive to manufacture and more difficult to store, transport, and make measurements on.
+Maps can also represent the entire Earth at once and easily accommodate any scale.
+The benefits of a flat map do not come without their disadvantages, however.
+Producing a map requires flattening the spherical Earth to a flat plane, an operation known as a map projection (or simply projection), which introduces inevitable distortions and map edges.
+These issues are not present on globes, and because of this, they provide a more accurate representation of the Earth than is possible with any map.
 
 
 \subsection{Map Projections}
-Producing flat map requires projection to map spheroidal/spherical Earth to plane.
-Study of map projections goes back to circa 500 BC.
+Despite the fundamental challenges associated with map projections, the many benefits of maps over globes have motivated the use and study of these operations.
+Distortions in a projection (or more generally in any mapping) are measured by their effect on angles, areas, and distances.
+While eliminating all distortion is impossible, specialized projection methods exist that can remove certain types of distortion.
+Commonly used conformal [] and area-preserving [] projections preserve angles and areas, respectively.
+Isometric projections---which preserve distances---also remove angle and area distortion, and therefore do not exist between the sphere and the plane.
+However, projections that preserve only certain distances, such as all those to a certain point, are possible. []
+Alternatively, some methods aim for a balanced trade-off between the different types of distortion, as opposed to eliminating a specific class. []
+
+Since distortion cannot be completely removed,
+
+Map edges introduced by projection can also impact people's understanding 
+
+
+Map projections introduce inevitable distortion and map edges
 \cite{snyder1987map}
 \cite{snyder1997flattening}
 
