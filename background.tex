@@ -7,18 +7,21 @@ We also provide background and related work on discrete global grids and grid sy
 
 \section{Traditional Maps and Globes}
 Cartography, the study and practice of making maps, is a mature and diverse discipline.
-While there is no agreement on what is the earliest known map, several examples dating back to the 4th millennium BCE exist.
-World maps are not quite as old; however, there are surviving specimens from 9th century BCE Babylonia.
+While there is no agreement on the earliest known map, there exist samples dating to the 4th millennium BCE and surviving world maps from 9th century BCE Babylonia.
+While one may think of maps primarily as a navigation tool, the uses extend much further.
+Maps allow geospatial data (data with an associated geographic component) to be encoded, processed, and visualized in a scale reference.
+Therefore, any field or discipline using such data often also uses maps of said data.
 
 
 In the 3rd century BCE, the ancient Greeks established that the Earth is spherical; with this came the first globes of Earth.
-Despite this discovery, maps still were---and continue to be---the primary method for representing the Earth and geospatial data~\cite{hruby20182000}.
+Globes serve a similar purpose as maps; however, the use of a spherical reference as opposed to a planar one provides a more accurate representation of the Earth.
+Despite this, maps were---and continue to be---the primary medium for representing the Earth and geospatial data~\cite{hruby20182000}.
 Compared to maps, globes are more expensive to manufacture and more difficult to store, transport, and make measurements on.
-Maps can also represent the entire Earth at once and easily accommodate any scale.
+Maps can also represent the entire Earth in one view and easily accommodate any scale.
 
 
 \subsection{Map Projections}
-The above benefits of a flat map do not come without their disadvantages
+The above benefits of a flat map over a globe do not come without their disadvantages
 Producing a map requires flattening the spherical Earth to a flat plane---an operation known as map projection (or simply projection)---which introduces inevitable distortions and map edges.
 These issues are not present on globes, and because of this, they provide a more accurate representation of the Earth than is possible with any map.
 Despite these fundamental challenges, the many benefits of maps have motivated the use and study of these operations~\cite{snyder1987map, snyder1997flattening}.
@@ -40,12 +43,12 @@ Straight lines may not map to the actual shortest path, distortions of area may 
 The amount and type of errors depend both on the projections used and the type of analysis performed, with certain maps being better suited for certain operations.
 For example, the Mercator projection---designed for navigation---maps straight lines to rhumb lines.
 However, the severely distorted area makes this projection a poor choice for representing the frequency of earthquakes in different regions.
-It is, therefore, important to use an appropriate map projection for each intended use case, with no one projection being ideal in all circumstances.
+It is, therefore, essential to use an appropriate map projection for each intended use case, with no one projection being ideal in all circumstances.
 
 
 Another significant challenge with flat maps is the edges (or boundaries) introduced.
 Such edges can have a significant impact on a person's understanding of a map when phenomena cross these boundaries.
-A study by Henneral asked participants to predict the location and direction of an airplane crossing the boundary of different map projections~\cite{hennerdal2015beyond}.
+A study by Hennerdal asked participants to predict the location and direction of an airplane crossing the boundary of different map projections~\cite{hennerdal2015beyond}.
 The study found that participants would often incorrectly place the airplane at the point of \textit{linear} peripheral continuity (the intersection of the straight line tangent to the initial aircraft location and the opposite map edge) as opposed to the correct location.
 The occurrence of this mistake decreased with age; however, the effect was still prominent and significant with adult participants. Another study by Hruby et al. measured how such edges impact the estimation of distance~\cite{hruby2016journey}.
 Two groups of participants, given either a Eurocentric or Americentirc map, were asked to estimate the distance between various Asian and American cities.
@@ -65,14 +68,30 @@ There has also been work to improve the efficiency of these projections for use 
 
 
 \section{Digital Earth Systems}
-Many existing systems for creating Digital Earth.
-Many different flavours for different tasks.
-Maps, streetview, Earth, GIS, etc.
-\cite{mahdavi2015survey}
-\cite{alderson2020digital}
+With the advent of computing systems came the move of maps from the physical domain to the digital one.
+Initially, this required scanning existing physical maps to digitize the data they contained.
+As the prevalence of computers increased, more geospatial data was stored natively in digital formats.
+Nowadays, nearly all (if not all) geospatial data is collected and stored digitally.
+Furthermore, advancements in remote sensing technologies, smart technologies, and the Internet of things have lead to explosive increases in the amount of geospatial data collected.
+Modern computers can process vast amounts of data compared to what is possible manually; despite this, the volume and complexity of geospatial data available and being collected surpasses even this capacity~\cite{lee2015geospatial}.
 
 
-\subsection{GIS}
+To make full use of the geospatial data gathered by society, former US vice president Al Gore proposed the idea of a Digital Earth~\cite{gore1998}.
+This Digital Earth---a 3D virtual globe---would serve as a common reference for the vast majority of geospatial data to be freely accessible by the public.
+This vision has since been further refined to be not one, but several connected Digital Earths that individually better meet the needs of specific audiences~\cite{goodchild2012next}.
+Currently, many different systems exist for creating a Digital Earth with significant variations in methodology, scope, and intended use(s).
+
+
+
+\subsection{Geographic Information Systems}
+Long before Al Gore's idea of a Digital Earth, traditional cartography techniques were being applied to create systems for creating and managing digital maps.
+These technologies became what is known today as GIS.
+Just as with physical maps, in a GIS, different datasets are represented as individual layers in a planar coordinate system.
+Different layers can then be integrated and analyzed through combinations of set operations (union, intersection, and difference), statistical analysis (such as mean and standard deviation), and other operations.
+This integration and analysis are also used to create visualizations of the underlying data.
+
+
+
 Digital Earth based on principles and techniques of traditional geography.
 Based on 2D maps.
 Use map ``layers'' to represent different data sets.
@@ -88,6 +107,8 @@ Use globe as reference model as opposed to flat map.
 Two approaches:
 (1) use underlying flat representation and map to globe for visualization.
 Does not solve issues of distortion for analysis purposes, only visualization.
+\cite{mahdavi2015survey}
+\cite{alderson2020digital}
 \cite{goodchild2018reimagining}
 
 
