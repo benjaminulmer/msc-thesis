@@ -121,42 +121,58 @@ For a detailed analysis of different Digital Earth systems and DGGS's (discussed
 
 
 \section{Discrete Global Grids}
-Spatial partitioning structures have long been used in computer graphics for managing spatial information.
-Reasons and benefits of such.
-Same techniques can be used for geospatial data.
-Uses of global grids varies.
-From structure for speeding up queries to foundation for entire Digital Earth system (pyxis/ggs) as alternative to GIS system.
-However DGG can also be used in tandem with traditional GIS technologies.
-Many different techniques exist for creating such grids (and by extension grid systems).
-\cite{sahr1998discrete}
-\cite{sahr2003geodesic}
+Space partitioning data structures have long been used in computer graphics to aid various geometry querries.
+These data structures provide information about which objects are near others and prevent unnecessary queries and tests between distant geometries.
+Common examples of this type of data structure include voxel grids, k-d trees, binary spatial partitioning (BSP) trees, and quad/octrees.
+Space partitionings, particularly compact and uniform ones, are also useful for the sampling and aggregation of data. 
+
+
+Space partitionings of the Earth for geospatial data are similarly useful.
+However, due to the spherical nature of the Earth, different techniques are often used as opposed to the above methods designed for Euclidean spaces.
+A DGG partitions the surface of the Earth into a set of non-overlapping cells allowing geospatial data to be associated with the appropriate cell(s).
+There exist several different approaches for creating a DGG, each with benefits and drawbacks.
+Likewise, the specific uses of a DGG vary based on the Digital Earth system.
+In some systems, a DGG only serves as a data structure for speeding up various spatial queries and analyses.
+Other entities have used a DGG (more specifically, a DGGS---described in more detail below) as the foundation and framework for an entire Digital Earth system. []
+Regardless of their specific use(s), DGG's are an essential aspect of many Digital Earths and are likewise well studied.
 
 
 \subsection{Discrete Global Grid Systems}
-A discrete global grid only represents Earth at one spatial resolution.
-Geospatial data comes in large range of resolutions.
-This can be addressed by creating a hierarchy of DGG's.
-This hierarchy is what we call a DGGS.
+While DGG's are a helpful tool, they only represent the Earth at one spatial resolution.
+If only working with one dataset, this is adequate.
+However, geospatial data comes in a wide range of resolutions, so when working with multiple datasets, multiple resolutions of DGG's may be needed.
+This shortcoming is addressed with a hierarchy of DGG's at increasingly fine resolutions, also known as a DGGS~\cite{sahr1998discrete, sahr2003geodesic}.
+Such a hierarchy allows geospatial data at any spatial resolution to be appropriately integrated at its native resolution and used with any other dataset.
 
 
 \subsubsection{Refinement}
-Start with initial discretization and then refine.
-Discretization can be any DGG.
+The most common approach for creating a DGGS is by defining an initial discretization and cell refinement method.
+The initial discretization is a DGG that serves as the most coarse level of the hierarchy. The cell refinement method defines a process for creating the next level of the hierarchy from the previous.
+If done in a systematic and consistent manner, refinement can be applied successively to create increasingly fine discretizations of the Earth.
 
 
-The refinement method of a DGGS defines the process by which a set of fine cells are produced from a set of coarse cells.
-This should be done in a consistent manner such that it can be applied successively to create increasingly fine discretizations of the Earth.
-These refinement schemes are classified by their input cell shape(s), which are given by the initial discretization; output cell shape(s), which are usually the same as the input; and their refinement factor, which is simply the ratio between the number of coarse cells and fine cells.
+Refinement schemes are classified by their input cell shape(s), which are given by the initial discretization; output cell shape(s), which are usually the same as the input; and their refinement factor, which is simply the ratio between the number of coarse cells and fine cells.
 For example, triangle 1-to-4 (1:4) refinement produces four triangle cells for each triangle in the set of coarse cells.
-The refinement factor determines how quickly the resolution of the grid increases with each application of the refinement method.
+The refinement factor determines how quickly the resolution of the grid increases with each application of the refinement method, with lower ones usually preferred in order to represent the Earth at a larger number of resolutions.
 
 
-Refinement vs. subdivision: Both terms appear in the literature.
-In computer graphics, subdivision typically refers to subdivision surfaces which involve repositioning vertices.
-To avoid confusion, this thesis will use the term refinement to refer to the process of creating a set of children cells from parent cells.
+Refinement should also maintain the relative shape of cells between different resolutions.
+For example, square cells should not be made increasingly rectangular during refinement.
+Two other noteworthy properties of refinement are congruency and alignment.
+With congruent refinement, each coarse cell is composed of a union of fine cells.
+Aligned refinement requires that each coarse cell shares a certain point with a fine cell, usually either a vertex or centroid (for vertex-aligned and centre-aligned refinement, respectively).
+Congruency and alignment are not required properties of refinement but are desirable in certain situations.
+Furthermore, based on other requirements of the refinement method, these properties may be unattainable. For example, congruent refinement is impossible for hexagon cells.
+
+
+As an aside, in the literature, the term subdivision may be used instead of refinement.
+While these terms are equivalent in terms of a DGGS, in the computer graphics literature, subdivision typically refers to subdivision curves and surfaces: processes that involve vertex repositioning.
+For consistency and to avoid confusion, this thesis exclusively uses the term refinement to refer to the process of creating a set of fine cells from a set of coarse ones, even if vertex repositioning is a part of this operation.
 
 
 \subsection{Spherical Grids}
+
+
 Lat-long grids.
 Semiregular/igloo lat-long grids (DQG).
 Small circle arc grids.
