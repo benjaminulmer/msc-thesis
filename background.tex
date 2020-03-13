@@ -84,43 +84,40 @@ Currently, many different systems exist for creating a Digital Earth with signif
 
 
 \subsection{Geographic Information Systems}
-Long before Al Gore's idea of a Digital Earth, traditional cartography techniques were being applied to create systems for creating and managing digital maps.
-These technologies became what is known today as GIS.
+Long before Al Gore's idea of a Digital Earth, traditional cartography techniques were being applied to systems for creating and managing digital maps.
+These technologies became what is known today as GIS~\cite{foresman1998history}.
 Just as with physical maps, in a GIS, different datasets are represented as individual layers in a planar coordinate system.
 Different layers can then be integrated and analyzed through combinations of set operations (union, intersection, and difference), statistical analysis (such as mean and standard deviation), and other operations.
-This integration and analysis are also used to create visualizations of the underlying data.
+These integrations and analyses are also used to create visualizations of the underlying data.
 
 
-
-Digital Earth based on principles and techniques of traditional geography.
-Based on 2D maps.
-Use map ``layers'' to represent different data sets.
-Layers can be combined and used for different analysis, visualizations, etc.
-Distortion can cause errors in this analysis; must use spherical analysis sometimes to avoid this.
-Most systems require some amount of user expertise to clean, integrate, process data.
-\cite{antenucci1991geographic}
-\cite{foresman1998history}
+Since their introduction, GIS has proven to be a powerful framework for managing geospatial data.
+This power, however, is a double-edged sword; proper use of a GIS requires a certain amount of knowledge and expertise~\cite{antenucci1991geographic}.
+To be used with a GIS, geospatial data must first be cleaned, processed, integrated, and distributed.
+All of these operations require familiarity with both the system used and the principles of cartography.
+Furthermore, due to the use of a planar coordinate system, distortion from projection can introduce errors in analysis and visualization, just as with physical maps.
+Which map projection to use for which use cases must be considered carefully, and also requires sufficient domain expertise.
 
 
 \subsection{Globe Based Digital Earth}
-Use globe as reference model as opposed to flat map.
-Two approaches:
-(1) use underlying flat representation and map to globe for visualization.
-Does not solve issues of distortion for analysis purposes, only visualization.
-\cite{mahdavi2015survey}
-\cite{alderson2020digital}
-\cite{goodchild2018reimagining}
+A more recent approach to a Digital Earth---and one more in line with Al Gore's initial proposal---is a globe based Digital Earth.
+While physical globes have practical drawbacks in comparison to a map, in a digital setting, these drawbacks are reduced if not completely negated. 
+Modern computer graphics algorithms and hardware have made creating, storing, and displaying a virtual globe in real-time no more difficult than displaying the equivalent map.
+Interactive systems allow zooming on a globe to show any region of the Earth at the desired scale, and also for digital measurement.
+Virtual globes still cannot display the entire Earth at once; however, novel interaction techniques such as multi-view focus plus context rendering can help alleviate this challenge.
 
 
-Other approach is to do analysis directly in spherical or ellipsoidal space.
-More computational expensive than planar equivalents, but much more accurate.
-Ellipsoidal is challenging due to issues of elliptic integrals; various well known techniques for sphere however.
-Raskin paper, Troy's papers, points on sphere paper, maybe others.
-\cite{raskin1994spatial}
-\cite{bahrdt2017rational}
-\cite{alderson2016multiresolution}
-\cite{alderson2019multiscale}
-\cite{alderson2018offsetting}
+Due to the reduced distortion with a globe, there has been a push toward globe based Digital Earth systems as opposed to conventional map based ones~\cite{goodchild2018reimagining}.
+One approach for doing so is to still use a flat map as the underlying representation of the Earth and then map back to a globe for visualization.
+While this solves the issues of map edges and distortion for visual analysis purposes, it does not address the distortion present for any analysis using the flat map and the corresponding errors introduced.
+The alternative is to do analysis directly in spherical---or even more accurately, ellipsoidal---space.
+While ellipsoidal analysis is often prohibitively complicated and expensive due to the mathematical challenges of elliptic integrals [], techniques for spherical analysis are well understood~\cite{raskin1994spatial}.
+While spherical analyses are still significantly more involved than the planar equivalents, modern computational capabilities are making them more feasible. 
+In addition to standard methods for analysis, there have been several recent works on techniques for more complicated spherical analysis and operations. Some examples include better representations for rational points on the sphere~\cite{bahrdt2017rational}, multiresolution representations of B-spline~\cite{alderson2016multiresolution} and NURBS curves~\cite{alderson2019multiscale}, and methods for offsetting both vector and raster curves~\cite{alderson2018offsetting}.
+For these reasons, direct spherical analysis on a globe based Digital Earth is becoming a compelling alternative to traditional GIS.
+
+
+For a detailed analysis of different Digital Earth systems and DGGS's (discussed below), refer to~\cite{mahdavi2015survey} and~\cite{alderson2020digital}.
 
 
 \section{Discrete Global Grids}
