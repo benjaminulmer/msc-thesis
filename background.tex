@@ -1,7 +1,7 @@
 \chapter{Background and Related Work} \label{chap:background}
 Providing a complete history of map and globe making (cartography) is much beyond both the scope and ability of this thesis.
 Instead, we provide a brief background to illuminate how these disciplines influenced the developments of Digital Earth systems.
-We discuss the different approaches for a Digital Earth, starting with traditional GIS and then discussing techniques used for globe based systems and analysis.
+We discuss the different approaches for a Digital Earth, starting with traditional GIS, and then discuss techniques used for globe based systems and analysis.
 We also provide background and related work on discrete global grids and grid systems, looking at different methods for constructing both 2D and 3D versions of these data structures.
 
 
@@ -42,7 +42,7 @@ Since distortion cannot be completely removed, measurements and analyses done on
 Straight lines may not map to the actual shortest path, distortions of area may misrepresent the density of phenomena, and locations may appear much closer together or farther apart than they genuinely are.
 The amount and type of errors depend both on the projections used and the type of analysis performed, with certain maps being better suited for certain operations.
 For example, the Mercator projection---designed for navigation---maps straight lines to rhumb lines.
-However, the severely distorted area makes this projection a poor choice for representing the frequency of earthquakes in different regions.
+However, severely distorted area makes this projection a poor choice for representing the frequency of earthquakes in different regions.
 It is, therefore, essential to use an appropriate map projection for each intended use case, with no one projection being ideal in all circumstances.
 
 
@@ -51,7 +51,7 @@ Such edges can have a significant impact on a person's understanding of a map wh
 A study by Hennerdal asked participants to predict the location and direction of an airplane crossing the boundary of different map projections~\cite{hennerdal2015beyond}.
 The study found that participants would often incorrectly place the airplane at the point of \textit{linear} peripheral continuity (the intersection of the straight line tangent to the initial aircraft location and the opposite map edge) as opposed to the correct location.
 The occurrence of this mistake decreased with age; however, the effect was still prominent and significant with adult participants. Another study by Hruby et al. measured how such edges impact the estimation of distance~\cite{hruby2016journey}.
-Two groups of participants, given either a Eurocentric or Americentirc map, were asked to estimate the distance between various Asian and American cities.
+Two groups of participants, given either a Eurocentric or Americentirc map, were asked to estimate the distances between various Asian and American cities.
 While both groups overestimated distances on average, the group with the Americentric map (where the shortest distances crossed the map boundary), had larger estimation errors than the other group.
 These studies further show that the projection used for a map must be chosen and centred carefully to ensure readers correctly understand how the map relates to the actual Earth.
 
@@ -94,17 +94,17 @@ These integrations and analyses are also used to create visualizations of the un
 Since their introduction, GIS has proven to be a powerful framework for managing geospatial data.
 This power, however, is a double-edged sword; proper use of a GIS requires a certain amount of knowledge and expertise~\cite{antenucci1991geographic}.
 To be used with a GIS, geospatial data must first be cleaned, processed, integrated, and distributed.
-All of these operations require familiarity with both the system used and the principles of cartography.
+All of these operations require familiarity with both the system used and the underlying cartographic principles.
 Furthermore, due to the use of a planar coordinate system, distortion from projection can introduce errors in analysis and visualization, just as with physical maps.
-Which map projection to use for which use cases must be considered carefully, and also requires sufficient domain expertise.
+Which map projection to use for which use cases must be considered carefully, which also requires sufficient domain expertise.
 
 
 \subsection{Globe Based Digital Earth}
 A more recent approach to a Digital Earth---and one more in line with Al Gore's initial proposal---is a globe based Digital Earth.
 While physical globes have practical drawbacks in comparison to a map, in a digital setting, these drawbacks are reduced if not completely negated. 
 Modern computer graphics algorithms and hardware have made creating, storing, and displaying a virtual globe in real-time no more difficult than displaying the equivalent map.
-Interactive systems allow zooming on a globe to show any region of the Earth at the desired scale, and also for digital measurement.
-Virtual globes still cannot display the entire Earth at once; however, novel interaction techniques such as multi-view focus plus context rendering can help alleviate this challenge.
+Interactive systems allow zooming on a globe to show any region of the Earth at the desired scale, and also for digital measurements.
+Virtual globes still cannot display the entire Earth at once; however, novel interaction techniques such as multi-view focus plus context rendering can help alleviate this challenge~\cite{mark-sherlock}
 
 
 Due to the reduced distortion with a globe, there has been a push toward globe based Digital Earth systems as opposed to conventional map based ones~\cite{goodchild2018reimagining}.
@@ -113,11 +113,9 @@ While this solves the issues of map edges and distortion for visual analysis pur
 The alternative is to do analysis directly in spherical---or even more accurately, ellipsoidal---space.
 While ellipsoidal analysis is often prohibitively complicated and expensive due to the mathematical challenges of elliptic integrals [], techniques for spherical analysis are well understood~\cite{raskin1994spatial}.
 While spherical analyses are still significantly more involved than the planar equivalents, modern computational capabilities are making them more feasible. 
-In addition to standard methods for analysis, there have been several recent works on techniques for more complicated spherical analysis and operations. Some examples include better representations for rational points on the sphere~\cite{bahrdt2017rational}, multiresolution representations of B-spline~\cite{alderson2016multiresolution} and NURBS curves~\cite{alderson2019multiscale}, and methods for offsetting both vector and raster curves~\cite{alderson2018offsetting}.
-For these reasons, direct spherical analysis on a globe based Digital Earth is becoming a compelling alternative to traditional GIS.
-
-
-For a detailed analysis of different Digital Earth systems and DGGS's (discussed below), refer to~\cite{mahdavi2015survey} and~\cite{alderson2020digital}.
+In addition to standard methods, there have been several recent works on techniques for more complicated spherical analysis and operations.
+Some examples include better representations for rational points on the sphere~\cite{bahrdt2017rational}, multiresolution representations of B-spline~\cite{alderson2016multiresolution} and NURBS curves~\cite{alderson2019multiscale}, and methods for offsetting both vector and raster curves~\cite{alderson2018offsetting}.
+For these reasons, direct spherical analysis on a globe based Digital Earth is becoming a compelling alternative to traditional GIS. For a detailed analysis of different Digital Earth systems and DGGS's (discussed below), refer to~\cite{mahdavi2015survey} and~\cite{alderson2020digital}.
 
 
 \section{Discrete Global Grids}
@@ -133,14 +131,13 @@ A DGG partitions the surface of the Earth into a set of non-overlapping cells al
 There exist several different approaches for creating a DGG, each with benefits and drawbacks.
 Likewise, the specific uses of a DGG vary based on the Digital Earth system.
 In some systems, a DGG only serves as a data structure for speeding up various spatial queries and analyses.
-Other entities have used a DGG (more specifically, a DGGS---described in more detail below) as the foundation and framework for an entire Digital Earth system. []
+Other entities have used a DGG (more specifically, a DGGS---described in more detail below) as the foundation and framework for an entire Digital Earth system [].
 Regardless of their specific use(s), DGG's are an essential aspect of many Digital Earths and are likewise well studied.
 
 
 \subsection{Discrete Global Grid Systems}
 While DGG's are a helpful tool, they only represent the Earth at one spatial resolution.
-If only working with one dataset, this is adequate.
-However, geospatial data comes in a wide range of resolutions, so when working with multiple datasets, multiple resolutions of DGG's may be needed.
+If only working with one dataset, this is adequate; however, geospatial data comes in a wide range of resolutions, so when working with multiple datasets, multiple resolutions of DGG's may be needed.
 This shortcoming is addressed with a hierarchy of DGG's at increasingly fine resolutions, also known as a DGGS~\cite{sahr1998discrete, sahr2003geodesic}.
 Such a hierarchy allows geospatial data at any spatial resolution to be appropriately integrated at its native resolution and used with any other dataset.
 
@@ -152,7 +149,7 @@ If done in a systematic and consistent manner, refinement can be applied success
 
 
 Refinement schemes are classified by their input cell shape(s), which are given by the initial discretization; output cell shape(s), which are usually the same as the input; and their refinement factor, which is simply the ratio between the number of coarse cells and fine cells.
-For example, triangle 1-to-4 (1:4) refinement produces four triangle cells for each triangle in the set of coarse cells.
+For example, triangle 1-to-4 (1:4) refinement produces four fine triangle cells for each triangle in the set of coarse cells.
 The refinement factor determines how quickly the resolution of the grid increases with each application of the refinement method, with lower ones usually preferred in order to represent the Earth at a larger number of resolutions.
 
 
@@ -169,9 +166,8 @@ As an aside, in the literature, the term subdivision may be used instead of refi
 While these terms are equivalent in terms of a DGGS, in the computer graphics literature, subdivision typically refers to subdivision curves and surfaces: processes that involve vertex repositioning.
 For consistency and to avoid confusion, this thesis exclusively uses the term refinement to refer to the process of creating a set of fine cells from a set of coarse ones, even if vertex repositioning is a part of this operation.
 
-
+\textbf{Done up to this point. Everything beyond is bullet-point drafting}
 \subsection{Spherical Grids}
-
 
 Lat-long grids.
 Semiregular/igloo lat-long grids (DQG).

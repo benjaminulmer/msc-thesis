@@ -30,6 +30,16 @@ Use figures to showcase size difference and aspect ratio/compactness problem.
 
 
 \subsection{Semiregular Refinement}
+Several works have developed a particular style of grid to address this issue, both for latitude-longitude grids~\cite{leopardi2006partition, sun2008global} and 3D grids~\cite{yu2009sdog, gang2013sphere, wang2013global}\cite{others}.
+These methods all have slight variations from one another, but the basic approach is the same.
+During refinement, degenerate cells are merged with other degenerate cells to create larger cells. %TODO is this the best definition to use?
+Despite still being degenerate, these merged cells end up being much more similar in size to the non-degenerate cells in the grid.
+Figure~X illustrates this type of refinement in contrast to a regular refinement approach.
+The terminology used in the literature to describe this type of refinement varies; in this thesis, we use the term \textit{semiregular degenerate} or for brevity just \textit{semiregular}.
+A more in-depth explanation of this class of refinement methods is provided in Chapter~3.something.
+
+
+
 Describe idea of method.
 Useful for 3D and lat-long grids.
 Cite works where type of refinement is used.
