@@ -26,7 +26,7 @@ These individual layers are overlayed to create a complete model of the Earth (o
 However, being created and gathered by diverse organizations, geospatial data exists in many different formats and resolutions.
 The conventional GIS pipeline---which requires experts to clean, process, integrate, and distribute data---is unsustainable in the face of geospatial big data.
 Furthermore, even after data has been integrated with a GIS, overlay operations such as intersections and data extraction are computationally expensive when many data layers are present~\cite{wang2015improving}.
-Coordinate based representations of geospatial data also do not provide proper facilities to represent the uncertainty or error of the data they are used to represent. [goodchilde reimagine]
+Coordinate based representations of geospatial data also do not provide proper facilities to represent the uncertainty or error of the data they are used to represent~\cite{goodchild2018reimagining}.
 
 
 Another challenge with GIS is the use of a flat map as the underlying representation.
@@ -64,7 +64,6 @@ Going forward, we use the term 3D DGGS to refer to these technologies collective
 
 
 Most human activity and interest, and correspondingly geospatial data, is located in a relatively small region above and below the surface of the Earth ($\pm$10 -- 500 km).
-Likewise, most existing approaches for 3D DGGS's have focused on this region.
 However, there are select processes such as seismic wave propagation and the magnetosphere that span much beyond this region (\textbf{figure?}).
 Furthermore, the range of altitudes satellites orbit at is extensive, with satellites in high Earth orbit exceeding 36,000 km.
 Therefore, to support the full range of human activity and interest, 3D DGGS's that extend to the centre of the Earth and far beyond the atmosphere are needed.
@@ -106,7 +105,7 @@ Addressing such cell degeneration is one of the main challenges of this thesis.
 \section{Goals and Scope}
 In addition to the initial goal of supporting an unbounded range of altitudes, there are several other aims for a 3D DGGS we wish to explore in this thesis.
 While we discuss these below in the context of a 3D DGGS, they are equally applicable to their conventional 2D counterparts.
-We choose to explore these goals only for Earth-centric 3D DGGS's using semiregular refinement strategies (see chapter 3.something); limiting the scope in this manner allows a more thorough exploration of the goals in the 3D DGGS's we propose.
+We choose to explore these goals only for Earth-centric 3D DGGS's using semiregular refinement strategies (see Chapter 3.something); limiting the scope in this manner allows a more thorough exploration of the goals in the 3D DGGS's we propose.
 
 
 As discussed previously, the cells of a 3D DGGS need to be compact while also maintaining near-uniform volume.
@@ -186,7 +185,7 @@ This main contributions of this thesis fall into three groups:
 
 The methods for modified SDOG refinement, along with its mappings and analysis, have been published in the journal \textit{Geoinformatica}~\cite{ulmertoward2020}.
 The efficient encoding and decoding algorithms are an unpublished extension of this work.
-The grid extension method, along with its mappings and use case results, has been submitted to the journal \textit{ISPRS International Journal of Geo-Information}.
+The grid extension method, along with its mappings and use case results, has been submitted to the journal \textit{ISPRS International Journal of Geo-Information}. \textbf{I'll update this once a decision on the paper is made. Either way it will have to change.}
 
 
 \section{Thesis Overview}
