@@ -39,10 +39,9 @@ Alternatively, some methods aim for a balanced trade-off between the different t
 
 
 Since distortion cannot be completely removed, measurements and analyses done on flat maps can produce errors.
-Straight lines may not map to the actual shortest path, distortions of area may misrepresent the density of phenomena, and locations may appear much closer together or farther apart than they genuinely are.
+Straight lines may not map to the actual shortest path, area distortions may misrepresent the density of phenomena, and locations may appear much closer together or farther apart than they genuinely are.
 The amount and type of errors depend both on the projections used and the type of analysis performed, with certain maps being better suited for certain operations.
-For example, the Mercator projection---designed for navigation---maps straight lines to rhumb lines.
-However, severely distorted area makes this projection a poor choice for representing the frequency of earthquakes in different regions.
+For example, the Mercator projection maps straight lines to rhumb lines making it a popular choice for navigation; however, the severely distorted area makes this projection a poor choice for representing the frequency of phenomena in different regions.
 It is, therefore, essential to use an appropriate map projection for each intended use case, with no one projection being ideal in all circumstances.
 
 
@@ -92,7 +91,7 @@ These integrations and analyses are also used to create visualizations of the un
 
 
 Since their introduction, GIS has proven to be a powerful framework for managing geospatial data.
-This power, however, is a double-edged sword; proper use of a GIS requires a certain amount of knowledge and expertise~\cite{antenucci1991geographic}.
+This power, however, is a double-edged sword; proper use of a GIS requires a significant amount of knowledge and expertise~\cite{antenucci1991geographic}.
 To be used with a GIS, geospatial data must first be cleaned, processed, integrated, and distributed.
 All of these operations require familiarity with both the system used and the underlying cartographic principles.
 Furthermore, due to the use of a planar coordinate system, distortion from projection can introduce errors in analysis and visualization, just as with physical maps.
@@ -104,7 +103,7 @@ A more recent approach to a Digital Earth---and one more in line with Al Gore's 
 While physical globes have practical drawbacks in comparison to a map, in a digital setting, these drawbacks are reduced if not completely negated. 
 Modern computer graphics algorithms and hardware have made creating, storing, and displaying a virtual globe in real-time no more difficult than displaying the equivalent map.
 Interactive systems allow zooming on a globe to show any region of the Earth at the desired scale, and also for digital measurements.
-Virtual globes still cannot display the entire Earth at once; however, novel interaction techniques such as multi-view focus plus context rendering can help alleviate this challenge~\cite{mark-sherlock}
+Virtual globes still cannot display the entire Earth at once; however, novel interaction techniques such as multi-view focus plus context rendering can help alleviate this limitation~\cite{mark-sherlock}.
 
 
 Due to the reduced distortion with a globe, there has been a push toward globe based Digital Earth systems as opposed to conventional map based ones~\cite{goodchild2018reimagining}.
@@ -125,14 +124,14 @@ Common examples of this type of data structure include voxel grids, k-d trees, b
 Space partitionings, particularly compact and uniform ones, are also useful for the sampling and aggregation of data. 
 
 
-Space partitionings of the Earth for geospatial data are similarly useful.
+Similarly, space partitionings of the Earth for geospatial data are also useful.
 However, due to the spherical nature of the Earth, different techniques are often used as opposed to the above methods designed for Euclidean spaces.
 A DGG partitions the surface of the Earth into a set of non-overlapping cells allowing geospatial data to be associated with the appropriate cell(s).
 There exist several different approaches for creating a DGG, each with benefits and drawbacks.
 Likewise, the specific uses of a DGG vary based on the Digital Earth system.
 In some systems, a DGG only serves as a data structure for speeding up various spatial queries and analyses.
 Other entities have used a DGG (more specifically, a DGGS---described in more detail below) as the foundation and framework for an entire Digital Earth system [].
-Regardless of their specific use(s), DGG's are an essential aspect of many Digital Earths and are likewise well studied.
+Regardless of their specific use(s), DGG's are an essential aspect of many Digital Earths and, as such, are well studied.
 
 
 \subsection{Discrete Global Grid Systems}
@@ -145,16 +144,17 @@ Such a hierarchy allows geospatial data at any spatial resolution to be appropri
 \subsubsection{Refinement}
 The most common approach for creating a DGGS is by defining an initial discretization and cell refinement method.
 The initial discretization is a DGG that serves as the most coarse level of the hierarchy. The cell refinement method defines a process for creating the next level of the hierarchy from the previous.
-If done in a systematic and consistent manner, refinement can be applied successively to create increasingly fine discretizations of the Earth.
+If done systematically and consistently, refinement can be applied successively to create arbitrarily fine discretizations of the Earth.
 
 
-Refinement schemes are classified by their input cell shape(s), which are given by the initial discretization; output cell shape(s), which are usually the same as the input; and their refinement factor, which is simply the ratio between the number of coarse cells and fine cells.
+Different refinement schemes are classified by their input cell shape(s), which are given by the initial discretization; output cell shape(s), which are usually the same as the input; and their refinement factor, which is simply the ratio between the number of coarse and fine cells.
 For example, triangle 1-to-4 (1:4) refinement produces four fine triangle cells for each triangle in the set of coarse cells.
-The refinement factor determines how quickly the resolution of the grid increases with each application of the refinement method, with lower ones usually preferred in order to represent the Earth at a larger number of resolutions.
+The refinement factor determines how quickly the resolution of the grid increases with each application of the refinement method, with lower ones usually preferred in order to represent the Earth at a higher number of resolutions.
 
 
-Refinement should also maintain the relative shape of cells between different resolutions.
+To be useful in the context of a DGGS, refinement should also maintain the relative shape of cells between different resolutions.
 For example, square cells should not be made increasingly rectangular during refinement.
+This property ensures that refinement maintains the compactness and aspect ratio of cells between different resolutions of the grid system.
 Two other noteworthy properties of refinement are congruency and alignment.
 With congruent refinement, each coarse cell is composed of a union of fine cells.
 Aligned refinement requires that each coarse cell shares a certain point with a fine cell, usually either a vertex or centroid (for vertex-aligned and centre-aligned refinement, respectively).
@@ -162,21 +162,45 @@ Congruency and alignment are not required properties of refinement but are desir
 Furthermore, based on other requirements of the refinement method, these properties may be unattainable. For example, congruent refinement is impossible for hexagon cells.
 
 
-As an aside, in the literature, the term subdivision may be used instead of refinement.
-While these terms are equivalent in terms of a DGGS, in the computer graphics literature, subdivision typically refers to subdivision curves and surfaces: processes that involve vertex repositioning.
+As an aside, in the literature, the term subdivision is used interchangeably with refinement.
+While these terms are equivalent in the context of a DGGS, in the computer graphics literature, subdivision typically refers to subdivision curves and surfaces: processes that involve vertex repositioning.
 For consistency and to avoid confusion, this thesis exclusively uses the term refinement to refer to the process of creating a set of fine cells from a set of coarse ones, even if vertex repositioning is a part of this operation.
 
-\textbf{Done up to this point. Everything beyond is bullet-point drafting}
+
 \subsection{Spherical Grids}
+With the Earth commonly approximated as a sphere, many DGG's and DGGS's are defined directly in this space.
+One of the most straightforward approaches for doing so is with a regular discretization based on latitude and longitude coordinates, or a latitude-longitude grid (LLG).
+Similar to a regular grid in Euclidean space defined by equal steps in Cartesian coordinates, an LLG divides the sphere into equal steps of latitude and longitude.
+Unlike Cartesian coordinates, however, spherical coordinates have singularities at both poles causing quadrilateral LLG cells to degenerate into triangle cells at the poles.
+This degeneration somethine compactness, area, connectivity something something.
+
+
+One strategy to lessen the drawbacks of an LLG is to change the longitude step size as a function of latitude. As (absolute) latitude increases, the same angular longitude corresponds to decreasing arc lengths on the sphere.
+Thus, decreasing the longitude step size in an LLG at higher latitudes results in more uniformly sized and compact grid cells at the cost of introducing an irregular connectivity structure to the grid.
+Using this strategy, Leopardi provides a formulation for creating an equal area and compact partitioning of the sphere into any number of regions~\cite{leopardi2006partition}.
+Similarly, the Degenerate Quadtree Grid (DQG) proposed by Sun et al. makes use of a modified quadtree refinement to create this type of grid~\cite{sun2008global}.
+The use of a refinement method---along with the provided encoding, decoding, and indexing algorithms---allows the DQG to operate as a full DGGS as opposed to a just a single resolution DGG.
+
+
+Another approach that solves some of the issues with a simple LLG is the Yin-Yang grid proposed by Kageyama and Sato~\cite{kageyama2004yin-yang}.
+This grid is composed of two congruent component grids---the Yin and Yang grids---which are LLG's 270\textdegree \ in longitude and 90\textdegree \ in latitude centred at the equator.
+These component grids are then rotated and placed atop each other to cover the sphere fully.
+As the component grids have a limited latitude, they do not have the same compactness and area issues seen in an LLG.
+However, cells near the boundaries of the component grids overlap in the composite grid creating either ambiguity or redundancy when associating geospatial data with cells and complicating grid connectivity in these regions.
+
+
+
+
+
 
 Lat-long grids.
 Semiregular/igloo lat-long grids (DQG).
 Small circle arc grids.
 Yin-yang grid.
-\cite{leopardi2006partition}
-\cite{sun2008global}
+
+
 \cite{song2002developing}
-\cite{kageyama2004yin-yang}
+
 
 
 \subsection{Polyhedral Grids}
