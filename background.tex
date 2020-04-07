@@ -49,9 +49,9 @@ Another significant challenge with flat maps is the edges (or boundaries) introd
 Such edges can have a significant impact on a person's understanding of a map when phenomena cross these boundaries.
 A study by Hennerdal asked participants to predict the location and direction of an airplane crossing the boundary of different map projections~\cite{hennerdal2015beyond}.
 The study found that participants would often incorrectly place the airplane at the point of \textit{linear} peripheral continuity (the intersection of the straight line tangent to the initial aircraft location and the opposite map edge) as opposed to the correct location.
-The occurrence of this mistake decreased with age; however, the effect was still prominent and significant with adult participants. Another study by Hruby et al. measured how such edges impact the estimation of distance~\cite{hruby2016journey}.
-Two groups of participants, given either a Eurocentric or Americentirc map, were asked to estimate the distances between various Asian and American cities.
-While both groups overestimated distances on average, the group with the Americentric map (where the shortest distances crossed the map boundary), had larger estimation errors than the other group.
+The occurrence of this mistake was most prominent with children; however, the effect was still present with adult participants. Another study by Hruby et al. measured how such edges impact the estimation of distance~\cite{hruby2016journey}.
+Two groups of participants, given either a Eurocentric or Americentirc map to memorize locations, were asked to estimate the distances between various Asian and American cities.
+While both groups overestimated distances on average, the group with the Eurocentric map (where the shortest distances crossed the map boundary), had larger estimation errors than the other group.
 These studies further show that the projection used for a map must be chosen and centred carefully to ensure readers correctly understand how the map relates to the actual Earth.
 
 
@@ -114,7 +114,7 @@ While ellipsoidal analysis is often prohibitively complicated and expensive due 
 While spherical analyses are still significantly more involved than the planar equivalents, modern computational capabilities are making them more feasible. 
 In addition to standard methods, there have been several recent works on techniques for more complicated spherical analysis and operations.
 Some examples include better representations for rational points on the sphere~\cite{bahrdt2017rational}, multiresolution representations of B-spline~\cite{alderson2016multiresolution} and NURBS curves~\cite{alderson2019multiscale}, and methods for offsetting both vector and raster curves~\cite{alderson2018offsetting}.
-For these reasons, direct spherical analysis on a globe based Digital Earth is becoming a compelling alternative to traditional GIS. For a detailed analysis of different Digital Earth systems and DGGS's (discussed below), refer to~\cite{mahdavi2015survey} and~\cite{alderson2020digital}.
+For these reasons, direct spherical analysis on a globe based Digital Earth is becoming a compelling alternative to traditional GIS. For a detailed analysis of different Digital Earth systems, refer to~\cite{mahdavi2015survey} and~\cite{alderson2020digital}.
 
 
 \section{Discrete Global Grids}
@@ -130,7 +130,7 @@ A DGG partitions the surface of the Earth into a set of non-overlapping cells al
 There exist several different approaches for creating a DGG, each with benefits and drawbacks.
 Likewise, the specific uses of a DGG vary based on the Digital Earth system.
 In some systems, a DGG only serves as a data structure for speeding up various spatial queries and analyses.
-Other entities have used a DGG (more specifically, a DGGS---described in more detail below) as the foundation and framework for an entire Digital Earth system [].
+Other entities have used a DGG (more specifically, a DGGS---described in more detail below) as the foundation and framework for an entire Digital Earth system~\cite{peterson2011close}.
 Regardless of their specific use(s), DGG's are an essential aspect of many Digital Earths and, as such, are well studied.
 
 
@@ -152,7 +152,7 @@ For example, triangle 1-to-4 (1:4) refinement produces four fine triangle cells 
 The refinement factor determines how quickly the resolution of the grid increases with each application of the refinement method, with lower ones usually preferred in order to represent the Earth at a higher number of resolutions.
 
 
-To be useful in the context of a DGGS, refinement should also maintain the relative shape of cells between different resolutions.
+Refinement should also maintain the relative shape of cells between different resolutions in the context of a DGGS.
 For example, square cells should not be made increasingly rectangular during refinement.
 This property ensures that refinement maintains the compactness and aspect ratio of cells between different resolutions of the grid system.
 Two other noteworthy properties of refinement are congruency and alignment.
@@ -172,7 +172,8 @@ With the Earth commonly approximated as a sphere, many DGG's and DGGS's are defi
 One of the most straightforward approaches for doing so is with a regular discretization based on latitude and longitude coordinates, or a latitude-longitude grid (LLG).
 Similar to a regular grid in Euclidean space defined by equal steps in Cartesian coordinates, an LLG divides the sphere into equal steps of latitude and longitude.
 Unlike Cartesian coordinates, however, spherical coordinates have singularities at both poles causing quadrilateral LLG cells to degenerate into triangle cells at the poles.
-This degeneration somethine compactness, area, connectivity something something.
+This degeneration reduces the compactness of cells near the poles, produces a high valence vertex at each of the poles, and results in cells in the grid having unbounded area differences.
+Thus, an LLG is neither a compact nor uniform DGG.
 
 
 One strategy to lessen the drawbacks of an LLG is to change the longitude step size as a function of latitude. As (absolute) latitude increases, the same angular longitude corresponds to decreasing arc lengths on the sphere.
@@ -183,37 +184,32 @@ The use of a refinement method---along with the provided encoding, decoding, and
 
 
 Another approach that solves some of the issues with a simple LLG is the Yin-Yang grid proposed by Kageyama and Sato~\cite{kageyama2004yin-yang}.
-This grid is composed of two congruent component grids---the Yin and Yang grids---which are LLG's 270\textdegree \ in longitude and 90\textdegree \ in latitude centred at the equator.
+This grid is composed of two congruent component grids---the Yin and Yang grids---which are LLG's 270\textdegree \ in longitude and 90\textdegree \ in latitude centred at the equator
 These component grids are then rotated and placed atop each other to cover the sphere fully.
 As the component grids have a limited latitude, they do not have the same compactness and area issues seen in an LLG.
 However, cells near the boundaries of the component grids overlap in the composite grid creating either ambiguity or redundancy when associating geospatial data with cells and complicating grid connectivity in these regions.
 
 
-
-
-
-
-Lat-long grids.
-Semiregular/igloo lat-long grids (DQG).
-Small circle arc grids.
-Yin-yang grid.
-
-
-\cite{song2002developing}
-
+A different method for defining a grid in spherical space is to forgo latitude and longitude coordinates altogether, and instead use arbitrary curves to define the edges of the grid.
+A method by Song et al. uses small circle arcs to perform an equal area triangle refinement~\cite{song2002developing}.
+While the resulting cells are equal area and have good compactness properties, calculating the correct small circle arcs to use during refinement is non-trivial.
+Furthermore, these types of grids have less straightforward and more expensive operations, often requiring a hierarchical algorithm (linear time on the level of refinement) as opposed to a direct (constant time) one.
 
 
 \subsection{Polyhedral Grids}
-Main idea is to use polyhedron as approximation for sphere.
-Polyhedral projection as described earlier maps spherical domain to polyhedral one.
-Avoids polar degeneracies.
-Area preserving projections allow equal area cells without significantly reducing compactness.
-\cite{fekete1990sphere}
-\cite{dutton1996encoding}
-\cite{gorski2005healpix}
-\cite{holhocs2014octahedral}
-\cite{mahdavi2013one} % TODO ???
-\cite{mahdavi2015hexagonal} % TODO ???
+As opposed to defining the grid directly in spherical space, a more recent and increasingly popular approach is to use a polyhedron as an initial approximation of the sphere.
+The most common choices for these polyhedra are the Platonic solids, as they are perfectly regular; however, other choices are also possible.
+Mapping back and forth between the Earth and polyhedron is accomplished using a polyhedral map projection and its inverse, respectively, and planar refinement of the faces of the polyhedron creates the cell hierarchy for a DGGS.
+This style of grid avoids degeneracies in the grid at the poles, providing a more uniform discretization of the entire Earth compared to grids based on latitude and longitude coordinates.
+Furthermore, the use of an area-preserving projection in conjunction with an area-preserving refinement of the polyhedron allows for an equal area grid without a significant reduction in cell compactness.
+
+
+One of the earliest polyhedron based DGGS's is the Sphere Quadtree, proposed by Fekete in 1990~\cite{fekete1990sphere}.
+This system uses a regular icosahedron as the initial discretization, along with standard 1:4 triangle refinement and a simple normalization projection.
+Dutton later adopted a similar method to the regular octahedron~\cite{dutton1996encoding}.
+While these two approaches are straightforward, they served as the groundwork for more sophisticated polyhedron-based DGGS's.
+Some more recent examples include HEALPix~\cite{gorski2005healpix}, ISEA3H~\cite{sahr2003geodesic}, and One-to-Two Digital Earth~\cite{mahdavi2013one}.
+We once again refer to~\cite{mahdavi2015survey} and~\cite{alderson2020digital} for a more detailed analysis and comparison of these different systems.
 
 
 \subsection{3D Grids}
