@@ -93,9 +93,9 @@ Cells should be aligned with the surface of the Earth and have a consistent orie
 \end{figure}
 
 
-The main challenge associated with such Earth-centric grids is the inevitable degeneration of cells toward the centre of the Earth.
+The main challenge associated with such Earth-centric grids is the inevitable degeneration of cells toward the singularity at the centre of the Earth.
 This effect is demonstrated in Figure~\ref{fig:3dllg}---cells more near the centre of the grid become increasingly small and skinny and eventually degenerate to pyramids.
-For grids with a small radial extent, this degeneration is negligible; however, for the range of altitudes we wish to support in this thesis, it cannot be ignored.
+For grids with a small radial extent, the effect of this is negligible; however, for the range of altitudes we wish to support in this thesis, it cannot be ignored.
 The problem with this type of cell degeneration is two-fold, as it reduces both the compactness and volume of cells. 
 Furthermore, the resulting difference in the volumes of cells is unbounded.
 It is worth noting that this same issue presents itself in traditional latitude-longitude grids at the poles, also demonstrated in Figure~\ref{fig:3dllg}.
@@ -183,9 +183,9 @@ This main contributions of this thesis fall into three groups:
 	For SDOG, we also propose new constant time encoding and decoding algorithms and benchmark their performance against the standard versions.
 \end{enumerate}
 
-The methods for modified SDOG refinement, along with its mappings and analysis, have been published in the journal \textit{Geoinformatica}~\cite{ulmertoward2020}.
+The method for modified SDOG refinement, along with its mappings and analysis, has been published in the journal \textit{Geoinformatica}~\cite{ulmertoward2020}.
 The efficient encoding and decoding algorithms are an unpublished extension of this work.
-The grid extension method, along with its mappings and use case results, has been submitted to the journal \textit{ISPRS International Journal of Geo-Information}. \textbf{I'll update this once a decision on the paper is made. Either way it will have to change.}
+The grid extension method, along with its mappings and use case results, has been published in the journal \textit{ISPRS International Journal of Geo-Information} in a special issue on Global Grid Systems~\cite{mdpi}.
 
 
 \section{Thesis Overview}
