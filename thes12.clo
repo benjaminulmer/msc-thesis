@@ -383,8 +383,8 @@
     -.2ex}{2.3ex plus .2ex}{\large\sty@section}} %removed \bfseries 2006nm
 \def\subsection{\@startsection{subsection}{2}{\z@}{-3.25ex plus -1ex minus
    -.2ex}{1.0ex plus .2ex}{\normalsize\sty@subsection}} %removed \bfseries 2006nm
-\def\subsubsection{\@startsection{subsubsection}{3}{\z@}{-2.12ex plus
-   -1ex minus -.2ex}{0.001ex plus .2ex}{\normalsize\sty@subsubsection}} %removed \bfseries 2006nm
+\def\subsubsection{\@startsection{subsubsection}{3}{\z@}{-3.25ex plus -1ex minus
+   -.2ex}{1.0ex plus .2ex}{\itshape\normalsize\sty@subsubsection}} %removed \bfseries 2006nm
 \def\paragraph{\@startsection
      {paragraph}{4}{\z@}{2.25ex plus 1ex minus .2ex}{-1em}{\normalsize\sty@paragraph}} %removed \bfseries 2006nm
 \def\subparagraph{\@startsection

@@ -103,7 +103,7 @@ A more recent approach to a Digital Earth---and one more in line with Al Gore's 
 While physical globes have practical drawbacks in comparison to a map, in a digital setting, these drawbacks are reduced if not completely negated. 
 Modern computer graphics algorithms and hardware have made creating, storing, and displaying a virtual globe in real-time no more difficult than displaying the equivalent map.
 Interactive systems allow digital measurements and zooming on a globe to show any region of the Earth at the desired scale.
-Virtual globes still cannot display the entire Earth at once; however, novel interaction techniques such as multi-view focus plus context rendering can help alleviate this limitation~\cite{mark-sherlock}.
+Virtual globes still cannot display the entire Earth at once; however, novel interaction techniques such as multi-view focus plus context rendering can help alleviate this limitation~[Mark's work] \textbf{Is there a paper in the works to cite or should I cite the thesis?}%\cite{mark-sherlock}.
 
 
 Due to the reduced distortion with a globe, there has been a push toward globe based Digital Earth systems as opposed to conventional map based ones~\cite{goodchild2018reimagining}.
@@ -213,12 +213,24 @@ We once again refer to~\cite{mahdavi2015survey} and~\cite{alderson2020digital} f
 
 
 \subsection{Grid Encoding and Decoding}
+
+\begin{figure}[tb]
+	\includegraphics[width=\textwidth]{coding.pdf}
+	\caption[Grid Encoding and Decoding with a Polyhedral Grid]{
+		The process of encoding (left) and decoding (right) with a polyhedral grid.
+		Encoding: features are projected from the Earth domain to the polyhedral domain of the grid; the set of planar cells associated with the feature are obtained---each of which has a unique index.
+		Decoding: a set of cell indices corresponds to cell geometry on the polyhedral grid; cells in the polyhedral domain are inverse projected back to the Earth domain
+	}
+	\label{fig:coding}
+\end{figure}
+
+
 For a DGG or DGGS to be useful as a tool for managing geospatial data, operations are needed that can associate said data with the appropriate set of cells.
 This class of operations is known as grid encoding.
 The most simple type of encoding is for points---finding the cell which contains a given point---however, operations for more complex geometry such as vector polylines and polygons is often also required~\cite{du2018duality} [more?].
 Likewise, the inverse process of mapping a set of cells in the grid domain to the corresponding regions of the Earth is also needed.
 These operations are, correspondingly, known as grid decoding.
-Grid encoding and decoding, as they apply to a polyhedron based grid, are shown in Figure~X.
+Grid encoding and decoding, as they apply to a polyhedron based grid, are shown in Figure~\ref{fig:coding}.
 
 
 \subsubsection{Indexing Scheme} \label{sec::dggs:indexing}
