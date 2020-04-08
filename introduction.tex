@@ -15,7 +15,7 @@ Remote sensing satellites and aircraft, along with various smart technologies, h
 This has led to the challenge of \textit{geospatial big data}, meaning that the volume and complexity of data exceed the capacity of current computing systems~\cite{lee2015geospatial}.
 With applications in urban planning, agriculture, education, natural disaster prediction and management, and many other fields, the development of technologies for managing geospatial data is more crucial than ever.
 These tools are needed to efficiently integrate, process, analyze, and visualize geospatial data in order to use it to make informed decisions.
-Such a need has lead to the vision of Digital Earth, where all data regarding the Earth is available in a common reference used by the public to inform their decisions.
+Such a need has led to the vision of Digital Earth, where all data regarding the Earth is available in a common reference used by the public to inform their decisions.
 The use of such a system would range from world governments informing policy by analyzing climate trends to homeowners referencing local utility line locations when building a fence.
 In reality, such an expansive and holistic system is yet to be achieved; however, many approaches for smaller-scale Digital Earths exist.
 
@@ -26,7 +26,7 @@ These individual layers are overlayed to create a complete model of the Earth (o
 However, being created and gathered by diverse organizations, geospatial data exists in many different formats and resolutions.
 The conventional GIS pipeline---which requires experts to clean, process, integrate, and distribute data---is unsustainable in the face of geospatial big data.
 Furthermore, even after data has been integrated with a GIS, overlay operations such as intersections and data extraction are computationally expensive when many data layers are present~\cite{wang2015improving}.
-Coordinate based representations of geospatial data also do not provide proper facilities to represent the uncertainty or error of the data they are used to represent~\cite{goodchild2018reimagining}.
+Coordinate based representations of geospatial data also do not provide proper facilities to represent the uncertainty or error of the data they are used to represent. [goodchilde reimagine]
 
 
 Another challenge with GIS is the use of a flat map as the underlying representation.
@@ -64,6 +64,7 @@ Going forward, we use the term 3D DGGS to refer to these technologies collective
 
 
 Most human activity and interest, and correspondingly geospatial data, is located in a relatively small region above and below the surface of the Earth ($\pm$10 -- 500 km).
+Likewise, most existing approaches for 3D DGGS's have focused on this region.
 However, there are select processes such as seismic wave propagation and the magnetosphere that span much beyond this region (\textbf{figure?}).
 Furthermore, the range of altitudes satellites orbit at is extensive, with satellites in high Earth orbit exceeding 36,000 km.
 Therefore, to support the full range of human activity and interest, 3D DGGS's that extend to the centre of the Earth and far beyond the atmosphere are needed.
@@ -105,7 +106,7 @@ Addressing such cell degeneration is one of the main challenges of this thesis.
 \section{Goals and Scope}
 In addition to the initial goal of supporting an unbounded range of altitudes, there are several other aims for a 3D DGGS we wish to explore in this thesis.
 While we discuss these below in the context of a 3D DGGS, they are equally applicable to their conventional 2D counterparts.
-We choose to explore these goals only for Earth-centric 3D DGGS's using semiregular refinement strategies (see Chapter 3.something); limiting the scope in this manner allows a more thorough exploration of the goals in the 3D DGGS's we propose.
+We choose to explore these goals only for Earth-centric 3D DGGS's using semiregular refinement strategies (see chapter 3.something); limiting the scope in this manner allows a more thorough exploration of the goals in the 3D DGGS's we propose.
 
 
 As discussed previously, the cells of a 3D DGGS need to be compact while also maintaining near-uniform volume.
@@ -161,7 +162,7 @@ For our proposed encoding and decoding algorithms, we compare the runtime perfor
 Evaluation of the second approach is done through a series of use cases, each employing a different combination of input DGGS and 3D parameters to create a resulting 3D DGGS most appropriate for the application.
 These use cases illustrate both the versatility and sophistication of the method, being able to quickly create many different 3D DGGS's while achieving the desirable properties outlined above.
 
-Paragraph for implementation.
+
 
 
 \section{Contribution}

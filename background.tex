@@ -71,7 +71,7 @@ With the advent of computing systems came the move of maps from the physical dom
 Initially, this required scanning existing physical maps to digitize the data they contained.
 As the prevalence of computers increased, more geospatial data was stored natively in digital formats.
 Nowadays, nearly all (if not all) geospatial data is collected and stored digitally.
-Furthermore, advancements in remote sensing technologies, smart technologies, and the Internet of things have lead to explosive increases in the amount of geospatial data collected.
+Furthermore, advancements in remote sensing technologies, smart technologies, and the Internet of things have led to explosive increases in the amount of geospatial data collected.
 Modern computers can process vast amounts of data compared to what is possible manually; despite this, the volume and complexity of geospatial data available and being collected surpasses even this capacity~\cite{lee2015geospatial}.
 
 
@@ -101,7 +101,7 @@ Which map projection to use for which use cases must be considered carefully, wh
 \subsection{Globe Based Digital Earth}
 A more recent approach to a Digital Earth---and one more in line with Al Gore's initial proposal---is a globe based Digital Earth.
 While physical globes have practical drawbacks in comparison to a map, in a digital setting, these drawbacks are reduced if not completely negated. 
-Modern computer graphics algorithms and hardware have made creating, storing, and displaying a virtual globe in real-time no more difficult than displaying the equivalent map.	
+Modern computer graphics algorithms and hardware have made creating, storing, and displaying a virtual globe in real-time no more difficult than displaying the equivalent map.
 Interactive systems allow digital measurements and zooming on a globe to show any region of the Earth at the desired scale.
 Virtual globes still cannot display the entire Earth at once; however, novel interaction techniques such as multi-view focus plus context rendering can help alleviate this limitation~\cite{mark-sherlock}.
 
@@ -213,35 +213,44 @@ We once again refer to~\cite{mahdavi2015survey} and~\cite{alderson2020digital} f
 
 
 \subsection{Grid Encoding and Decoding}
-
-
-Need to map data/features to grid cells.
-Most simple encoding is for points: find cell that contains point.
-Inverse also needed: take cell and get geometry on reference model.
-Call these encoding and decoding.
-As part of this, need way to refer to cells uniquely.
-
-rasterization?
-\cite{du2018duality}
+For a DGG or DGGS to be useful as a tool for managing geospatial data, operations are needed that can associate said data with the appropriate set of cells.
+This class of operations is known as grid encoding.
+The most simple type of encoding is for points---finding the cell which contains a given point---however, operations for more complex geometry such as vector polylines and polygons is often also required~\cite{du2018duality} [more?].
+Likewise, the inverse process of mapping a set of cells in the grid domain to the corresponding regions of the Earth is also needed.
+These operations are, correspondingly, known as grid decoding.
+Grid encoding and decoding, as they apply to a polyhedron based grid, are shown in Figure~X.
 
 
 \subsubsection{Indexing Scheme} \label{sec::dggs:indexing}
-For grid and cell geometries to be useful as a DGGS, a mechanism for assigning a unique index to each cell is needed.
-Earth data is assigned to cells using these indices, which allows for efficient retrieval of all data associated with a specific cell or region of the Earth.
-Thus, in order to be able to insert new data into the grid efficiently, it is important to be able to quickly determine the cell (and associated index) that contains a point on the Earth after it has been projected.
-Likewise, given a cell index, it is important to be able to determine the geometry of the corresponding cell in the grid.
-This geometry can then be inverse projected to find the region of the Earth associated with the cell.
-These indices also allow for certain spatial relationship queries to be defined, such as the retrieval of neighbouring cells, and can be used to navigate up and down the hierarchy of the grid via parent and child relationships between cells in different resolutions.
-\cite{yu2009coding}
-\cite{vince2006indexing}
-\cite{tong2013efficient}
-\cite{mahdavi2015hexagonal}
-\cite{mahdavi2015categorization}
+Closely related to encoding and decoding operations is the method used to assign a unique identifier to each cell in a DGG or DGGS.
+Such an index is necessary in order to unambiguously distinguish between cells in the grid so that data can be associated with a set of cells via association with the corresponding index or indices.
+Indices are also used to traverse through the grid with neighbour relationships and, in a DGGS, traverse the hierarchy with parent and child relationships.
+
+
+In a given scheme, indices may have different representations depending on the context they are used in, with (injective) functions that convert between different representations.
+As an example, for a regular quadrilateral grid, a natural choice for assigning unique identifiers to each cell is with a 2D coordinate-based index.
+This choice allows straightforward and constant-time algorithms for several operations: encoding of points represented in the same coordinate system, decoding of cells to obtain the minimum and maximum in each dimension, and retrieving the index of neighbouring cells in the grid.
+However, standard row-major and column-major linearizations of these coordinates may not be ideal for storing data associated with said indices.
+This is because, when performing grid operations, it is more likely to require additional data from a nearby region than from a distant region.
+Therefore, nearby cells should ideally have similar indices to decrease the number of cache misses and disk seeks.
+In our example then, a different representation of the indices---such as one derived from a space-filling curve---may be used when storing and retrieving data.
+
+
+The exact method used to index cells depends heavily on the geometry of the grid itself.
+For example, an indexing scheme designed for a regular quadrilateral grid is unlikely to be useful (or even applicable) to an irregular triangle grid.
+Thus, grids with different cell shapes and connectivities will require different indexing schemes designed specifically for the qualities of that grid.
+Regular quadrilateral and triangular grids have well-understood techniques for indexing from the computer graphics literature [].
+Furthermore, Atlas of Connectivity Maps, proposed by Mahdavai-Amiri and Samavati, extend these techniques to semi-regular grids like those of most polyhedral DGGS~\cite{mahdavi2014atlas}.
+However, hexagon based grids, which are an increasingly popular choice due to their desirable sampling properties resulting from the high compactness of hexagons, are more difficult to index.
+Despite this, there are some works on developing efficient indexing for both 1:3~\cite{vince2006indexing} and 1:4~\cite{tong2013efficient} hexagon DGGS's, along with general methods for hierarchical hexagonal grids~\cite{mahdavi2015hexagonal}.
+There has also been work done to categorize different DGGS indexing schemes to facilitate conversion and data transference between different systems~\cite{mahdavi2015categorization}.
 
 
 \section{Summary}
-Maps and globes have been around for thousands of years.
-With advent of computer, GIS was born which carried over conventions of traditional cartography.
-Recently, global grids have become popular as a replacement/augmentation of GIS.
-Many different approached for DGG and DGGS.
-3D DGGS are the next step of this evolution; techniques exist but still underdeveloped comparatively.
+The world we live in is full of data, and maps of globes of the Earth have a long history in helping people understand and process that data.
+With maps historically favoured over globes for practical reasons, digital representations have allowed for virtual globes that more accurately represent the Earth as compared to flat maps.
+Computers have also increased the amount of geospatial data we can process, but---along with other technologies---have also led to an explosion in the amount of data available.
+In handling this ever-increasing amount of data, DGG's and DGGS's have become an essential tool in addition to conventional GIS technologies.
+While there exist many different techniques for creating these global grids, those based on approximating polyhedron have become the state-of-the-art choice. The 3D DGGS, which we explore more in the next chapter, is the next step in this evolution for facilitating the efficient integration, analysis, and visualization of geospatial data.
+
+
