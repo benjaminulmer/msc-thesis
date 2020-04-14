@@ -1,8 +1,8 @@
 \chapter{Background and Related Work} \label{chap:background}
 Providing a complete history of map and globe making (cartography) is much beyond both the scope and ability of this thesis.
-Instead, we provide a brief background to illuminate how these disciplines influenced the development of Digital Earth systems.
-We discuss the different approaches for a Digital Earth, starting with traditional GIS, and then discuss techniques used for globe based systems and analysis.
-We also provide background and related work on discrete global grids and grid systems, looking at different methods for constructing both 2D and 3D versions of these data structures.
+Instead, this chapter aims to provide the necessary background to illuminate how these disciplines influenced the development of Digital Earth systems.
+We go on to discuss the different approaches for a Digital Earth, starting with traditional GIS, and then techniques used for globe based systems and analysis.
+We also provide background and related work on discrete global grids and grid systems, looking at different methods for constructing these data structures.
 
 
 \section{Traditional Maps and Globes}
@@ -103,7 +103,7 @@ A more recent approach to a Digital Earth---and one more in line with Al Gore's 
 While physical globes have practical drawbacks in comparison to a map, in a digital setting, these drawbacks are reduced if not completely negated. 
 Modern computer graphics algorithms and hardware have made creating, storing, and displaying a virtual globe in real-time no more difficult than displaying the equivalent map.
 Interactive systems allow digital measurements and zooming on a globe to show any region of the Earth at the desired scale.
-Virtual globes still cannot display the entire Earth at once; however, novel interaction techniques such as multi-view focus plus context rendering can help alleviate this limitation~[Mark's work] \textbf{Is there a paper in the works to cite or should I cite the thesis?}%\cite{mark-sherlock}.
+Virtual globes still cannot display the entire Earth at once; however, novel interaction techniques such as multi-view focus plus context rendering can help alleviate this limitation~\cite{mark-sherlock}.
 
 
 Due to the reduced distortion with a globe, there has been a push toward globe based Digital Earth systems as opposed to conventional map based ones~\cite{goodchild2018reimagining}.
@@ -115,6 +115,10 @@ While spherical analyses are still significantly more involved than the planar e
 In addition to standard methods, there have been several recent works on techniques for more complicated spherical analysis and operations.
 Some examples include better representations for rational points on the sphere~\cite{bahrdt2017rational}, multiresolution representations of B-spline~\cite{alderson2016multiresolution} and NURBS curves~\cite{alderson2019multiscale}, and methods for offsetting both vector and raster curves~\cite{alderson2018offsetting}.
 For these reasons, direct spherical analysis on a globe based Digital Earth is becoming a compelling alternative to traditional GIS. For a detailed analysis of different Digital Earth systems, refer to~\cite{mahdavi2015survey} and~\cite{alderson2020digital}.
+
+
+\subsection{Volumetric Digital Earth}
+Examples: 
 
 
 \section{Discrete Global Grids}
@@ -263,6 +267,5 @@ The world we live in is full of data, and maps of globes of the Earth have a lon
 With maps historically favoured over globes for practical reasons, digital representations have allowed for virtual globes that more accurately represent the Earth as compared to flat maps.
 Computers have also increased the amount of geospatial data we can process, but---along with other technologies---have also led to an explosion in the amount of data available.
 In handling this ever-increasing amount of data, DGG's and DGGS's have become an essential tool in addition to conventional GIS technologies.
-While there exist many different techniques for creating these global grids, those based on approximating polyhedron have become the state-of-the-art choice. The 3D DGGS, which we explore more in the next chapter, is the next step in this evolution for facilitating the efficient integration, analysis, and visualization of geospatial data.
-
-
+While there exist many different techniques for creating these global grids, those based on approximating polyhedron have become the state-of-the-art choice.
+The 3D DGGS, which we explore more in the next chapter, is the next step in this evolution for facilitating the efficient integration, analysis, and visualization of geospatial data for a volumetric Digital Earth.

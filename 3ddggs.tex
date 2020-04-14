@@ -1,18 +1,21 @@
-\chapter{Need for 3D Discrete Global Grid Systems} \label{chap:3ddggs}
-This chapter look at different method for 3D DGGS and why they are needed.
-First look at why flattening not good enough solution to problem.
-Explain drawbacks of embedded approach.
-Challenges with Earth-Centric.
-How semiregular refinement can be used to lessen these drawbacks.
+\chapter{3D Discrete Global Grid Systems} \label{chap:3ddggs}
+In the previous chapter, we explored the DGGS as a tool for integrating multiple geospatial datasets at varying resolutions.
+However, a DGGS has no inbuilt mechanism for handling the altitude(s) of geospatial data.
+Instead, an extension of the data structure to the third dimension---the 3D DGGS---is needed to accommodate such 3D data natively.
+This chapter argues for the need for 3D DGGS's in certain applications by exploring the downsides of a typical data flattening approach used to integrate 3D data with a 2D DGGS.
+We then compare the two most common approaches used for creating a 3D DGGS: embedding and Earth-centric.
+We argue for the Earth-centric approach, proposing semiregular refinement---the primary tool used in the remainder of this thesis---as a strategy to lessen the disadvantages of this approach.
 
 
 \section{Data Flattening}
-No partitioning in radial dimension.
-This means slower data retrieval for specific altitudes, lack of spatial neighbourhood relationships, and other issues???
-Furthermore, no hierarchy in radial dimension.
-This means no automatic aggregation in this dimension.
-Also loose any other benefits of grid in this dimension.
-In general you simply loose all the benefits of a grid in the radial dimension.
+A DGGS provides a multiresolution partitioning of the surface of the Earth, but no partitioning in the radial dimension.
+Therefore, any geospatial data with associate altitude must be flattened to the surface for integration with a DGGS, with the original altitude stored as a field of the data.
+In applications where data \textit{does not} need to be filtered by altitude, and altitude is used no differently than any other attribute, this is an acceptable approach.
+However, if data \textit{does} need to be accessed or otherwise distinguished by altitude, then this approach is problematic.
+In this case, all data must be queried and searched to find those with the required altitude(s).
+Furthermore, the lack of a hierarchy in the radial dimension means data at different radial resolutions must be integrated manually as opposed to using the structure of the DGGS itself to aid in this task.
+Generally speaking, any benefits gained by using a DGGS are lost in the radial dimension; this is problematic for any application that uses the radial dimension in the same manner as (or more so than) surface ones.
+Instead of managing altitude separately, the DGGS should be responsible for hierarchically partitioning altitude in addition to the surface of the Earth, which we call a 3D DGGS.
 
 
 \section{Embedded Grids}
@@ -29,12 +32,11 @@ Issue of degeneration similar to lat-long grids.
 Use figures to showcase size difference and aspect ratio/compactness problem.
 
 
-
 Same as regular grids but with altitude dimension.
 Can be made from any of the above by extrusion method.
 Lat-long -> 3D LLG -> GeoSOT3D.
 Yin-yang -> 3D yin-yang.
-Polyhedral -> frustum/prismatoid.
+Polyhedral -> frustum/prismatoid
 \cite{yoo2019concept}
 \cite{sun20153d}
 \cite{yoshida2004application}
@@ -42,17 +44,16 @@ Polyhedral -> frustum/prismatoid.
 \cite{tackley2008modelling}
 
 
-Issue of radial degeneration---see Chapter 3.something
+Issue of radial degeneration
 Methods have been proposed that use method similar to igloo in radial dimension.
 DQG -> SDOG.
 SSS 3DG.
+Better prismatoid
 \cite{yu2009sdog}
 \cite{yu2012large-scale}
 \cite{yu2012lithosphere}
 \cite{gang2013sphere} 
 \cite{wang2013global}
-
-
 
 
 \subsection{Semiregular Refinement}
@@ -63,7 +64,6 @@ Despite still being degenerate, these merged cells end up being much more simila
 Figure~X illustrates this type of refinement in contrast to a regular refinement approach.
 The terminology used in the literature to describe this type of refinement varies; in this thesis, we use the term \textit{semiregular degenerate} or for brevity just \textit{semiregular}.
 A more in-depth explanation of this class of refinement methods is provided in Chapter~3.something.
-
 
 
 Describe idea of method.
