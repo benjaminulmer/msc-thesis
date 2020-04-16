@@ -77,7 +77,7 @@ Thus, for data with more extensive altitude ranges, there are even fewer methods
 From this, we arrive at the primary goal of this thesis: to develop 3D DGGS's that have adequate support for unbounded ranges of altitude. 
 
 
-A simple approach for such a 3D DGGS would be to embed the Earth in a 3D Euclidean voxel partitioning, for which many efficient and well-tested algorithms exist.
+A simple approach for such a 3D DGGS would be to embed the Earth in a 3D Euclidean voxel partitioning or similar space partitioning data structure, for which many efficient and well-tested algorithms exist.
 While such a system is simple in its construction, it ignores the spherical nature of the Earth.
 Cells are not aligned with the surface of the Earth, which means there is no consistent orientation of up (increasing altitude) and down (decreasing altitude) with respect to a cell.
 Likewise, traversal along the surface of the Earth is complex and requires ``zig-zagging'' up and down.
@@ -89,7 +89,8 @@ Cells should be aligned with the surface of the Earth and have a consistent orie
 \begin{figure}[tb]
 	\includegraphics[width=\textwidth]{Fig1.pdf}
 	\caption[Different Views of a 3D Latitude-Longitude Grid]{
-		placeholder figure. Caption describing degeneration in cells toward centre and poles
+		placeholder figure.
+		Caption describing degeneration in cells toward centre and poles
 	}
 	\label{fig:3dllg}
 \end{figure}

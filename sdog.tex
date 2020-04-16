@@ -3,11 +3,13 @@
 
 \section{SDOG Overview}
 
-\begin{figure}[tbp]
+\begin{figure}[tb]
 	\includegraphics[width=\textwidth]{Fig2.pdf}
-	\caption{One octant of an SDOG grid after four levels of subdivision viewed (a) from the side, (b) from the front, and (c) at an angle.
+	\caption[Title]{
+		One octant of an SDOG grid after four levels of refinement viewed (a) from the side, (b) from the front, and (c) at an angle.
 		Compared to a 3D LLG, cells are much more uniform in size and have much better compactness.
-		Refer to Section~\ref{sec:results} for a detailed analysis of the volume preserving and compactness properties of SDOG}
+		Refer to Section~\ref{sec:results} for a detailed analysis of the volume preserving and compactness properties of SDOG
+	}
 	\label{fig:sdog}
 \end{figure}
 
@@ -15,19 +17,21 @@
 We first provide a brief explanation of SDOG construction and refinement as presented in~\cite{yu2009sdog}.
 SDOG is an extension of the traditional octree to a spherical, as opposed to Euclidean, volume.
 A sphere with twice the radius of the Earth is initially divided into eight equal octants via the equatorial plane and two perpendicular meridian planes.
-These octants are taken to be the coarsest cells of the grid and are then subdivided to create more fine discretizations of the sphere.
-An SDOG octant after four subdivisions can be seen in Figure~\ref{fig:sdog}.
+These octants are taken to be the coarsest cells of the grid and are then refined to create more fine discretizations of the sphere.
+An SDOG octant after four refinements can be seen in Figure~\ref{fig:sdog}.
 
 
-\begin{figure}[tbp]
+\begin{figure}[tb]
 	\includegraphics[width=\textwidth]{Fig3.pdf}
-	\caption{Location and extent of splitting surfaces in SDOG subdivision for (a) SG cells, (b) LG cells, and (c) NG cells.
-		Only NG cells have all three splitting surfaces fully subdivide the cell into eight children, and make up the majority of cells as the grid becomes more refined.}
+	\caption[Title]{
+		Location and extent of splitting surfaces in SDOG refinement for (a) SG cells, (b) LG cells, and (c) NG cells.
+		Only NG cells have all three splitting surfaces fully refine the cell into eight children, and make up the majority of cells as the grid becomes more refined
+	}
 	\label{fig:subRules}
 \end{figure}
 
 
-SDOG cells (including octants) are subdivided using the midpoint of each spherical coordinate: latitude, longitude, and radius.
+SDOG cells (including octants) are refined using the midpoint of each spherical coordinate: latitude, longitude, and radius.
 These midpoints create splitting surfaces that can be used to split parent cells into smaller children cells.
 To prevent the degeneration in cell compactness and size near the poles and centre of the sphere seen in 3D LLGs (Figure~\ref{fig:3dllg}), the extent of these splitting surfaces and the number of resulting children cells depends on the shape, or class, of cell that is being divided.
 The splitting surfaces for each type of SDOG cell are shown in Figure~\ref{fig:subRules}.
@@ -37,19 +41,19 @@ We call a splitting surface symmetric if it creates the same number and type(s) 
 Cells that extend to the centre of the sphere and to one of the poles are referred to as Sphere-degenerated Grid (SG) cells (Figure~\ref{fig:subRules}a) and include the original eight octants.
 For these cells, the longitudinal splitting surface does not extend beyond the latitudinal one in the direction towards the pole.
 Additionally, neither the latitudinal nor longitudinal splitting surfaces extend beyond the radial one in the direction towards the centre of the sphere.
-The result of this subdivision is four children cells: another SG cell, one Latitude-degenerated Grid (LG) cell, and two Normal Grid (NG) cells.
+The result of this refinement is four children cells: another SG cell, one Latitude-degenerated Grid (LG) cell, and two Normal Grid (NG) cells.
 LG and NG cells are described below.
 Only the longitudinal splitting surface for SG cells is symmetric.
 
 
 LG cells (Figure~\ref{fig:subRules}b) are similar to SG ones, except that they only extend to one of the poles and not the centre of the sphere.
 Therefore, the longitudinal splitting surface does not extend beyond the latitudinal one in the direction towards the pole.
-This subdivision results in six children cells: two LG cells and four NG cells.
+This refinement results in six children cells: two LG cells and four NG cells.
 The longitudinal and radial splitting surfaces for LG cells are symmetric.
 
 
 NG cells (Figure~\ref{fig:subRules}c) extend to neither the pole nor the centre of the sphere and make up the majority of SDOG cells.
-These cells are fully subdivided into eight children NG cells and are the regular case for SDOG subdivision.
+These cells are fully refined into eight children NG cells and are the regular case for SDOG refinement.
 All splitting surfaces for NG cells are symmetric.
 
 
@@ -59,21 +63,21 @@ A good indexing scheme will allow for efficient data insertion, retrieval, and m
 Examples of some of these queries are: point to cell, which give the index of the cell containing a given point; index inversion, which calculates a cell's location and geometry from the index; neighbourhood queries; and in the case of a hierarchical grid, hierarchy traversal to find parent and children cells.
 
 
-Due to the fact that SDOG subdivision is based on the midpoints of spherical coordinates, an indexing scheme that is efficient for many of the above operations can be easily developed.
-At any subdivision level, $k$, each cell can be given an integer index in each spherical coordinate ranging from zero to $2^{k} - 1$.
-To address the degenerate subdivision of certain cells, these integer indices are modified appropriately with divisions by powers of two, which can be done quickly with bit shift operations.
+Due to the fact that SDOG refinement is based on the midpoints of spherical coordinates, an indexing scheme that is efficient for many of the above operations can be easily developed.
+At any refinement level, $k$, each cell can be given an integer index in each spherical coordinate ranging from zero to $2^{k} - 1$.
+To address the degenerate refinement of certain cells, these integer indices are modified appropriately with divisions by powers of two, which can be done quickly with bit shift operations.
 The integer indices can then be linearized by various methods, one good choice being a Z-order curve \cite{morton1966computer} as used in \cite{yu2009sdog}.
 A more detailed description of degenerate Z-order indexing for SDOG grids, including algorithms for point to cell and index inversion operations, can be found in \cite{yu2009coding}.
 
 
 \subsection{Number of SDOG Cells} \label{sec:sdog-numCells}
-Being able to analyze the number of cells in the grid at each level of subdivision is useful not only for measuring volume preserving properties---such as quickly calculating the average cell volume---but also for analyzing the behavior of the grid as the level of subdivision increases.
-This type of analysis will prove useful in informing decisions about how to modify subdivision to improve volume preservation.
+Being able to analyze the number of cells in the grid at each level of refinement is useful not only for measuring volume preserving properties---such as quickly calculating the average cell volume---but also for analyzing the behavior of the grid as the level of refinement increases.
+This type of analysis will prove useful in informing decisions about how to modify refinement to improve volume preservation.
 
 
-Due to the degenerate nature of SDOG subdivision, calculating the number of cells in the grid is more complicated than a simple exponential formulation.
-Despite this, we can use the above subdivision rules to derive recursive definitions for the number of cells in an SDOG grid (or a single octant) at a given level of subdivision.
-Let $S(k)$, $L(k)$, $N(k)$, and $T(k)$ be the number of SG, LG, NG, and total cells of an SDOG octant at subdivision level $k$, respectively.
+Due to the degenerate nature of SDOG refinement, calculating the number of cells in the grid is more complicated than a simple exponential formulation.
+Despite this, we can use the above refinement rules to derive recursive definitions for the number of cells in an SDOG grid (or a single octant) at a given level of refinement.
+Let $S(k)$, $L(k)$, $N(k)$, and $T(k)$ be the number of SG, LG, NG, and total cells of an SDOG octant at refinement level $k$, respectively.
 There is only ever one SG cell in an SDOG octant, so trivially
 %
 \begin{equation}
@@ -131,7 +135,7 @@ V = \frac{1}{3} \left( \lambda_{2} - \lambda_{1} \right) \left(r_{2}^{3} - r_{1}
 
 In addition to the volume of a cell, surface area is another useful property to be able to measure.
 Combined with the volume of cells, this allows us to measure the compactness of cells, which we use in Section \ref{sec:results} to help evaluate the consequences of our modifications.
-From the fact that SDOG cells are subdivided using spherical coordinates, each face of a cell is a section of a simple geometric shape.
+From the fact that SDOG cells are refined using spherical coordinates, each face of a cell is a section of a simple geometric shape.
 Faces created by radial splitting surfaces are spherical, with surface area given by
 %
 \begin{equation}
@@ -153,37 +157,41 @@ Finally, faces created by latitudinal splitting surfaces lie on a cone, with a s
 %\subsection{Ideal Placement of Splitting Surfaces}
 %\subsection{Blending Functions}
 
-\begin{figure}[tbp]
+\begin{figure}[tb]
 	\includegraphics[width=0.85\textwidth]{Fig4.pdf}
-	\caption{Distribution of cell volumes in an octant after four levels of conventional SDOG subdivision}
+	\caption[Title]{
+		Distribution of cell volumes in an octant after four levels of conventional SDOG refinement
+	}
 	\label{fig:sdog-vol}
 \end{figure}
 
 
 The main goal of this work is to modify SDOG in such a way as to improve volume preservation while minimizing the impact on other desired properties of the grid.
 To aid in this task, we have developed a visualization framework for displaying and modifying SDOG grids.
-This framework allows for changes to subdivision to be quickly implemented and allows visual analysis of said modifications.
+This framework allows for changes to refinement to be quickly implemented and allows visual analysis of said modifications.
 All of the figures in the paper (except for the charts) were created using the output of this framework.
 As an example and a baseline, the distribution of cell volumes in a conventional SDOG grid is visualized in Figure~\ref{fig:sdog-vol}.
 
 
-As previously discussed, in conventional SDOG subdivision the location of the different splitting surfaces is always chosen to be at the midpoint of the respective spherical coordinate; we question if this should always be the case.
-For an octree in Euclidean space this type of subdivision is desirable, as it generates children cells of identical size and shape.
+As previously discussed, in conventional SDOG refinement the location of the different splitting surfaces is always chosen to be at the midpoint of the respective spherical coordinate; we question if this should always be the case.
+For an octree in Euclidean space this type of refinement is desirable, as it generates children cells of identical size and shape.
 In spherical space, however, this property does not transfer.
-Using midpoints to subdivide cells makes for a simple subdivision scheme, but it makes no guarantees about the shape or size of the resulting children cells.
+Using midpoints to refine cells makes for a simple refinement scheme, but it makes no guarantees about the shape or size of the resulting children cells.
 
 
-\begin{figure}[tbp]
+\begin{figure}[tb]
 	\includegraphics[width=0.5\textwidth]{Fig5.pdf}
-	\caption{Each SDGO cell can be expressed as a range in each spherical coordinate, and the location of the splitting surface for each spherical coordinate can be expressed as a function of the maximum and minimum of the respective range.
+	\caption[Title]{
+		Each SDGO cell can be expressed as a range in each spherical coordinate, and the location of the splitting surface for each spherical coordinate can be expressed as a function of the maximum and minimum of the respective range.
 		Here we show only an NG cell, however the same applies to SG and LG cells.
-		The functions $f$, $g$, and $h$ serve as placeholders for any valid function that results in the output being strictly between the two inputs}
+		The functions $f$, $g$, and $h$ serve as placeholders for any valid function that results in the output being strictly between the two inputs
+	}
 	\label{fig:functions}
 \end{figure}
 
 
 By allowing the location of the splitting surfaces to be adjusted, we can modify the shape and size of children cells and as a result affect the volume preservation, compactness, and other properties of the grid.
-Let $c_{s}$ be the location of the splitting surface, where $c$ is one of $\left\lbrace \phi, \lambda, r \right\rbrace$, then one way to express the location of the splitting surfaces used for subdivision is as a convex combination of maximum and minimum values
+Let $c_{s}$ be the location of the splitting surface, where $c$ is one of $\left\lbrace \phi, \lambda, r \right\rbrace$, then one way to express the location of the splitting surfaces used for refinement is as a convex combination of maximum and minimum values
 %
 \begin{equation} \label{eq:convex}
 c_{s} = \alpha c_{2} + \left( 1-\alpha \right) c_{1}, \quad \alpha \in \left( 0, 1 \right),
@@ -191,7 +199,7 @@ c_{s} = \alpha c_{2} + \left( 1-\alpha \right) c_{1}, \quad \alpha \in \left( 0,
 %
 where we call $\alpha$ the splitting factor.
 Conventional SDOG used midpoints (i.e.
-$\alpha = \frac{1}{2}$) for each spherical coordinate when subdividing, regardless of cell type.
+$\alpha = \frac{1}{2}$) for each spherical coordinate when refining, regardless of cell type.
 While a convex combination is the most straightforward, any function of the maximum and minimum such that the result is strictly between the two is a valid method for determining the location of the splitting surfaces (Figure~\ref{fig:functions}).
 Thus, the location of splitting surfaces can be modified by changing this function, either by using a different value of $\alpha$, or by using a different function altogether.
 Furthermore, the function used can be different for each cell type and spherical coordinate.
@@ -238,11 +246,13 @@ We first look at which splitting surfaces should \textit{not} be modified.
 From Eq.~(\ref{eq:longVol}) it is clear a longitudinal splitting surface at the midpoint will always split a cell exactly in half, and therefore since all longitudinal splitting surfaces are symmetric, they should not be changed.
 
 
-\begin{figure}[tbp]
+\begin{figure}[tb]
 	\includegraphics[width=0.6\textwidth]{Fig6.pdf}
-	\caption{Spherical shells created by the radial splitting surfaces of SG cells.
-		At $k$ levels of subdivision there are $k$ shells and one inner SG cell.
-		These shells are similar and should have volume proportional to the number of cells they contain}
+	\caption[Title]{
+		Spherical shells created by the radial splitting surfaces of SG cells.
+		At $k$ levels of refinement there are $k$ shells and one inner SG cell.
+		These shells are similar and should have volume proportional to the number of cells they contain
+	}
 	\label{fig:sg-rad-splits}
 \end{figure}
 
@@ -261,32 +271,34 @@ then the ratio of the volume between shell $n+1$ and $n$ is
 \frac{ \alpha^{3 \left(n + 1 \right)} - \alpha^{3\left( n + 2 \right)} }{ \alpha^{3n} - \alpha^{3 \left( n + 1 \right)} } = \frac{ \alpha^{3} \alpha^{3n} \left( 1 - \alpha^{3} \right) }{ \alpha^{3n} \left( 1 - \alpha^{3} \right) } = \alpha^{3}.
 \end{equation}
 %
-From the self similar nature of SDOG subdivision, we know that the cells in shell $n$ are simply the cells of shell $n+1$ subdivided once.
-We also know that in the limit, an SDOG grid at one level higher of subdivision will have eight times as many cells as the previous resolution $\left( \lim_{k \to \infty} \frac{ T(k+1) }{ T(k) }  = 8 \right)$.
+From the self similar nature of SDOG refinement, we know that the cells in shell $n$ are simply the cells of shell $n+1$ refined once.
+We also know that in the limit, an SDOG grid at one level higher of refinement will have eight times as many cells as the previous resolution $\left( \lim_{k \to \infty} \frac{ T(k+1) }{ T(k) }  = 8 \right)$.
 Therefore, in order for cells in the grid to be close to equal volume, it must be that shell $n+1$ has one eighth the volume of shell $n$ (since it will have one eighth the number of cells), which occurs exactly when $\alpha = \frac{1}{2}$.
 
 
 This leaves five possible splitting surfaces that can be modified: the radial splitting surface for LG and NG cells, and the latitudinal splitting surface for SG, LG, and NG cells.
 An important decision then is whether to use convex combinations to calculate the location of these surfaces (Eq.~(\ref{eq:convex})), or to use the functions parameterized by the ratio of volumes (Eq.~(\ref{eq:radVol}) and (\ref{eq:latVol})).
-This is akin to a stationary subdivision scheme in comparison to a non-stationary one.
-A stationary scheme will maintain the simplicity of subdivision, however, offers less overall ability to improve volume preservation.
+This is akin to a stationary refinement scheme in comparison to a non-stationary one.
+A stationary scheme will maintain the simplicity of refinement, however, offers less overall ability to improve volume preservation.
 Because of this, we provide both a stationary and non-stationary set of modifications.
 
 
 \subsection{Stationary Subdivision} \label{sec:method-stationary}
 By constraining splitting surfaces to be calculated via convex combinations, there are more restrictions on which splitting surfaces should be modified.
-An interesting property of SDOG subdivision is that if a cell subdivides symmetrically in a given spherical dimension, all children of that cell also subdivide symmetrically in that dimension.
-Thus, symmetric splitting surfaces result in non-degenerate binary (in the given dimension) subdivision at all further levels of subdivision, and it becomes clear that using any other value than the midpoint results in divergence as the level of subdivision gets large.
+An interesting property of SDOG refinement is that if a cell refines symmetrically in a given spherical dimension, all children of that cell also refine symmetrically in that dimension.
+Thus, symmetric splitting surfaces result in non-degenerate binary (in the given dimension) refinement at all further levels of refinement, and it becomes clear that using any other value than the midpoint results in divergence as the level of refinement gets large.
 Therefore, all symmetric splitting surfaces should be left at the midpoint, which leaves only the latitudinal splitting surface for SG and LG cells to be modified.
 We use $\alpha_{\phi}^{SG}$ and $\alpha_{\phi}^{LG}$ to refer to the splitting factors used for calculating the location of these surfaces.
 
 
-\begin{figure}[tbp]
+\begin{figure}[tb]
 	\includegraphics[width=0.9859\textwidth]{Fig7.pdf}
-	\caption{Spherical zones created by the latitudinal splitting surfaces of SG and LG cells.
-		At $k$ levels of subdivision there are $k$ zones and one upper stack of LG cells in the outer most shell.
+	\caption[Title]{
+		Spherical zones created by the latitudinal splitting surfaces of SG and LG cells.
+		At $k$ levels of refinement there are $k$ zones and one upper stack of LG cells in the outer most shell.
 		Each successively smaller shell has one fewer zones, until reaching the innermost SG cell.
-		Zones in the same shell are not exactly similar, but are regular and should have volume proportional to the number of cells they contain}
+		Zones in the same shell are not exactly similar, but are regular and should have volume proportional to the number of cells they contain
+	}
 	\label{fig:lat-splits}
 \end{figure}
 
@@ -308,13 +320,15 @@ Zone $n$ has a percentage $\left( 1 - p \right)^{n} p$ of the initial volume of 
 
 From here, we can now see why the latitudinal splitting surfaces for LG cells should remain at the midpoint.
 As $\phi_{1}$ approaches $\pm \frac{\pi}{2}$, this function is closely approximated by a convex combination with a factor of one half (see Appendix~\ref{app:lat}).
-Thus, as the level of subdivision gets large, using $\alpha_{\phi}^{LG} = \frac{1}{2}$ approaches the ideal placement for the splitting surfaces, and thus is the ideal factor to use for a convex combination.
+Thus, as the level of refinement gets large, using $\alpha_{\phi}^{LG} = \frac{1}{2}$ approaches the ideal placement for the splitting surfaces, and thus is the ideal factor to use for a convex combination.
 
 
-\begin{figure}[tbp]
+\begin{figure}[tb]
 	\includegraphics[width=0.85\textwidth]{Fig8.pdf}
-	\caption{Results of the stationary scheme after four levels of subdivision using $\alpha_{\phi}^{SG} \approx 0.54$.
-		Since only one type of splitting surface has been modified, the results are similar to that of conventional SDOG}
+	\caption[Title]{
+		Results of the stationary scheme after four levels of refinement using $\alpha_{\phi}^{SG} \approx 0.54$.
+		Since only one type of splitting surface has been modified, the results are similar to that of conventional SDOG
+	}
 	\label{fig:stationary}
 \end{figure}
 
@@ -334,7 +348,7 @@ We compare these two schemes more closely in Section \ref{sec:results}.
 
 
 \subsection{Non-Stationary Subdivision} \label{sec:method-nonStationary}
-By not limiting splitting surfaces to be calculated using convex combinations, we are allowed much more control over subdivision and the resulting properties.
+By not limiting splitting surfaces to be calculated using convex combinations, we are allowed much more control over refinement and the resulting properties.
 Using Eq~(\ref{eq:radVol}) and (\ref{eq:latVol}) to calculate the modifiable splitting surfaces, all that is needed is to determine the ideal value of $p$ for the different splitting surfaces and cell types.
 We have already done this for the latitudinal splitting surfaces of SG and LG cells in Section \ref{sec:method-stationary} with Eq.~(\ref{eq:idealLat}).
 Therefore, all that is left is the radial splitting surfaces for LG and NG cells, and the latitudinal one for NG cells.
@@ -342,25 +356,29 @@ However, since all of these remaining splitting surfaces are symmetric, we simpl
 In other words, we can simply set $p = \frac{1}{2}$ for these remaining splitting surfaces.
 
 
-\begin{figure}[tbp]
+\begin{figure}[tb]
 	\includegraphics[width=0.85\textwidth]{Fig9.pdf}
-	\caption{Results of the non-stationary scheme after four levels of subdivision using $\beta = 1$.
+	\caption[Title]{
+		Results of the non-stationary scheme after four levels of refinement using $\beta = 1$.
 		All NG cells have exactly the same volume, with the LG and SG cells having a lower volume.
-		Notice how the resulting NG cells are stretched and squashed in order to ensure they all have equal volume}
+		Notice how the resulting NG cells are stretched and squashed in order to ensure they all have equal volume
+	}
 	\label{fig:perfect}
 \end{figure}
 
 
-\begin{figure}[tbp]
+\begin{figure}[tb]
 	\includegraphics[width=0.85\textwidth]{Fig10.pdf}
-	\caption{Results of the non-stationary scheme after four levels of subdivision using $\beta = \frac{1}{2}$.
-		NG cells are still stretched and squashed in order to better preserve volume, however the effect is less pronounced}
+	\caption[Title]{
+		Results of the non-stationary scheme after four levels of refinement using $\beta = \frac{1}{2}$.
+		NG cells are still stretched and squashed in order to better preserve volume, however the effect is less pronounced
+	}
 	\label{fig:balanced}
 \end{figure}
 
 
 Figure~\ref{fig:perfect} shows the resulting grid from this method of calculating splitting surfaces.
-In this grid, all NG cells at the same level of subdivision have exactly the same volume as one another.
+In this grid, all NG cells at the same level of refinement have exactly the same volume as one another.
 This greatly improves the volume preservation, as only cells that extend to one of the poles (SG and LG cells) will have a different volume than the other cells in the grid.
 This does not come without consequence though; cells are stretched and squashed in order to achieve this volume preservation, which may be an undesirable effect depending on the application.
 To offset this reduction in cell compactness, it is possible to use splitting factors that are somewhere in between these ones ($c_{s}'$), which give ideal volume preservation, and the conventional SDOG ones ($c_{m}$), which give better compactness.
@@ -384,7 +402,7 @@ For this purpose, we use the coefficient of variation (CV), which is simply the 
 We use the CV over the standard deviation as it a dimensionless quantity.
 
 
-In modifying the subdivision for volume preservation, it is also important to evaluate the impact these changes have on other properties of the grid.
+In modifying the refinement for volume preservation, it is also important to evaluate the impact these changes have on other properties of the grid.
 In Section \ref{sec:mapping} we discussed how the modified grids can be indexed using a mapping between them and conventional SDOG, however we should also measure the effect our changes have on the compactness of the resulting cells.
 To measure this, we use the notion of sphericity, which quantifies how closely the shape of an object approximates a sphere~\cite{wadell1935volume}.
 It is defined as the ratio between the surface area of a sphere with the same volume as the object and the surface area of the object itself.
@@ -399,40 +417,48 @@ Formally, given an object $\omega$ and a sphere $s$ such that $\operatorname{vol
 We use the mean and standard deviation (SD) of sphericity for all cells in the grid to evaluate compactness globally.
 
 
-\begin{figure}[tbp]
+\begin{figure}[tb]
 	\centering
 	\includegraphics[width=0.75\textwidth]{Fig11.pdf}
-	\caption{Volume ratio for the different grids at increasing levels of subdivision.
-		Note that for the non-stationary method ($\beta = 1$) the volume ratio does not change with subdivision level}
+	\caption[Title]{
+		Volume ratio for the different grids at increasing levels of refinement.
+		Note that for the non-stationary method ($\beta = 1$) the volume ratio does not change with refinement level
+	}
 	\label{fig:vr}
 \end{figure}
 
 
-\begin{figure}[tbp]
+\begin{figure}[tb]
 	\centering
 	\includegraphics[width=0.75\textwidth]{Fig12.pdf}
-	\caption{CV of volume for the different grids at increasing levels of subdivision}
+	\caption[Title]{
+		CV of volume for the different grids at increasing levels of refinement
+	}
 	\label{fig:cv}
 \end{figure}
 
 
-\begin{figure}[tbp]
+\begin{figure}[tb]
 	\centering
 	\includegraphics[width=0.75\textwidth]{Fig13.pdf}
-	\caption{Mean sphericity for the different grids at increasing levels of subdivision}
+	\caption[Title]{
+		Mean sphericity for the different grids at increasing levels of refinement
+	}
 	\label{fig:sph}
 \end{figure}
 
 
-\begin{figure}[tbp]
+\begin{figure}[tb]
 	\centering
 	\includegraphics[width=0.75\textwidth]{Fig14.pdf}
-	\caption{Standard deviation of sphericity for the different grids at increasing levels of subdivision}
+	\caption[Title]{
+		Standard deviation of sphericity for the different grids at increasing levels of refinement
+	}
 	\label{fig:sd-sph}
 \end{figure}
 
 
-As a baseline, we have calculated the value of these measures at each subdivision level from one to fifteen for conventional SDOG.
+As a baseline, we have calculated the value of these measures at each refinement level from one to fifteen for conventional SDOG.
 We then repeated this for the four modifications discussed in this paper: the two stationary modifications with $\alpha_{\phi}^{SG} \approx 0.54$ and $\alpha_{\phi}^{SG} = 0.57$, the non-stationary modification (referred to as $\beta = 1$), and finally the blending of the non-stationary with conventional SDOG using $\beta = \frac{1}{2}$.
 The results for each grid are displayed in Figures~\ref{fig:vr}, \ref{fig:cv}, \ref{fig:sph}, and \ref{fig:sd-sph} showing the volume ratio, CV of volume, mean sphericity, and SD of sphericity respectively.
 Table~\ref{tab:results} summarizes these charts with the convergence value of each property for the five different grids.
@@ -442,7 +468,9 @@ It is important to note that for volume ratio and CV of volume lower values are 
 
 \begin{table}[]
 	\centering
-	\caption{Convergence value of each measure for the five discussed grids}
+	\caption[Title]{
+		Convergence value of each measure for the five discussed grids
+	}
 	\begin{tabular}{|c|c|c|c|c|c|}
 		\hline
 		& SDOG & $\alpha_{\phi}^{SG} \approx 0.54$ & $\alpha_{\phi}^{SG} = 0.57$ & $\beta = 1$ & $\beta = 0.5$ \\ \hline
@@ -457,7 +485,9 @@ It is important to note that for volume ratio and CV of volume lower values are 
 
 \begin{table}[]
 	\centering
-	\caption{Convergence value of max and min sphericity for the five discussed grids}
+	\caption[Title]{
+		Convergence value of max and min sphericity for the five discussed grids
+	}
 	\begin{tabular}{|c|c|c|c|c|c|}
 		\hline
 		& SDOG & $\alpha_{\phi}^{SG} \approx 0.54$ & $\alpha_{\phi}^{SG} = 0.57$ & $\beta = 1$ & $\beta = 0.5$ \\ \hline
@@ -469,16 +499,16 @@ It is important to note that for volume ratio and CV of volume lower values are 
 \end{table}
 
 
-The stationary scheme with $\alpha_{\phi}^{SG} \approx 0.54$ has a better volume ratio than conventional SDOG for all levels of subdivision except the first, and a lower CV of volume for all levels of subdivision after the second.
-Comparing this to the one with $\alpha_{\phi}^{SG} = 0.57$, both the volume ratio and CV of volume do not improve as compared to conventional SDOG until the fifth level of subdivision.
-Both of these methods also reduce the mean sphericity of cells at all levels of subdivision, with $\alpha_{\phi}^{SG} = 0.57$ having more than twice the absolute reduction of $\alpha_{\phi}^{SG} \approx 0.54$.
+The stationary scheme with $\alpha_{\phi}^{SG} \approx 0.54$ has a better volume ratio than conventional SDOG for all levels of refinement except the first, and a lower CV of volume for all levels of refinement after the second.
+Comparing this to the one with $\alpha_{\phi}^{SG} = 0.57$, both the volume ratio and CV of volume do not improve as compared to conventional SDOG until the fifth level of refinement.
+Both of these methods also reduce the mean sphericity of cells at all levels of refinement, with $\alpha_{\phi}^{SG} = 0.57$ having more than twice the absolute reduction of $\alpha_{\phi}^{SG} \approx 0.54$.
 The variation in sphericity is similar between all three of these grids.
-Using $\alpha_{\phi}^{SG} = 0.57$ does give a slightly better volume ratio than $\alpha_{\phi}^{SG} \approx 0.54$ as the level of subdivision gets large, however this difference is quite small and likely not worth the lower cell compactness and higher variation in volume.
+Using $\alpha_{\phi}^{SG} = 0.57$ does give a slightly better volume ratio than $\alpha_{\phi}^{SG} \approx 0.54$ as the level of refinement gets large, however this difference is quite small and likely not worth the lower cell compactness and higher variation in volume.
 
 
 The non-stationary scheme gives a much larger improvement to both the volume ratio and the CV of volume.
 This is to be expected, as all NG cells in this scheme have exactly equal volume.
-As the level of subdivision gets large, the CV of volume quickly approaches zero since the number of NG cells is much larger than the number of LG and SG cells in the grid.
+As the level of refinement gets large, the CV of volume quickly approaches zero since the number of NG cells is much larger than the number of LG and SG cells in the grid.
 The cost of this improved volume preservation is a much larger reduction in the sphericity of cells and an increase in the variation of sphericity, which is to be expected.
 The blending scheme has results in between that of conventional SDOG and the non-stationary scheme, which was also expected.
 The CV of volume, mean sphericity, and SD of sphericity are all near the respective halfway points, whereas the volume ratio still ends up being a significant improvement over conventional SDOG.
