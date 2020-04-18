@@ -108,7 +108,7 @@ Addressing such cell degeneration is one of the main challenges of this thesis.
 \section{Goals and Scope}
 In addition to the initial goal of supporting an unbounded range of altitudes, there are several other aims for a 3D DGGS we wish to explore in this thesis.
 While we discuss these below in the context of a 3D DGGS, they are equally applicable to their conventional 2D counterparts.
-We choose to explore these goals only for Earth-centric 3D DGGS's using semiregular refinement strategies (see chapter 3.something); limiting the scope in this manner allows a more thorough exploration of the goals in the 3D DGGS's we propose.
+We choose to explore these goals only for Earth-centric 3D DGGS's using semiregular degenerate refinement strategies (see chapter 3.something); limiting the scope in this manner allows a more thorough exploration of the goals in the 3D DGGS's we propose.
 
 
 As discussed previously, the cells of a 3D DGGS need to be compact while also maintaining near-uniform volume.
@@ -130,7 +130,7 @@ Ensuring all these operations are efficient allows quick integration, processing
 Finally, our 3D DGGS should leverage the accomplishments already made with conventional DGGS to facilitate the efficient and straightforward transference of data between 2D and 3D DGGS's. This interoperability allows smooth migration from 2D to 3D systems while also providing backwards compatibility from 3D to 2D systems.
 
 
-Given these goals and scope, we refine the goal of this thesis: develop methods for Earth-centric 3D DGGS's using semiregular refinement to support unbounded ranges of altitude, equal (or near-equal) volume cells, efficient operations, and interoperability with 2D DGGS's.
+Given these goals and scope, we refine the goal of this thesis: develop methods for Earth-centric 3D DGGS's using semiregular degenerate refinement to support unbounded ranges of altitude, equal (or near-equal) volume cells, efficient operations, and interoperability with 2D DGGS's.
 
 
 \section{Methodology}
@@ -193,7 +193,7 @@ The grid extension method, along with its mappings and use case results, has bee
 \textbf{Draft based on current outline; may change.}
 The outline for the remaining chapters of this thesis is as follows:
 Chapter~\ref{chap:background} covers background information on map projections, Digital Earth systems, and global grids.
-Chapter~\ref{chap:3ddggs} discusses the benefits and drawbacks of different approaches for creating a 3D DGGS and also provides a more detailed explanation of the semiregular refinement strategy employed throughout the thesis.
+Chapter~\ref{chap:3ddggs} discusses the benefits and drawbacks of different approaches for creating a 3D DGGS and also provides a detailed explanation of the semiregular degenerate refinement strategy employed throughout the thesis.
 Chapter~\ref{chap:sdog} introduces SDOG and provides an analysis of the number of cells in SDOG at a given resolution.
 We then provided the modified refinement rules that improve volume preservation and the analysis of said rules.
 Chapter~\ref{chap:extension} covers the grid extension method for creating a 3D DGGS from a 2D one.
