@@ -25,7 +25,7 @@ For simplicity, we initially assume the surface refinement factor is 1:4; a gene
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=\columnwidth]{basic-refinement.pdf}
+	\includegraphics[width=\columnwidth]{reg-refinement.pdf}
 	\caption{Regular prismatoid refinement as applied to a single pyramid cell \textbf{(a)} once and \textbf{(b)} twice}
 	\label{fig:regular}
 \end{figure}
@@ -54,7 +54,7 @@ We continue our assumption of a 1:4 surface refinement factor from before.
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=\columnwidth]{degen-refinement.pdf}
+	\includegraphics[width=\columnwidth]{semireg-refinement.pdf}
 	\caption{Semiregular prismatoid refinement as applied to a single pyramid cell \textbf{(a)} once and \textbf{(b)} twice.
 		In \textbf{(b)}, the number of times the surface refinement has been applied ($k_s$) is shown for each layer; see how the radial refinements of central layers separate regions of the grid with different values of $k_s$}
 	\label{fig:semiregular}
@@ -75,17 +75,17 @@ This surface resolution is needed for grid encoding/decoding and various indexin
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=\textwidth]{comparison.pdf}
+	\includegraphics[width=\textwidth]{reg-vs-semireg.pdf}
 	\caption{Three levels of successive applications of regular (top) and semiregular (bottom) prismatoid refinement.
 		Only the side of a single pyramid starting cell is shown to highlight the behaviour of the two schemes at different radii.
 		Note how cells degenerate towards the centre with regular refinement, whereas this issue is not present in the semiregular scheme}
-	\label{fig:multipleSL}
+	\label{fig:regVsemireg}
 \end{figure}
 
 
 Normal layers in this scheme are simply refined using regular prismatoid refinement.
 This results in two normal layers, both of which have $k_s$ equal to one greater than that of the starting layer.
-Figure~\ref{fig:multipleSL} compares three successive applications of regular and semiregular prismatoid refinement to a single pyramid cell.
+Figure~\ref{fig:regVsemireg} compares three successive applications of regular and semiregular prismatoid refinement to a single pyramid cell.
 
 \section{Refinement Extensions}
 \subsection{Other Surface Refinement Factors} \label{sec:grid:factors}
@@ -150,7 +150,7 @@ Table~\ref{tab:layers} lists our proposed layering sequences for surface refinem
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=\textwidth]{hexagons.pdf}
+	\includegraphics[width=\textwidth]{semireg-hexagons.pdf}
 	\caption{Semiregular prismatoid refinement applied to a hexagonal base cell using a 1:3 surface refinement scheme \textbf{(a)} once and \textbf{(c)} twice; \textbf{(b)} is the same image as \textbf{(c)}, but with the surface cells of the previous refinement level shown for reference.
 		Note that in the second level of refinement, normal layers have two radial refinements as opposed to one}
 	\label{fig:hexagons}

@@ -29,13 +29,48 @@ Despite these fundamental challenges, the many benefits of maps have motivated t
 
 Distortions in a map projection (or more generally in any mapping) are measured by their effect on angles, areas, and distances.
 While eliminating all distortion is impossible, specialized projection methods exist that remove certain types of distortion.
-Commonly used conformal [] and area-preserving [] projections preserve angles and areas, respectively.
+Commonly used conformal (Figure~\ref{fig:mercator}) and area-preserving (Figure~\ref{fig:gall-peters}) projections preserve angles and areas, respectively.
 Preserving distance also removes all other distortion, and since the sphere in non-developable, isometric projections between the sphere and the plane are impossible.
-However, projections that preserve only certain distances, such as all those to a certain point, are achievable. []
-Alternatively, some methods aim for a balanced trade-off between the different types of distortion, as opposed to eliminating a specific type. []
-\cite{mathematics paper on distortion}
-\cite{planar area preserving}
-\cite{planar conformal}
+However, projections that preserve only certain distances, such as all those to a certain point, are achievable (Figure~\ref{fig:azi-equidist}).
+Alternatively, some methods aim for a balanced trade-off between the different types of distortion, as opposed to eliminating a specific type (Figure~\ref{fig:robinson}).
+
+
+\begin{figure*}[p]
+	\centering
+	\begin{subfigure}[]{0.5\textwidth}
+		\centering
+		\includegraphics[width=0.95\textwidth]{mercator.jpg}
+		\caption{}
+		\label{fig:mercator}
+	\end{subfigure}%
+	%
+	\begin{subfigure}[]{0.5\textwidth}
+		\centering
+		\includegraphics[width=0.95\textwidth]{azi-equidist.jpg}
+		\caption{}
+		\label{fig:azi-equidist}
+	\end{subfigure}%
+	
+	\begin{subfigure}[]{0.5\textwidth}
+		\centering
+		\includegraphics[width=0.95\textwidth]{gall-peters.jpg}
+		\caption{}
+		\label{fig:gall-peters}
+	\end{subfigure}%
+	%
+	\begin{subfigure}[]{0.5\textwidth}
+		\centering
+		\includegraphics[width=0.95\textwidth]{robinson.jpg}
+		\caption{}
+		\label{fig:robinson}
+	\end{subfigure}
+	
+	\caption[Four Popular Map Projections]{
+		Four common map projections and special properties they possess: \textbf{(a)} Mercator~\cite{mercator}, conformal; \textbf{(b)} azimuthal equidistant~\cite{azi-equidist}, equidistant to centre point; \textbf{(c)} Gall-Peters~\cite{gall-peters}, equal area; and \textbf{(d)} Robinson~\cite{robinson}, compromise (no measures preserved).
+		Images courtesy of Daniel R. Strebe -- CC BY-SA 3.0
+	}
+	\label{fig:projections}
+\end{figure*}
 
 
 Since distortion cannot be completely removed, measurements and analyses done on flat maps can produce errors.
@@ -58,7 +93,20 @@ These studies further show that the projection used for a map must be chosen and
 \subsubsection{Polyhedral Projections} \label{chap:2:polyproj}
 At the cost of introducing additional map edges, cutting a map can reduce the amount of distortion introduced by projection~\cite{soliman2018optimal}.
 Such cuts are analogous to projecting the sphere to an underlying polyhedron, the net of which produces the final flat map.
-Aside from reducing distortion, this type of map can serve as a pseudo-globe by folding the net into the corresponding polyhedron.
+Figure~\ref{fig:poly-projection} shows one example of such a projection, the Dymaxion map.
+Aside from reducing distortion, this polyhedron based maps can serve as a pseudo-globe by folding the net into the corresponding polyhedron.
+
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{dymaxion.png}
+	\caption[The Dymaxion (or Fuller) Map Projection]{
+		The Dymaxion, also known as Fuller, map projection: one of the first examples of a polyhedron based map projection.
+		Image courtesy of Justin Haruaki Kunimune~\cite{dymaxion} -- CC BY-SA 4.0
+	}
+	\label{fig:poly-projection}
+\end{figure}
+
 
 
 As will be discussed later, this class of projection methods is also a core component of any polyhedron based discretization of the Earth.
@@ -173,11 +221,22 @@ For consistency and to avoid confusion, this thesis exclusively uses the term re
 
 \subsection{Spherical Grids} \label{chap:2:spherical}
 With the Earth commonly approximated as a sphere, many DGG's and DGGS's are defined directly in this space.
-One of the most straightforward approaches for doing so is with a regular discretization based on latitude and longitude coordinates, or a latitude-longitude grid (LLG).
+One of the most straightforward approaches for doing so is with a regular discretization based on latitude and longitude coordinates, or a latitude-longitude grid (LLG), shown in Figure~\ref{fig:llg}.
 Similar to a regular grid in Euclidean space defined by equal steps in Cartesian coordinates, an LLG divides the sphere into equal steps of latitude and longitude.
 Unlike Cartesian coordinates, however, spherical coordinates have singularities at both poles causing quadrilateral LLG cells to degenerate into triangle cells at the poles.
 This degeneration reduces the compactness of cells near the poles, produces a high valence vertex at each of the poles, and results in cells in the grid having unbounded area differences.
 Thus, an LLG is neither a compact nor uniform DGG.
+
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.4\textwidth]{llg.pdf}
+	\caption[A Latitude Longitude Grid]{
+		\textbf{Placeholder} A latitude-longitude grid (LLG) with 24 longitudinal division and 12 latitudinal divisions.
+		Note how cells become increasingly narrow toward poles, resulting in reduced size and compactness as compared to cells more near the equator
+	}
+	\label{fig:llg}
+\end{figure}
 
 
 One strategy to lessen the drawbacks of an LLG is to change the longitude step size as a function of latitude. As (absolute) latitude increases, the same angular longitude corresponds to decreasing arc lengths on the sphere.
@@ -208,6 +267,17 @@ This style of grid avoids degeneracies in the grid at the poles, providing a mor
 Furthermore, the use of an area-preserving projection in conjunction with an area-preserving refinement of the polyhedron allows for an equal area grid without a significant reduction in cell compactness.
 
 
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.30\textwidth]{polyhedron-grid.pdf}
+	\caption[A Icosahedron Based Grid]{
+		\textbf{Placeholder} A simple triangular grid based on a regular icosahedron.
+		Projection goes between polyhedron domain and spherical domain
+	}
+	\label{fig:poly-grid}
+\end{figure}
+
+
 One of the earliest polyhedron based DGGS's is the Sphere Quadtree, proposed by Fekete in 1990~\cite{fekete1990sphere}.
 This system uses a regular icosahedron as the initial discretization, along with standard 1:4 triangle refinement and a simple normalization projection.
 Dutton later adopted a similar method to the regular octahedron~\cite{dutton1996encoding}.
@@ -217,8 +287,16 @@ We once again refer to~\cite{mahdavi2015survey} and~\cite{alderson2020digital} f
 
 
 \subsection{Grid Encoding and Decoding} \label{chap:2:coding}
+For a DGG or DGGS to be useful as a tool for managing geospatial data, operations are needed that can associate said data with the appropriate set of cells.
+This class of operations is known as grid encoding.
+The most simple type of encoding is for points---finding the cell which contains a given point---however, operations for more complex geometry such as vector polylines and polygons is often also required~\cite{du2018duality} [more?].
+Likewise, the inverse process of mapping a set of cells in the grid domain to the corresponding regions of the Earth is also needed.
+These operations are, correspondingly, known as grid decoding.
+Grid encoding and decoding, as they apply to a polyhedron based grid, are shown in Figure~\ref{fig:coding}.
+
 
 \begin{figure}[tb]
+	\centering
 	\includegraphics[width=\textwidth]{coding.pdf}
 	\caption[Grid Encoding and Decoding with a Polyhedral Grid]{
 		The process of encoding (left) and decoding (right) with a polyhedral grid.
@@ -227,14 +305,6 @@ We once again refer to~\cite{mahdavi2015survey} and~\cite{alderson2020digital} f
 	}
 	\label{fig:coding}
 \end{figure}
-
-
-For a DGG or DGGS to be useful as a tool for managing geospatial data, operations are needed that can associate said data with the appropriate set of cells.
-This class of operations is known as grid encoding.
-The most simple type of encoding is for points---finding the cell which contains a given point---however, operations for more complex geometry such as vector polylines and polygons is often also required~\cite{du2018duality} [more?].
-Likewise, the inverse process of mapping a set of cells in the grid domain to the corresponding regions of the Earth is also needed.
-These operations are, correspondingly, known as grid decoding.
-Grid encoding and decoding, as they apply to a polyhedron based grid, are shown in Figure~\ref{fig:coding}.
 
 
 \subsubsection{Indexing Scheme} \label{chap:2:indexing}

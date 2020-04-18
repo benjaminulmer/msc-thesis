@@ -63,6 +63,30 @@ This has motivated the development of volumetric (3D) discrete global grids and 
 Going forward, we use the term 3D DGGS to refer to these technologies collectively.
 
 
+\begin{figure*}[p]
+	\centering
+	\begin{subfigure}[]{0.5\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{earth-cutaway.pdf}
+		\caption{}
+		\label{fig:earth-cutaway}
+	\end{subfigure}%
+	%
+	\begin{subfigure}[]{0.5\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{earth-atmosphere.pdf}
+		\caption{}
+		\label{fig:earth-atmosphere}
+	\end{subfigure}%
+	
+	\caption[Four Popular Map Projections]{
+		Four common map projections and special properties they possess: \textbf{(a)} Mercator~\cite{mercator}, conformal; \textbf{(b)} azimuthal equidistant~\cite{azi-equidist}, equidistant to centre point; \textbf{(c)} Gall-Peters~\cite{gall-peters}, equal area; and \textbf{(d)} Robinson~\cite{robinson}, compromise (no measures preserved).
+		Images courtesy of Daniel R. Strebe -- CC BY-SA 3.0
+	}
+	\label{fig:3dearth}
+\end{figure*}
+
+
 Most human activity and interest, and correspondingly geospatial data, is located in a relatively small region above and below the surface of the Earth ($\pm$10 -- 500 km).
 Likewise, most existing approaches for 3D DGGS's have focused on this region.
 However, there are select processes such as seismic wave propagation and the magnetosphere that span much beyond this region (\textbf{figure?}).
@@ -86,16 +110,6 @@ While these issues are negligible for small scale regions of the Earth, for a 3D
 Cells should be aligned with the surface of the Earth and have a consistent orientation for increasing and decreasing altitude.
 
 
-\begin{figure}[tb]
-	\includegraphics[width=\textwidth]{Fig1.pdf}
-	\caption[Different Views of a 3D Latitude-Longitude Grid]{
-		placeholder figure.
-		Caption describing degeneration in cells toward centre and poles
-	}
-	\label{fig:3dllg}
-\end{figure}
-
-
 The main challenge associated with such Earth-centric grids is the inevitable degeneration of cells toward the singularity at the centre of the Earth.
 This effect is demonstrated in Figure~\ref{fig:3dllg}---cells more near the centre of the grid become increasingly small and skinny and eventually degenerate to pyramids.
 For grids with a small radial extent, the effect of this is negligible; however, for the range of altitudes we wish to support in this thesis, it cannot be ignored.
@@ -103,6 +117,17 @@ The problem with this type of cell degeneration is two-fold, as it reduces both 
 Furthermore, the resulting difference in the volumes of cells is unbounded.
 It is worth noting that this same issue presents itself in traditional latitude-longitude grids at the poles, also demonstrated in Figure~\ref{fig:3dllg}.
 Addressing such cell degeneration is one of the main challenges of this thesis.
+
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{3dllg.pdf}
+	\caption[Different Views of a 3D Latitude-Longitude Grid]{
+		placeholder figure.
+		Caption describing degeneration in cells toward centre and poles
+	}
+	\label{fig:3dllg}
+\end{figure}
 
 
 \section{Goals and Scope} \label{chap:1:goals}

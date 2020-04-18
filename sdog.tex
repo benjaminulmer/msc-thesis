@@ -4,7 +4,7 @@
 \section{SDOG Overview}
 
 \begin{figure}[tb]
-	\includegraphics[width=\textwidth]{Fig2.pdf}
+	\includegraphics[width=\textwidth]{sdog.pdf}
 	\caption[Title]{
 		One octant of an SDOG grid after four levels of refinement viewed (a) from the side, (b) from the front, and (c) at an angle.
 		Compared to a 3D LLG, cells are much more uniform in size and have much better compactness.
@@ -22,23 +22,23 @@ An SDOG octant after four refinements can be seen in Figure~\ref{fig:sdog}.
 
 
 \begin{figure}[tb]
-	\includegraphics[width=\textwidth]{Fig3.pdf}
+	\includegraphics[width=\textwidth]{sdog-refinement.pdf}
 	\caption[Title]{
 		Location and extent of splitting surfaces in SDOG refinement for (a) SG cells, (b) LG cells, and (c) NG cells.
 		Only NG cells have all three splitting surfaces fully refine the cell into eight children, and make up the majority of cells as the grid becomes more refined
 	}
-	\label{fig:subRules}
+	\label{fig:sdog-refinement}
 \end{figure}
 
 
 SDOG cells (including octants) are refined using the midpoint of each spherical coordinate: latitude, longitude, and radius.
 These midpoints create splitting surfaces that can be used to split parent cells into smaller children cells.
 To prevent the degeneration in cell compactness and size near the poles and centre of the sphere seen in 3D LLGs (Figure~\ref{fig:3dllg}), the extent of these splitting surfaces and the number of resulting children cells depends on the shape, or class, of cell that is being divided.
-The splitting surfaces for each type of SDOG cell are shown in Figure~\ref{fig:subRules}.
+The splitting surfaces for each type of SDOG cell are shown in Figure~\ref{fig:sdog-refinement}.
 We call a splitting surface symmetric if it creates the same number and type(s) of cells on both sides; otherwise we call it degenerate.
 
 
-Cells that extend to the centre of the sphere and to one of the poles are referred to as Sphere-degenerated Grid (SG) cells (Figure~\ref{fig:subRules}a) and include the original eight octants.
+Cells that extend to the centre of the sphere and to one of the poles are referred to as Sphere-degenerated Grid (SG) cells (Figure~\ref{fig:sdog-refinement}a) and include the original eight octants.
 For these cells, the longitudinal splitting surface does not extend beyond the latitudinal one in the direction towards the pole.
 Additionally, neither the latitudinal nor longitudinal splitting surfaces extend beyond the radial one in the direction towards the centre of the sphere.
 The result of this refinement is four children cells: another SG cell, one Latitude-degenerated Grid (LG) cell, and two Normal Grid (NG) cells.
@@ -46,13 +46,13 @@ LG and NG cells are described below.
 Only the longitudinal splitting surface for SG cells is symmetric.
 
 
-LG cells (Figure~\ref{fig:subRules}b) are similar to SG ones, except that they only extend to one of the poles and not the centre of the sphere.
+LG cells (Figure~\ref{fig:sdog-refinement}b) are similar to SG ones, except that they only extend to one of the poles and not the centre of the sphere.
 Therefore, the longitudinal splitting surface does not extend beyond the latitudinal one in the direction towards the pole.
 This refinement results in six children cells: two LG cells and four NG cells.
 The longitudinal and radial splitting surfaces for LG cells are symmetric.
 
 
-NG cells (Figure~\ref{fig:subRules}c) extend to neither the pole nor the centre of the sphere and make up the majority of SDOG cells.
+NG cells (Figure~\ref{fig:sdog-refinement}c) extend to neither the pole nor the centre of the sphere and make up the majority of SDOG cells.
 These cells are fully refined into eight children NG cells and are the regular case for SDOG refinement.
 All splitting surfaces for NG cells are symmetric.
 
@@ -158,7 +158,7 @@ Finally, faces created by latitudinal splitting surfaces lie on a cone, with a s
 %\subsection{Blending Functions}
 
 \begin{figure}[tb]
-	\includegraphics[width=0.85\textwidth]{Fig4.pdf}
+	\includegraphics[width=0.85\textwidth]{sdog-volume.pdf}
 	\caption[Title]{
 		Distribution of cell volumes in an octant after four levels of conventional SDOG refinement
 	}
@@ -180,7 +180,7 @@ Using midpoints to refine cells makes for a simple refinement scheme, but it mak
 
 
 \begin{figure}[tb]
-	\includegraphics[width=0.5\textwidth]{Fig5.pdf}
+	\includegraphics[width=0.5\textwidth]{sdog-functions.pdf}
 	\caption[Title]{
 		Each SDGO cell can be expressed as a range in each spherical coordinate, and the location of the splitting surface for each spherical coordinate can be expressed as a function of the maximum and minimum of the respective range.
 		Here we show only an NG cell, however the same applies to SG and LG cells.
@@ -247,18 +247,18 @@ From Eq.~(\ref{eq:longVol}) it is clear a longitudinal splitting surface at the 
 
 
 \begin{figure}[tb]
-	\includegraphics[width=0.6\textwidth]{Fig6.pdf}
+	\includegraphics[width=0.6\textwidth]{sdog-shells.pdf}
 	\caption[Title]{
 		Spherical shells created by the radial splitting surfaces of SG cells.
 		At $k$ levels of refinement there are $k$ shells and one inner SG cell.
 		These shells are similar and should have volume proportional to the number of cells they contain
 	}
-	\label{fig:sg-rad-splits}
+	\label{fig:sdog-shells}
 \end{figure}
 
 
 Less trivially, the radial splitting surface for SG cells should also be left at the midpoint.
-Referring to Figure~\ref{fig:sg-rad-splits}, we can see that the radial splitting surfaces for SG cells separate the grid into spherical shells.
+Referring to Figure~\ref{fig:sdog-shells}, we can see that the radial splitting surfaces for SG cells separate the grid into spherical shells.
 Shell $n$ has a volume proportional to
 %
 \begin{equation}
@@ -292,14 +292,14 @@ We use $\alpha_{\phi}^{SG}$ and $\alpha_{\phi}^{LG}$ to refer to the splitting f
 
 
 \begin{figure}[tb]
-	\includegraphics[width=0.9859\textwidth]{Fig7.pdf}
+	\includegraphics[width=0.9859\textwidth]{sdog-zones.pdf}
 	\caption[Title]{
 		Spherical zones created by the latitudinal splitting surfaces of SG and LG cells.
 		At $k$ levels of refinement there are $k$ zones and one upper stack of LG cells in the outer most shell.
 		Each successively smaller shell has one fewer zones, until reaching the innermost SG cell.
 		Zones in the same shell are not exactly similar, but are regular and should have volume proportional to the number of cells they contain
 	}
-	\label{fig:lat-splits}
+	\label{fig:sdog-zones}
 \end{figure}
 
 
@@ -307,7 +307,7 @@ We first performed a simple search on the possible values of these splitting fac
 We found that volume preservation could be improved by certain values of $\alpha_{\phi}^{SG}$, however, it was always the case that $\alpha_{\phi}^{LG}$ was best left equal to one half.
 To understand why this is the case, we look at where the ideal placements for these splitting surfaces would be if not constrained by convex combinations.
 Notice that these two latitudinal splitting surfaces have a similar effect as the radial splitting surface for SG cells.
-Referring now to Figure~\ref{fig:lat-splits}, we see that these splitting surfaces further divide the spherical shells into spherical zones.
+Referring now to Figure~\ref{fig:sdog-zones}, we see that these splitting surfaces further divide the spherical shells into spherical zones.
 Additionally, each zone is comprised entirely of NG cells.
 From this fact we conclude that zone $n$ has exactly four times as many cells as zone $n+1$, and thus in the ideal case would have exactly four times the volume as well.
 We can use Eq.~(\ref{eq:latVol}) to find these ideal locations using the proper value for $p$.
@@ -324,12 +324,12 @@ Thus, as the level of refinement gets large, using $\alpha_{\phi}^{LG} = \frac{1
 
 
 \begin{figure}[tb]
-	\includegraphics[width=0.85\textwidth]{Fig8.pdf}
+	\includegraphics[width=0.85\textwidth]{alpha-volume.pdf}
 	\caption[Title]{
 		Results of the stationary scheme after four levels of refinement using $\alpha_{\phi}^{SG} \approx 0.54$.
 		Since only one type of splitting surface has been modified, the results are similar to that of conventional SDOG
 	}
-	\label{fig:stationary}
+	\label{fig:alpha-volume}
 \end{figure}
 
 
@@ -341,7 +341,7 @@ Substituting back into Eq.~(\ref{eq:convex}) we get
 \alpha_{\phi}^{SG} = \frac{ \sin^{-1} \left( \pm \frac{3}{4} \right) }{ \pm \frac{\pi}{2} } \approx 0.53989.
 \end{equation}
 %
-The grid resulting from using this value can be seen in Figure~\ref{fig:stationary}.
+The grid resulting from using this value can be seen in Figure~\ref{fig:alpha-volume}.
 Interestingly, our initial search also found $\alpha_{\phi}^{SG} = 0.57$ to perform well, even resulting in a slightly lower maximum difference in cell volumes than the theoretical ideal.
 These findings are not necessarily in conflict, however, as the theoretical ideal results in much less variation in the volume of cells.
 We compare these two schemes more closely in Section \ref{sec:results}.
@@ -357,27 +357,27 @@ In other words, we can simply set $p = \frac{1}{2}$ for these remaining splittin
 
 
 \begin{figure}[tb]
-	\includegraphics[width=0.85\textwidth]{Fig9.pdf}
+	\includegraphics[width=0.85\textwidth]{modified-volume.pdf}
 	\caption[Title]{
 		Results of the non-stationary scheme after four levels of refinement using $\beta = 1$.
 		All NG cells have exactly the same volume, with the LG and SG cells having a lower volume.
 		Notice how the resulting NG cells are stretched and squashed in order to ensure they all have equal volume
 	}
-	\label{fig:perfect}
+	\label{fig:modified-results}
 \end{figure}
 
 
 \begin{figure}[tb]
-	\includegraphics[width=0.85\textwidth]{Fig10.pdf}
+	\includegraphics[width=0.85\textwidth]{blend-volume.pdf}
 	\caption[Title]{
 		Results of the non-stationary scheme after four levels of refinement using $\beta = \frac{1}{2}$.
 		NG cells are still stretched and squashed in order to better preserve volume, however the effect is less pronounced
 	}
-	\label{fig:balanced}
+	\label{fig:blend-volume}
 \end{figure}
 
 
-Figure~\ref{fig:perfect} shows the resulting grid from this method of calculating splitting surfaces.
+Figure~\ref{fig:modified-results} shows the resulting grid from this method of calculating splitting surfaces.
 In this grid, all NG cells at the same level of refinement have exactly the same volume as one another.
 This greatly improves the volume preservation, as only cells that extend to one of the poles (SG and LG cells) will have a different volume than the other cells in the grid.
 This does not come without consequence though; cells are stretched and squashed in order to achieve this volume preservation, which may be an undesirable effect depending on the application.
@@ -390,7 +390,7 @@ c_{s} = \beta c_{s}' + \left( 1 - \beta \right)c_{m}, \quad \beta \in \left( 0,1
 \end{equation}
 %
 however other methods could give better results.
-We show a simple result in Figure~\ref{fig:balanced} using $\beta = \frac{1}{2}$.
+We show a simple result in Figure~\ref{fig:blend-volume} using $\beta = \frac{1}{2}$.
 
 \section{Results}
 There are several potential methods for evaluating the volume preserving properties of a 3D DGGS.
@@ -419,7 +419,7 @@ We use the mean and standard deviation (SD) of sphericity for all cells in the g
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[width=0.75\textwidth]{Fig11.pdf}
+	\includegraphics[width=0.75\textwidth]{volume-ratio.pdf}
 	\caption[Title]{
 		Volume ratio for the different grids at increasing levels of refinement.
 		Note that for the non-stationary method ($\beta = 1$) the volume ratio does not change with refinement level
@@ -430,7 +430,7 @@ We use the mean and standard deviation (SD) of sphericity for all cells in the g
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[width=0.75\textwidth]{Fig12.pdf}
+	\includegraphics[width=0.75\textwidth]{cv-volume.pdf}
 	\caption[Title]{
 		CV of volume for the different grids at increasing levels of refinement
 	}
@@ -440,7 +440,7 @@ We use the mean and standard deviation (SD) of sphericity for all cells in the g
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[width=0.75\textwidth]{Fig13.pdf}
+	\includegraphics[width=0.75\textwidth]{mean-sph.pdf}
 	\caption[Title]{
 		Mean sphericity for the different grids at increasing levels of refinement
 	}
@@ -450,7 +450,7 @@ We use the mean and standard deviation (SD) of sphericity for all cells in the g
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[width=0.75\textwidth]{Fig14.pdf}
+	\includegraphics[width=0.75\textwidth]{sd-sph.pdf}
 	\caption[Title]{
 		Standard deviation of sphericity for the different grids at increasing levels of refinement
 	}
