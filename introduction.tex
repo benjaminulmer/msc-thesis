@@ -26,7 +26,7 @@ These individual layers are overlayed to create a complete model of the Earth (o
 However, being created and gathered by diverse organizations, geospatial data exists in many different formats and resolutions.
 The conventional GIS pipeline---which requires experts to clean, process, integrate, and distribute data---is unsustainable in the face of geospatial big data.
 Furthermore, even after data has been integrated with a GIS, overlay operations such as intersections and data extraction are computationally expensive when many data layers are present~\cite{wang2015improving}.
-Coordinate based representations of geospatial data also do not provide proper facilities to represent the uncertainty or error of the data they are used to represent. [goodchilde reimagine]
+Coordinate based representations of geospatial data also do not provide proper facilities to represent the uncertainty or error of the data they are used to represent~\cite{goodchild2018reimagining}.
 
 
 Another challenge with GIS is the use of a flat map as the underlying representation.
@@ -40,8 +40,8 @@ Model globes avoid many of the shortcomings of planar maps by providing a more a
 Despite this, the ability for physical maps to be easily made and stored, display the entire Earth at once, and accommodate any scale has made them the preferred option in many situations.
 With the advent of a Digital Earth, however, many the drawbacks of physical globes are lessened or negated.
 Computer graphics algorithms and hardware allow globes to be rendered in real-time, storage is no different than for a digital map, and interactive systems allow zooming and panning to show any part of the Earth at any scale.
-The only challenge unsolved is displaying the entire Earth at once; however, even this is partially addressed with multi-view focus plus context rendering techniques~\cite{mark-sherlock}.
-Because of this, there has been a recent push toward globe based Digital Earth systems, one of the most well-known examples of which being Google Earth\footnote{url here}.
+The only challenge unsolved is displaying the entire Earth at once; however, even this is partially addressed with multi-view focus plus context rendering techniques~\cite{sherlock2017visualizations}
+Because of this, there has been a recent push toward globe based Digital Earth systems, one of the most well-known examples of which being Google Earth\footnote{\url{https://www.google.com/earth/}}.
 In these systems, data is visualized on a 3D model of the Earth---approximated as a sphere or ellipsoid---as opposed to a traditional planar map. While globe based Digital Earths are becoming more popular, many of these systems still use a flat map as the underlying representation for geospatial data.
 Thus, these systems still suffer errors introduced by distortion resulting from any planar operations done with the underlying coordinate system.
 
@@ -70,7 +70,7 @@ Furthermore, the range of altitudes satellites orbit at is extensive, with satel
 Therefore, to support the full range of human activity and interest, 3D DGGS's that extend to the centre of the Earth and far beyond the atmosphere are needed.
 
 
-\section{Problem Statement}
+\section{Problem Statement} \label{chap:1:problem}
 Despite the necessity for 3D DGGS's, the area of research is still relatively unexplored compared to that of traditional DGGS and GIS technologies.
 Additionally, of the proposed methods, many are only appropriate for data with small altitude ranges, or data near the surface of the Earth.
 Thus, for data with more extensive altitude ranges, there are even fewer methods that are appropriate. 
@@ -105,10 +105,10 @@ It is worth noting that this same issue presents itself in traditional latitude-
 Addressing such cell degeneration is one of the main challenges of this thesis.
 
 
-\section{Goals and Scope}
+\section{Goals and Scope} \label{chap:1:goals}
 In addition to the initial goal of supporting an unbounded range of altitudes, there are several other aims for a 3D DGGS we wish to explore in this thesis.
 While we discuss these below in the context of a 3D DGGS, they are equally applicable to their conventional 2D counterparts.
-We choose to explore these goals only for Earth-centric 3D DGGS's using semiregular degenerate refinement strategies (see chapter 3.something); limiting the scope in this manner allows a more thorough exploration of the goals in the 3D DGGS's we propose.
+We choose to explore these goals only for Earth-centric 3D DGGS's using semiregular degenerate refinement strategies (see Chapter~\ref{chap:3:semiregDegen}); limiting the scope in this manner allows a more thorough exploration of the goals in the 3D DGGS's we propose.
 
 
 As discussed previously, the cells of a 3D DGGS need to be compact while also maintaining near-uniform volume.
@@ -133,7 +133,7 @@ Finally, our 3D DGGS should leverage the accomplishments already made with conve
 Given these goals and scope, we refine the goal of this thesis: develop methods for Earth-centric 3D DGGS's using semiregular degenerate refinement to support unbounded ranges of altitude, equal (or near-equal) volume cells, efficient operations, and interoperability with 2D DGGS's.
 
 
-\section{Methodology}
+\section{Methodology} \label{chap:1:method}
 In this thesis, we use two different approaches to create 3D DGGS's with the desired properties.
 The first approach modifies the refinement rules of an existing 3D DGGS, the Spheroid Degenerated-Octree Grid (SDOG)~\cite{yu2009sdog}, to improve its volume-preserving properties.
 With SDOG, a sphere with twice the radius of the Earth is initially divided into eight equal octants via the equatorial plane and two perpendicular meridian planes.
@@ -165,7 +165,7 @@ Evaluation of the second approach is done through a series of use cases, each em
 These use cases illustrate both the versatility and sophistication of the method, being able to quickly create many different 3D DGGS's while achieving the desirable properties outlined above.
 
 
-\section{Contribution}
+\section{Contribution} \label{chap:1:contribution}
 This main contributions of this thesis fall into three groups:
 
 \begin{enumerate}
@@ -189,7 +189,7 @@ The efficient encoding and decoding algorithms are an unpublished extension of t
 The grid extension method, along with its mappings and use case results, has been published in the journal \textit{ISPRS International Journal of Geo-Information} in a special issue on Global Grid Systems~\cite{ulmer2020general}.
 
 
-\section{Thesis Overview}
+\section{Thesis Overview} \label{chap:1:overview}
 \textbf{Draft based on current outline; may change.}
 The outline for the remaining chapters of this thesis is as follows:
 Chapter~\ref{chap:background} covers background information on map projections, Digital Earth systems, and global grids.

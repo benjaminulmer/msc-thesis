@@ -5,7 +5,7 @@ We go on to discuss the different approaches for a Digital Earth, starting with 
 We also provide background and related work on discrete global grids and grid systems, looking at different methods for constructing these data structures.
 
 
-\section{Traditional Maps and Globes}
+\section{Traditional Maps and Globes} \label{chap:2:maps}
 Cartography, the study and practice of making maps, is a mature and diverse discipline.
 While there is no agreement on the earliest known map, there exist samples dating to the 4th millennium BCE and surviving world maps from 9th century BCE Babylonia.
 While one may think of maps primarily as a navigation tool, the uses extend much further.
@@ -20,7 +20,7 @@ Compared to maps, globes are more expensive to manufacture and more difficult to
 Maps can also represent the entire Earth in one view and easily accommodate any scale.
 
 
-\subsection{Map Projections}
+\subsection{Map Projections} \label{chap:2:projection}
 The above benefits of a flat map over a globe do not come without their disadvantages
 Producing a map requires flattening the spherical Earth to a flat plane---an operation known as map projection (or simply projection)---which introduces inevitable distortions and map edges.
 These issues are not present on globes, and because of this, they provide a more accurate representation of the Earth than is possible with any map.
@@ -55,7 +55,7 @@ While both groups overestimated distances on average, the group with the Eurocen
 These studies further show that the projection used for a map must be chosen and centred carefully to ensure readers correctly understand how the map relates to the actual Earth.
 
 
-\subsubsection{Polyhedral Projections}
+\subsubsection{Polyhedral Projections} \label{chap:2:polyproj}
 At the cost of introducing additional map edges, cutting a map can reduce the amount of distortion introduced by projection~\cite{soliman2018optimal}.
 Such cuts are analogous to projecting the sphere to an underlying polyhedron, the net of which produces the final flat map.
 Aside from reducing distortion, this type of map can serve as a pseudo-globe by folding the net into the corresponding polyhedron.
@@ -66,7 +66,7 @@ Since equal-area cells are often desired for such discretizations, many area-pre
 There has also been work to improve the efficiency of these projections for use with Digital Earth systems~\cite{harrison2011optimization}.
 
 
-\section{Digital Earth Systems}
+\section{Digital Earth Systems} \label{chap:2:DE}
 With the advent of computing systems came the move of maps from the physical domain to the digital one.
 Initially, this required scanning existing physical maps to digitize the data they contained.
 As the prevalence of computers increased, more geospatial data was stored natively in digital formats.
@@ -82,7 +82,7 @@ Currently, many different systems exist for creating a Digital Earth with signif
 
 
 
-\subsection{Geographic Information Systems}
+\subsection{Geographic Information Systems} \label{chap:2:GIS}
 Long before Al Gore's idea of a Digital Earth, traditional cartography techniques were being applied to systems for creating and managing digital maps.
 These technologies became what is known today as GIS~\cite{foresman1998history}.
 Just as with physical maps, in a GIS, different datasets are represented as individual layers in a planar coordinate system.
@@ -98,12 +98,12 @@ Furthermore, due to the use of a planar coordinate system, distortion from proje
 Which map projection to use for which use cases must be considered carefully, which also requires sufficient domain expertise.
 
 
-\subsection{Globe Based Digital Earth}
+\subsection{Globe Based Digital Earth} \label{chap:2:globeDE}
 A more recent approach to a Digital Earth---and one more in line with Al Gore's initial proposal---is a globe based Digital Earth.
 While physical globes have practical drawbacks in comparison to a map, in a digital setting, these drawbacks are reduced if not completely negated. 
 Modern computer graphics algorithms and hardware have made creating, storing, and displaying a virtual globe in real-time no more difficult than displaying the equivalent map.
 Interactive systems allow digital measurements and zooming on a globe to show any region of the Earth at the desired scale.
-Virtual globes still cannot display the entire Earth at once; however, novel interaction techniques such as multi-view focus plus context rendering can help alleviate this limitation~\cite{mark-sherlock}.
+Virtual globes still cannot display the entire Earth at once; however, novel interaction techniques such as multi-view focus plus context rendering can help alleviate this limitation~\cite{sherlock2017visualizations}.
 
 
 Due to the reduced distortion with a globe, there has been a push toward globe based Digital Earth systems as opposed to conventional map based ones~\cite{goodchild2018reimagining}.
@@ -117,11 +117,11 @@ Some examples include better representations for rational points on the sphere~\
 For these reasons, direct spherical analysis on a globe based Digital Earth is becoming a compelling alternative to traditional GIS. For a detailed analysis of different Digital Earth systems, refer to~\cite{mahdavi2015survey} and~\cite{alderson2020digital}.
 
 
-\subsection{Volumetric Digital Earth}
+\subsection{Volumetric Digital Earth} \label{chap:2:VDE}
 Examples: 
 
 
-\section{Discrete Global Grids}
+\section{Discrete Global Grids} \label{chap:2:DGG}
 Space partitioning data structures have long been used in computer graphics to aid various geometry querries.
 These data structures provide information about which objects are near others and prevent unnecessary queries and tests between distant geometries.
 Common examples of this type of data structure include voxel grids, k-d trees, binary spatial partitioning (BSP) trees, and quad/octrees.
@@ -138,14 +138,14 @@ Other entities have used a DGG (more specifically, a DGGS---described in more de
 Regardless of their specific use(s), DGG's are an essential aspect of many Digital Earths and, as such, are well studied.
 
 
-\subsection{Discrete Global Grid Systems}
+\subsection{Discrete Global Grid Systems} \label{chap:2:DGGS}
 While DGG's are a helpful tool, they only represent the Earth at one spatial resolution.
 If only working with one dataset, this is adequate; however, geospatial data comes in a wide range of resolutions, so when working with multiple datasets, multiple resolutions of DGG's may be needed.
 This shortcoming is addressed with a hierarchy of DGG's at increasingly fine resolutions, also known as a DGGS~\cite{sahr1998discrete, sahr2003geodesic}.
 Such a hierarchy allows geospatial data at any spatial resolution to be appropriately integrated at its native resolution and used with any other dataset.
 
 
-\subsubsection{Refinement}
+\subsubsection{Refinement} \label{chap:2:refinement}
 The most common approach for creating a DGGS is by defining an initial discretization and cell refinement method.
 The initial discretization is a DGG that serves as the most coarse level of the hierarchy. The cell refinement method defines a process for creating the next level of the hierarchy from the previous.
 If done systematically and consistently, refinement can be applied successively to create arbitrarily fine discretizations of the Earth.
@@ -171,7 +171,7 @@ While these terms are equivalent in the context of a DGGS, in the computer graph
 For consistency and to avoid confusion, this thesis exclusively uses the term refinement to refer to the process of creating a set of fine cells from a set of coarse ones, even if vertex repositioning is a part of this operation.
 
 
-\subsection{Spherical Grids}
+\subsection{Spherical Grids} \label{chap:2:spherical}
 With the Earth commonly approximated as a sphere, many DGG's and DGGS's are defined directly in this space.
 One of the most straightforward approaches for doing so is with a regular discretization based on latitude and longitude coordinates, or a latitude-longitude grid (LLG).
 Similar to a regular grid in Euclidean space defined by equal steps in Cartesian coordinates, an LLG divides the sphere into equal steps of latitude and longitude.
@@ -200,7 +200,7 @@ While the resulting cells are equal area and have good compactness properties, c
 Furthermore, these types of grids have less straightforward and more expensive operations, often requiring a hierarchical algorithm (linear time on the level of refinement) as opposed to a direct (constant time) one.
 
 
-\subsection{Polyhedral Grids}
+\subsection{Polyhedral Grids} \label{chap:2:polyhedral}
 As opposed to defining the grid directly in spherical space, a more recent and increasingly popular approach is to use a polyhedron as an initial approximation of the sphere.
 The most common choices for these polyhedra are the Platonic solids, as they are perfectly regular; however, other choices are also possible.
 Mapping back and forth between the Earth and polyhedron is accomplished using a polyhedral map projection and its inverse, respectively, and planar refinement of the faces of the polyhedron creates the cell hierarchy for a DGGS.
@@ -216,7 +216,7 @@ Some more recent examples include HEALPix~\cite{gorski2005healpix}, ISEA3H~\cite
 We once again refer to~\cite{mahdavi2015survey} and~\cite{alderson2020digital} for a more detailed analysis and comparison of these different systems.
 
 
-\subsection{Grid Encoding and Decoding}
+\subsection{Grid Encoding and Decoding} \label{chap:2:coding}
 
 \begin{figure}[tb]
 	\includegraphics[width=\textwidth]{coding.pdf}
@@ -237,7 +237,7 @@ These operations are, correspondingly, known as grid decoding.
 Grid encoding and decoding, as they apply to a polyhedron based grid, are shown in Figure~\ref{fig:coding}.
 
 
-\subsubsection{Indexing Scheme} \label{sec::dggs:indexing}
+\subsubsection{Indexing Scheme} \label{chap:2:indexing}
 Closely related to encoding and decoding operations is the method used to assign a unique identifier to each cell in a DGG or DGGS.
 Such an index is necessary in order to unambiguously distinguish between cells in the grid so that data can be associated with a set of cells via association with the corresponding index or indices.
 Indices are also used to traverse through the grid with neighbour relationships and, in a DGGS, traverse the hierarchy with parent and child relationships.
@@ -255,14 +255,14 @@ In our example then, a different representation of the indices---such as one der
 The exact method used to index cells depends heavily on the geometry of the grid itself.
 For example, an indexing scheme designed for a regular quadrilateral grid is unlikely to be useful (or even applicable) to an irregular triangle grid.
 Thus, grids with different cell shapes and connectivities will require different indexing schemes designed specifically for the qualities of that grid.
-Regular quadrilateral and triangular grids have well-understood techniques for indexing from the computer graphics literature [].
+Regular quadrilateral and triangular grids have well-understood techniques for indexing from the computer graphics literature.
 Furthermore, Atlas of Connectivity Maps, proposed by Mahdavai-Amiri and Samavati, extend these techniques to semiregular grids like those of most polyhedral DGGS~\cite{mahdavi2014atlas}.
 However, hexagon based grids, which are an increasingly popular choice due to their desirable sampling properties resulting from the high compactness of hexagons, are more difficult to index.
 Despite this, there are some works on developing efficient indexing for both 1:3~\cite{vince2006indexing} and 1:4~\cite{tong2013efficient} hexagon DGGS's, along with general methods for hierarchical hexagonal grids~\cite{mahdavi2015hexagonal}.
 There has also been work done to categorize different DGGS indexing schemes to facilitate conversion and data transference between different systems~\cite{mahdavi2015categorization}.
 
 
-\section{Summary}
+\section{Summary} \label{chap:2:summary}
 The world we live in is full of data, and maps of globes of the Earth have a long history in helping people understand and process that data.
 With maps historically favoured over globes for practical reasons, digital representations have allowed for virtual globes that more accurately represent the Earth as compared to flat maps.
 Computers have also increased the amount of geospatial data we can process, but---along with other technologies---have also led to an explosion in the amount of data available.
