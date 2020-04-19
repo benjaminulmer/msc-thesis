@@ -23,10 +23,23 @@ We call this a 3D DGGS.
 Now treating the Earth as a fully 3D entity, it seems natural to use a conventional Euclidean space partitioning data structure such as a voxel grid or octree to manage geospatial data.
 We refer to this approach as an embedding one, creating an embedded 3D DGGS.
 While an embedding approach is straightforward and leverages existing data structures and algorithms, it disregards the actual shape of the Earth.
-Regardless of how finely refined cells are, they can only approximate the underlying representation of the Earth: a sphere or ellipsoid (Figure~X).
+Regardless of how finely refined cells are, they can only approximate the underlying representation of the Earth: a sphere or ellipsoid (Figure~\ref{fig:embedded}).
 Furthermore, cells do not align with the surface of the Earth, which means cells have no consistent orientation of what direction represents an increasing or decreasing altitude, or up and down.
 Because of this, traversing along the surface of the Earth becomes a non-straightforward operation that requires a ``zig-zagging'' path.
 Due to the multi-sphere structure of the Earth, these challenges also manifest when dealing with different subterranean and atmospheric layers.
+
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.6\textwidth]{embedded.pdf}
+	\caption[A Circle Embedded in a Regular Cartesian Grid]{
+		A circle embedded in a regular 2D Cartesian grid.
+		Cells do not align with the circle, which means the cells that represent the surface of the circle (blue) contain varying amounts of said circle.
+		Regardless of how finely such a grid is refined, it will only ever approximate the surface.
+		The same applies to a sphere or ellipsoid embedded in a 3D grid
+	}
+	\label{fig:embedded}
+\end{figure}
 
 
 Despite the issues present with an embedded grid, for small scale regions with negligible curvature, these issues also become negligible.
@@ -81,11 +94,25 @@ A regular grid refinement is one that results in regular connectivity in the out
 For triangular grids, this means each vertex has a valence of exactly six; for quadrilateral grids, a valence of four; and for hexagonal grids, a valence of three (Figure~X).
 
 
-Looking specifically at regular quadrilateral refinement, one way to achieve this is by splitting each input cell into four output ones with two intersecting straight lines, as shown in Figure~X.
-As we have seen, applying such a regular refinement to a degenerate (triangular) starting cell---such as spherical octant or a slice going from the surface of a sphere to the centre---still results in a regular grid, but the compactness and size of cells are affected.
-To lessen this effect, the splitting edge that would normally intersect the singularity can be stopped at the other edge, as demonstrated in Figure~X.
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\textwidth]{semireg-degen.pdf}
+	\caption[Comparison of Regular and Semiregular Degenerate Refinement]{
+		A demonstration of regular and semiregular degenerate refinement schemes for quadrilaterals.
+		Left: regular refinement applied to a quadrilateral domain.
+		Centre: regular refinement applied to a triangular domain.
+		Right: semiregular degenerate refinement applied to a triangular domain.
+		The bottom row shows regions of regular connectivity in the resulting grids; note how the semiregular degenerate scheme results in several regular regions, but the grid itself is not fully regular
+	}
+	\label{fig:semireg-degen}
+\end{figure}
+
+
+Looking specifically at regular quadrilateral refinement, one way to achieve this is by splitting each input cell into four output ones with two intersecting straight lines, as shown in Figure~\ref{fig:semireg-degen}~left.
+As we have seen, applying such a regular refinement to a degenerate (triangular) starting cell---such as spherical octant or a slice going from the surface of a sphere to the centre---still results in a regular grid, but the compactness and size of cells are affected (Figure~\ref{fig:semireg-degen}~centre).
+To lessen this effect, the splitting edge that would normally intersect the singularity can be stopped at the other edge, as demonstrated in Figure~\ref{fig:semireg-degen}~right.
 When applying this scheme recursively, only the degenerate (triangular) cells use the special refinement, and non-degenerate (quadrilateral) cells use regular refinement.
-As illustrated in Figure~X, this refinement method results in a grid with regular regions, but the grid as a whole is not itself regular.
+As illustrated in Figure~\ref{fig:semireg-degen}~bottom, this refinement method results in a grid with regular regions, but the grid as a whole is not itself regular.
 Hence, we call this semiregular degenerate refinement.
 The same principles apply in 3D for hexahedral grids; however, there are instead three intersecting \textit{faces} used in refinement.
 In general, we define a semiregular degenerate refinement to be one in which one or more splitting geometries (curves in 2D and surfaces in 3D) are stopped by another splitting geometry in the direction toward a singularity where, if not stopped, would otherwise intersect said singularity.
