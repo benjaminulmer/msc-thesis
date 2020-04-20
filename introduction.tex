@@ -12,7 +12,7 @@ Therefore, important to understand the Earth so we can make informed decisions r
 
 One of the ways humanity works toward better understanding the Earth is by gathering data about it.
 Remote sensing satellites and aircraft, along with various smart technologies, have created a significant increase in the amount of geospatial data available and continually being collected.
-This has led to the challenge of \textit{geospatial big data}, meaning that the volume and complexity of data exceed the capacity of current computing systems~\cite{lee2015geospatial}.
+These developments have led to the challenge of \textit{geospatial big data}, meaning that the volume and complexity of data exceed the capacity of current computing systems~\cite{lee2015geospatial}.
 With applications in urban planning, agriculture, education, natural disaster prediction and management, and many other fields, the development of technologies for managing geospatial data is more crucial than ever.
 These tools are needed to efficiently integrate, process, analyze, and visualize geospatial data in order to use it to make informed decisions.
 Such a need has led to the vision of Digital Earth, where all data regarding the Earth is available in a common reference used by the public to inform their decisions.
@@ -25,21 +25,21 @@ With a GIS, different datasets are represented and stored as individual map laye
 These individual layers are overlayed to create a complete model of the Earth (or region of the Earth) and combined with different operations to perform various analyses.
 However, being created and gathered by diverse organizations, geospatial data exists in many different formats and resolutions.
 The conventional GIS pipeline---which requires experts to clean, process, integrate, and distribute data---is unsustainable in the face of geospatial big data.
-Furthermore, even after data has been integrated with a GIS, overlay operations such as intersections and data extraction are computationally expensive when many data layers are present~\cite{wang2015improving}.
+Furthermore, even after integrating data with a GIS, overlay operations such as intersections and data extraction are computationally expensive when many data layers are present~\cite{wang2015improving}.
 Coordinate based representations of geospatial data also do not provide proper facilities to represent the uncertainty or error of the data they are used to represent~\cite{goodchild2018reimagining}.
 
 
 Another challenge with GIS is the use of a flat map as the underlying representation.
 Flattening the Earth produces inevitable map edges and distortion that impact the analysis and visualization of geospatial data.
 Map edges can cause serious misunderstanding of the continuity between different sides of the map---especially with young children~\cite{hennerdal2015beyond}---and also affect the estimation of distance even when the continuity is correctly understood~\cite{hruby2016journey}.
-Distortion causes inaccuracies in calculations such as geodesics and buffering if planar geometry is used~\cite{flaterbuffering}, which is especially problematic when working with large distances and areas.
+Distortion causes inaccuracies in calculations such as geodesics and buffering if using planar geometry~\cite{flaterbuffering}, which is especially problematic when working with large distances and areas.
 These distortions also affect the visual analysis of data by misrepresenting the size and shape of different regions.
 
 
 Model globes avoid many of the shortcomings of planar maps by providing a more accurate reference model for the Earth.
 Despite this, the ability for physical maps to be easily made and stored, display the entire Earth at once, and accommodate any scale has made them the preferred option in many situations.
 With the advent of a Digital Earth, however, many the drawbacks of physical globes are lessened or negated.
-Computer graphics algorithms and hardware allow globes to be rendered in real-time, storage is no different than for a digital map, and interactive systems allow zooming and panning to show any part of the Earth at any scale.
+Computer graphics algorithms and hardware allow rendering of globes in real-time, storage is no different than for a digital map, and interactive systems allow zooming and panning to show any part of the Earth at any scale.
 The only challenge unsolved is displaying the entire Earth at once; however, even this is partially addressed with multi-view focus plus context rendering techniques~\cite{sherlock2017visualizations}
 Because of this, there has been a recent push toward globe based Digital Earth systems, one of the most well-known examples of which being Google Earth\footnote{\url{https://www.google.com/earth/}}.
 In these systems, data is visualized on a 3D model of the Earth---approximated as a sphere or ellipsoid---as opposed to a traditional planar map. While globe based Digital Earths are becoming more popular, many of these systems still use a flat map as the underlying representation for geospatial data.
@@ -59,37 +59,13 @@ Uniformity of size ensures that each resolution of the DGGS represents the entir
 While DGGS's are an effective tool for integrating and managing geospatial data on the surface of the Earth, they have no inbuilt mechanism for supporting 3D data.
 Many of today's geospatial sensors, along with other technologies such a numerical weather prediction, generate data with an associated altitude in addition to other dimensions.
 With a DGGS, 3D data is flattened with altitude stored only as an attribute.
-This has motivated the development of volumetric (3D) discrete global grids and grid systems to allow native support for 3D data.
+This shortcoming has motivated the development of volumetric (3D) discrete global grids and grid systems to allow native support for 3D data.
 Going forward, we use the term 3D DGGS to refer to these technologies collectively.
-
-
-\begin{figure*}[p]
-	\centering
-	\begin{subfigure}[]{0.5\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{earth-cutaway.pdf}
-		\caption{}
-		\label{fig:earth-cutaway}
-	\end{subfigure}%
-	%
-	\begin{subfigure}[]{0.5\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{earth-atmosphere.pdf}
-		\caption{}
-		\label{fig:earth-atmosphere}
-	\end{subfigure}%
-	
-	\caption[Four Popular Map Projections]{
-		Four common map projections and special properties they possess: \textbf{(a)} Mercator~\cite{mercator}, conformal; \textbf{(b)} azimuthal equidistant~\cite{azi-equidist}, equidistant to centre point; \textbf{(c)} Gall-Peters~\cite{gall-peters}, equal area; and \textbf{(d)} Robinson~\cite{robinson}, compromise (no measures preserved).
-		Images courtesy of Daniel R. Strebe -- CC BY-SA 3.0
-	}
-	\label{fig:3dearth}
-\end{figure*}
 
 
 Most human activity and interest, and correspondingly geospatial data, is located in a relatively small region above and below the surface of the Earth ($\pm$10 -- 500 km).
 Likewise, most existing approaches for 3D DGGS's have focused on this region.
-However, there are select processes such as seismic wave propagation and the magnetosphere that span much beyond this region (\textbf{figure?}).
+However, there are select processes such as seismic wave propagation and the magnetosphere that span much beyond this region.
 Furthermore, the range of altitudes satellites orbit at is extensive, with satellites in high Earth orbit exceeding 36,000 km.
 Therefore, to support the full range of human activity and interest, 3D DGGS's that extend to the centre of the Earth and far beyond the atmosphere are needed.
 
@@ -123,7 +99,7 @@ Addressing such cell degeneration is one of the main challenges of this thesis.
 	\centering
 	\includegraphics[width=\textwidth]{3dllg.pdf}
 	\caption[Different Views of a 3D Latitude-Longitude Grid]{
-		placeholder figure.
+		Placeholder figure.
 		Caption describing degeneration in cells toward centre and poles
 	}
 	\label{fig:3dllg}
@@ -163,7 +139,7 @@ In this thesis, we use two different approaches to create 3D DGGS's with the des
 The first approach modifies the refinement rules of an existing 3D DGGS, the Spheroid Degenerated-Octree Grid (SDOG)~\cite{yu2009sdog}, to improve its volume-preserving properties.
 With SDOG, a sphere with twice the radius of the Earth is initially divided into eight equal octants via the equatorial plane and two perpendicular meridian planes.
 Cells (including the initial octants) are then refined using splitting surfaces located at the midpoint of the three spherical coordinates: latitude, longitude, and radius.
-To prevent cell degeneration near the poles and centre of the grid, the extent of splitting surfaces (and the number of resulting children cells) depends on the shape of the cell that is being refined.
+The extent of these splitting surfaces (and the number of resulting children cells) depends on the shape of the cell, which prevents excessive cell degeneration near the poles and centre of the grid.
 We perform the modifications by analyzing the placement of these splitting surfaces and finding ideal new locations that result in cells of the most uniform volume possible given certain constraints.
 
 
@@ -175,7 +151,7 @@ We take care to perform the extension in such a way that it achieves the desired
 The extension also allows for an additional property, a target aspect ratio for cells, to be attained.
 
 
-For both of these approaches, we define mappings between physical points and their corresponding locations in grid space, which are used to implement efficient encoding and decoding operations.
+For both of these approaches, we define mappings between physical points and their corresponding locations in grid space, which we use to implement efficient encoding and decoding operations.
 For the SDOG based approach, we provide constant time encoding and decoding algorithms that outperform the standard versions of these algorithms at high levels of refinement.
 These new algorithms can be used both with conventional SDOG and, by using the provided mappings, the volume-preserving one.
 We also provide similar algorithms for the 3D DGGS's that result from the extension method.
@@ -186,7 +162,7 @@ We also use a third metric to evaluate the impact these modifications have on th
 For our proposed encoding and decoding algorithms, we compare the runtime performance with the conventional algorithms at different levels of refinement both for conventional SDOG and our modified grids.
 
 
-Evaluation of the second approach is done through a series of use cases, each employing a different combination of input DGGS and 3D parameters to create a resulting 3D DGGS most appropriate for the application.
+We evaluation of the second approach through a series of use cases, each employing a different combination of input DGGS and 3D parameters to create a resulting 3D DGGS most appropriate for the application.
 These use cases illustrate both the versatility and sophistication of the method, being able to quickly create many different 3D DGGS's while achieving the desirable properties outlined above.
 
 
@@ -202,7 +178,7 @@ This main contributions of this thesis fall into three groups:
 	\item Method for extending 2D DGGS to 3D.
 	This method is fully general and supports any valid DGGS, including any refinement factor and non-congruent refinement.
 	Furthermore, clearly defined parameters allow for a target aspect ratio for cells and---like the SDOG modifications---a balanced trade-off between volume preservation and cell compactness.
-	A set of sample use cases is used to evaluate the method.
+	We use a set of sample use cases to evaluate the method.
 	
 	\item Mapping functions (for modified SDOG \textit{and} extended grids).
 	These mappings enable the volume preservation of the above methods while still allowing efficient encoding and decoding.
@@ -225,6 +201,6 @@ Chapter~\ref{chap:extension} covers the grid extension method for creating a 3D 
 We start with a basic version of the method for 1-to-4 refinement factors, and then introduce extensions for other factors and targeting a specific cell aspect ratio.
 Chapter~\ref{chap:mapping} derives the mapping functions used for modified SDOG and the extended grids.
 Chapter~\ref{chap:coding} then details how these mappings are used for efficient encoding and decoding operations.
-This is also where we introduce and compare the improved encoding and decoding algorithms for SDOG.
+This chapter is also where we introduce and compare the improved encoding and decoding algorithms for SDOG.
 Chapter~\ref{chap:usecases} showcases three sample use cases for the grid extensions method, as well as the 3D DGGS's used for said use cases.
 Finally, Chapter~\ref{chap:conclusion} concludes with a summary, along with limitations and directions for future work.

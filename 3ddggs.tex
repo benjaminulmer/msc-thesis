@@ -35,7 +35,7 @@ Due to the multi-sphere structure of the Earth, these challenges also manifest w
 	\caption[A Circle Embedded in a Regular Cartesian Grid]{
 		A circle embedded in a regular 2D Cartesian grid.
 		Cells do not align with the circle, which means the cells that represent the surface of the circle (blue) contain varying amounts of said circle.
-		Regardless of how finely such a grid is refined, it will only ever approximate the surface.
+		Regardless of how finely refined such a grid is, it will only ever approximate the surface.
 		The same applies to a sphere or ellipsoid embedded in a 3D grid
 	}
 	\label{fig:embedded}
@@ -125,5 +125,5 @@ In a non-degenerate grid, each cell will have precisely one neighbour along each
 In 3D, the same applies but with faces instead of edges.
 Grids resulting from semiregular degenerate refinement violate this property, with some cells having multiple neighbours along an edge/face.
 Such degenerate connectivity introduces challenges when propagating values across boundaries of cells, which is problematic in specific applications.
-However, in the context of a 3D DGGS where the primary function of the grid is to integrate and index geospatial data, we believe the benefits of this approach outweigh the disadvantages.
+However, in the context of a 3D DGGS, where the primary function of the grid is to integrate and index geospatial data, we believe the benefits of this approach outweigh the disadvantages.
 As such, semiregular degenerate refinement is the primary tool used in the remainder of this thesis to achieve the goals set out in Chapter~\ref{chap:1:goals}.

@@ -159,7 +159,7 @@ While this solves the issues of map edges and distortion for visual analysis pur
 The alternative is to do analysis directly in spherical---or even more accurately, ellipsoidal---space.
 While ellipsoidal analysis is often prohibitively complicated and expensive due to the mathematical challenges of elliptic integrals [], techniques for spherical analysis are well understood~\cite{raskin1994spatial}.
 While spherical analyses are still significantly more involved than the planar equivalents, modern computational capabilities are making them more feasible. 
-In addition to standard methods, there have been several recent works on techniques for more complicated spherical analysis and operations.
+In addition to standard methods, there have been several recent works on techniques for more complex spherical analysis and operations.
 Some examples include better representations for rational points on the sphere~\cite{bahrdt2017rational}, multiresolution representations of B-spline~\cite{alderson2016multiresolution} and NURBS curves~\cite{alderson2019multiscale}, and methods for offsetting both vector and raster curves~\cite{alderson2018offsetting}.
 For these reasons, direct spherical analysis on a globe based Digital Earth is becoming a compelling alternative to traditional GIS. For a detailed analysis of different Digital Earth systems, refer to~\cite{mahdavi2015survey} and~\cite{alderson2020digital}.
 
@@ -231,7 +231,7 @@ Thus, an LLG is neither a compact nor uniform DGG.
 	\centering
 	\includegraphics[width=0.4\textwidth]{llg.pdf}
 	\caption[A Latitude Longitude Grid]{
-		\textbf{Placeholder} A latitude-longitude grid (LLG) with 24 longitudinal division and 12 latitudinal divisions.
+		\textbf{Placeholder and temporary caption} A latitude-longitude grid (LLG) with 24 longitudinal division and 12 latitudinal divisions.
 		Note how cells become increasingly narrow toward poles, resulting in reduced size and compactness as compared to cells more near the equator
 	}
 	\label{fig:llg}
@@ -270,8 +270,8 @@ Furthermore, the use of an area-preserving projection in conjunction with an are
 	\centering
 	\includegraphics[width=0.30\textwidth]{polyhedron-grid.pdf}
 	\caption[A Icosahedron Based Grid]{
-		\textbf{Placeholder} A simple triangular grid based on a regular icosahedron.
-		Projection goes between polyhedron domain and spherical domain
+		\textbf{Placeholder and temporary caption} A simple triangular grid based on a regular icosahedron.
+		Probably also show projection between polyhedron domain and spherical domain
 	}
 	\label{fig:poly-grid}
 \end{figure}
@@ -288,7 +288,7 @@ We once again refer to~\cite{mahdavi2015survey} and~\cite{alderson2020digital} f
 \subsection{Grid Encoding and Decoding} \label{chap:2:coding}
 For a DGG or DGGS to be useful as a tool for managing geospatial data, operations are needed that can associate said data with the appropriate set of cells.
 This class of operations is known as grid encoding.
-The most simple type of encoding is for points---finding the cell which contains a given point---however, operations for more complex geometry such as vector polylines and polygons is often also required~\cite{du2018duality} [more?].
+The most basic type of encoding is for points---finding the cell which contains a given point---however, operations for more complex geometry such as vector polylines and polygons is often also required~\cite{du2018duality}.
 Likewise, the inverse process of mapping a set of cells in the grid domain to the corresponding regions of the Earth is also needed.
 These operations are, correspondingly, known as grid decoding.
 Grid encoding and decoding, as they apply to a polyhedron based grid, are shown in Figure~\ref{fig:coding}.
@@ -312,12 +312,12 @@ Such an index is necessary in order to unambiguously distinguish between cells i
 Indices are also used to traverse through the grid with neighbour relationships and, in a DGGS, traverse the hierarchy with parent and child relationships.
 
 
-In a given scheme, indices may have different representations depending on the context they are used in, with (injective) functions that convert between different representations.
+In a given scheme, indices may have different representations depending on the context, with (injective) functions that convert between different representations.
 As an example, for a regular quadrilateral grid, a natural choice for assigning unique identifiers to each cell is with a 2D coordinate-based index.
 This choice allows straightforward and constant-time algorithms for several operations: encoding of points represented in the same coordinate system, decoding of cells to obtain the minimum and maximum in each dimension, and retrieving the index of neighbouring cells in the grid.
 However, standard row-major and column-major linearizations of these coordinates may not be ideal for storing data associated with said indices.
-This is because, when performing grid operations, it is more likely to require additional data from a nearby region than from a distant region.
-Therefore, nearby cells should ideally have similar indices to decrease the number of cache misses and disk seeks.
+When performing grid operations, it is more likely to require additional data from a nearby region than from a distant region.
+Therefore, nearby cells should ideally have similar indices to decrease the number of cache misses and disk seeks; row-major and column-major orderings do not have this property.
 In our example then, a different representation of the indices---such as one derived from a space-filling curve---may be used when storing and retrieving data.
 
 
