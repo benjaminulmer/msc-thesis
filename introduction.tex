@@ -17,7 +17,7 @@ With applications in urban planning, agriculture, education, natural disaster pr
 These tools are needed to efficiently integrate, process, analyze, and visualize geospatial data in order to use it to make informed decisions.
 Such a need has led to the vision of Digital Earth, where all data regarding the Earth is available in a common reference used by the public to inform their decisions.
 The use of such a system would range from world governments informing policy by analyzing climate trends to homeowners referencing local utility line locations when building a fence.
-In reality, such an expansive and holistic system is yet to be achieved; however, many approaches for smaller-scale Digital Earths exist.
+In reality, such an expansive and holistic system is yet to be achieved; however, many approaches for smaller scope Digital Earths exist.
 
 
 Geographic information systems (GIS) are one of the conventional approaches used for creating a Digital Earth.
@@ -82,17 +82,8 @@ While such a system is simple in its construction, it ignores the spherical natu
 Cells are not aligned with the surface of the Earth, which means there is no consistent orientation of up (increasing altitude) and down (decreasing altitude) with respect to a cell.
 Likewise, traversal along the surface of the Earth is complex and requires ``zig-zagging'' up and down.
 This type of grid also provides a poor approximation for the surface of the Earth, especially at low resolutions.
-While these issues are negligible for small scale regions of the Earth, for a 3D DGGS with global coverage, the underlying grid should be sphere-based and Earth-centric.
+While these issues are negligible for small-scale regions of the Earth, for a 3D DGGS with global coverage, the underlying grid should be sphere-based and Earth-centric.
 Cells should be aligned with the surface of the Earth and have a consistent orientation for increasing and decreasing altitude.
-
-
-The main challenge associated with such Earth-centric grids is the inevitable degeneration of cells toward the singularity at the centre of the Earth.
-This effect is demonstrated in Figure~\ref{fig:3dllg}---cells more near the centre of the grid become increasingly small and skinny and eventually degenerate to pyramids.
-For grids with a small radial extent, the effect of this is negligible; however, for the range of altitudes we wish to support in this thesis, it cannot be ignored.
-The problem with this type of cell degeneration is two-fold, as it reduces both the compactness and volume of cells. 
-Furthermore, the resulting difference in the volumes of cells is unbounded.
-It is worth noting that this same issue presents itself in traditional latitude-longitude grids at the poles, also demonstrated in Figure~\ref{fig:3dllg}.
-Addressing such cell degeneration is one of the main challenges of this thesis.
 
 
 \begin{figure}[h]
@@ -104,6 +95,16 @@ Addressing such cell degeneration is one of the main challenges of this thesis.
 	}
 	\label{fig:3dllg}
 \end{figure}
+
+
+The main challenge associated with such Earth-centric grids is the inevitable degeneration of cells toward the singularity at the centre of the Earth.
+This effect is demonstrated in Figure~\ref{fig:3dllg}---cells more near the centre of the grid become increasingly small and skinny and eventually degenerate to pyramids.
+For grids with a small radial extent, the effect of this is negligible; however, for the range of altitudes we wish to support in this thesis, it cannot be ignored.
+The problem with this type of cell degeneration is two-fold, as it reduces both the compactness and volume of cells.
+Furthermore, the resulting difference in the volumes of cells is unbounded.
+It is worth noting that this same issue presents itself in traditional latitude-longitude grids at the poles, also demonstrated in Figure~\ref{fig:3dllg}.
+Addressing such cell degeneration is one of the main challenges of this thesis.
+
 
 
 \section{Goals and Scope} \label{chap:1:goals}
@@ -164,6 +165,15 @@ For our proposed encoding and decoding algorithms, we compare the runtime perfor
 
 We evaluation of the second approach through a series of use cases, each employing a different combination of input DGGS and 3D parameters to create a resulting 3D DGGS most appropriate for the application.
 These use cases illustrate both the versatility and sophistication of the method, being able to quickly create many different 3D DGGS's while achieving the desirable properties outlined above.
+
+
+As a part of this thesis, we have implemented several components programmatically.
+For both SDOG and the grid extension method, we created basic visualization frameworks for displaying the resulting grid geometries of different refinement rules.
+These tools allowed quick implementation and visual analysis of different modifications to refinement, and the outputs served as the basis for many of the figures in this thesis.
+For SDOG, we also implemented a tool for calculating volume and compactness statistics for different refinement methods along with both the conventional and improved encoding and decoding algorithms.
+These were used for the analysis and runtime comparison, respectively.
+Finally, the entire grid extension methodology was integrated with an internal research toolset used for designing and testing different conventional DGGS's.
+This expanded toolset created the different 3D DGGS's employed in the use case examples.
 
 
 \section{Contribution} \label{chap:1:contribution}

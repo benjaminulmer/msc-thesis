@@ -124,6 +124,7 @@ The main drawback of this class of refinement is the degenerate connectivity int
 In a non-degenerate grid, each cell will have precisely one neighbour along each edge, or no neighbours if the cell is on a boundary of the grid.
 In 3D, the same applies but with faces instead of edges.
 Grids resulting from semiregular degenerate refinement violate this property, with some cells having multiple neighbours along an edge/face.
-Such degenerate connectivity introduces challenges when propagating values across boundaries of cells, which is problematic in specific applications.
-However, in the context of a 3D DGGS, where the primary function of the grid is to integrate and index geospatial data, we believe the benefits of this approach outweigh the disadvantages.
+Such degenerate connectivity introduces challenges when propagating values across boundaries of cells and calculating values at vertices, as is needed for finite element methods.
+There has been work to address this challenge for conventional octrees~\cite{braun2008douar}, which have a similar issue between regions of the grid at different levels of refinement; similar methods could likely be applied to semiregular degenerate grids as well.
+Considering the tradeoffs of this approach, we believe the benefits outweigh the disadvantages in the context of a 3D DGGS.
 As such, semiregular degenerate refinement is the primary tool used in the remainder of this thesis to achieve the goals set out in Chapter~\ref{chap:1:goals}.
