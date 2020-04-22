@@ -1,77 +1,68 @@
-\chapter{Volume Preserving SDOG Refinement} \label{chap:sdog}
+\chapter{Volume-Preserving SDOG Refinement} \label{chap:sdog}
 
 
-\section{SDOG Overview}
+Most of the content of this chapter is taken from the article "Toward Volume Preserving Spheroid-Degenerated Octree Grid," authored by Benjamin Ulmer and Faramarz Samavati, which appeared in the journal \textit{Geoinformatica}~\cite{ulmer2020toward}.
+Slight modifications have been made to maintain consistent terminology with the rest of the thesis, along with a more streamlined presentation of the methodology. Furthermore, the blending method presented in this chapter is different from the one that appears in the article.
 
-\begin{figure}[tb]
+
+\section{SDOG Overview} \label{chap:4:sdog}
+Before describing our modifications, we first provide a brief explanation of SDOG construction and refinement as initially proposed by Yu and Wu~\cite{yu2009sdog}.
+SDOG is an extension of the traditional octree to a spherical, as opposed to Euclidean, volume.
+A sphere with twice the radius of the Earth is initially divided into eight equal octants via the equatorial plane and two perpendicular meridian planes.
+These octants are taken to be the coarsest cells of the grid and are then refined to create more fine discretizations of the sphere.
+Figure~\ref{fig:sdog} shows an SDOG octant after four applications of refinement.
+
+
+\begin{figure}[ht!]
 	\includegraphics[width=\textwidth]{sdog.pdf}
 	\caption[Title]{
 		One octant of an SDOG grid after four levels of refinement viewed (a) from the side, (b) from the front, and (c) at an angle.
-		Compared to a 3D LLG, cells are much more uniform in size and have much better compactness.
-		Refer to Section~\ref{sec:results} for a detailed analysis of the volume preserving and compactness properties of SDOG
+		Compared to a 3D LLG, cells are more uniform in size and have better compactness.
+		Refer to Chapter~\ref{chap:4:results} for a detailed analysis of the volume and compactness properties of SDOG
 	}
 	\label{fig:sdog}
 \end{figure}
 
 
-We first provide a brief explanation of SDOG construction and refinement as presented in~\cite{yu2009sdog}.
-SDOG is an extension of the traditional octree to a spherical, as opposed to Euclidean, volume.
-A sphere with twice the radius of the Earth is initially divided into eight equal octants via the equatorial plane and two perpendicular meridian planes.
-These octants are taken to be the coarsest cells of the grid and are then refined to create more fine discretizations of the sphere.
-An SDOG octant after four refinements can be seen in Figure~\ref{fig:sdog}.
-
-
-\begin{figure}[tb]
+\begin{figure}[ht!]
 	\includegraphics[width=\textwidth]{sdog-refinement.pdf}
 	\caption[Title]{
 		Location and extent of splitting surfaces in SDOG refinement for (a) SG cells, (b) LG cells, and (c) NG cells.
-		Only NG cells have all three splitting surfaces fully refine the cell into eight children, and make up the majority of cells as the grid becomes more refined
+		Only NG cells have all three splitting surfaces fully refine the cell into eight children, and make up the majority of cells as the grid becomes increasingly refined
 	}
 	\label{fig:sdog-refinement}
 \end{figure}
 
 
 SDOG cells (including octants) are refined using the midpoint of each spherical coordinate: latitude, longitude, and radius.
-These midpoints create splitting surfaces that can be used to split parent cells into smaller children cells.
-To prevent the degeneration in cell compactness and size near the poles and centre of the sphere seen in 3D LLGs (Figure~\ref{fig:3dllg}), the extent of these splitting surfaces and the number of resulting children cells depends on the shape, or class, of cell that is being divided.
-The splitting surfaces for each type of SDOG cell are shown in Figure~\ref{fig:sdog-refinement}.
-We call a splitting surface symmetric if it creates the same number and type(s) of cells on both sides; otherwise we call it degenerate.
+These midpoints create splitting surfaces used to split parent cells into smaller children cells.
+As described in Chapter~\ref{chap:3:semiregDegen}, a semiregular degenerate refinement is used to prevent excessive degeneration in cell size and compactness near the poles and centre of the sphere.
+As a result, SDOG cells are grouped into three classes, depending on which singularities they border.
+Figure~\ref{fig:sdog-refinement} shows the resulting splitting surfaces for each type of SDOG cell.
+%We call a splitting surface symmetric if it creates the same number and type(s) of cells on both sides; otherwise we call it degenerate.
 
 
-Cells that extend to the centre of the sphere and to one of the poles are referred to as Sphere-degenerated Grid (SG) cells (Figure~\ref{fig:sdog-refinement}a) and include the original eight octants.
+Cells that extend to the centre of the sphere and one of the poles are referred to as Sphere-degenerated Grid (SG) cells (Figure~\ref{fig:sdog-refinement}a) and include the original eight octants.
 For these cells, the longitudinal splitting surface does not extend beyond the latitudinal one in the direction towards the pole.
 Additionally, neither the latitudinal nor longitudinal splitting surfaces extend beyond the radial one in the direction towards the centre of the sphere.
 The result of this refinement is four children cells: another SG cell, one Latitude-degenerated Grid (LG) cell, and two Normal Grid (NG) cells.
-LG and NG cells are described below.
-Only the longitudinal splitting surface for SG cells is symmetric.
+We describe LG and NG cells below.
+%Only the longitudinal splitting surface for SG cells is symmetric.
 
 
 LG cells (Figure~\ref{fig:sdog-refinement}b) are similar to SG ones, except that they only extend to one of the poles and not the centre of the sphere.
 Therefore, the longitudinal splitting surface does not extend beyond the latitudinal one in the direction towards the pole.
 This refinement results in six children cells: two LG cells and four NG cells.
-The longitudinal and radial splitting surfaces for LG cells are symmetric.
+%The longitudinal and radial splitting surfaces for LG cells are symmetric.
 
 
 NG cells (Figure~\ref{fig:sdog-refinement}c) extend to neither the pole nor the centre of the sphere and make up the majority of SDOG cells.
 These cells are fully refined into eight children NG cells and are the regular case for SDOG refinement.
-All splitting surfaces for NG cells are symmetric.
+%All splitting surfaces for NG cells are symmetric.
 
 
-\subsection{SDOG Indexing} \label{sec:sdog-indexing}
-In order to identify and distinguish the cells of a grid, there needs to be a method to assign a unique index to each cell.
-A good indexing scheme will allow for efficient data insertion, retrieval, and manipulation via a set of queries.
-Examples of some of these queries are: point to cell, which give the index of the cell containing a given point; index inversion, which calculates a cell's location and geometry from the index; neighbourhood queries; and in the case of a hierarchical grid, hierarchy traversal to find parent and children cells.
-
-
-Due to the fact that SDOG refinement is based on the midpoints of spherical coordinates, an indexing scheme that is efficient for many of the above operations can be easily developed.
-At any refinement level, $k$, each cell can be given an integer index in each spherical coordinate ranging from zero to $2^{k} - 1$.
-To address the degenerate refinement of certain cells, these integer indices are modified appropriately with divisions by powers of two, which can be done quickly with bit shift operations.
-The integer indices can then be linearized by various methods, one good choice being a Z-order curve \cite{morton1966computer} as used in \cite{yu2009sdog}.
-A more detailed description of degenerate Z-order indexing for SDOG grids, including algorithms for point to cell and index inversion operations, can be found in \cite{yu2009coding}.
-
-
-\subsection{Number of SDOG Cells} \label{sec:sdog-numCells}
-Being able to analyze the number of cells in the grid at each level of refinement is useful not only for measuring volume preserving properties---such as quickly calculating the average cell volume---but also for analyzing the behavior of the grid as the level of refinement increases.
+\subsection{Number of SDOG Cells} \label{chap:4:numCells}
+Being able to analyze the number of cells in the grid at each level of refinement is useful not only for measuring volume-preserving properties---such as quickly calculating the average cell volume---but also for analyzing the behaviour of the grid as the level of refinement increases.
 This type of analysis will prove useful in informing decisions about how to modify refinement to improve volume preservation.
 
 
@@ -86,55 +77,51 @@ S(k) = 1.
 \end{equation}
 %
 We know each LG cell produces two new LG cells, and that the SG cell produces one new LG cell.
-From this we can say
-\begin{equation*}
+From this we say
+%
+\begin{equation*} \label{eq:lg-recursive}
 L(k) = 2L(k-1) + 1 \quad\text{and}\quad L(1) = 1.
-\label{eq:lg-recursive}
 \end{equation*}
 %
 Similarly, each NG cell produces eight new NG cells, each LG cell produces four, and the SG cell produces two.
 Thus
-\begin{equation*}
+%
+\begin{equation*} \label{eq:ng-recursive}
 N(k) = 8N(k-1) + 4L(k-1) + 2 \quad\text{and}\quad N(1) = 2.
-\label{eq:ng-recursive}
 \end{equation*}
 %
 $L(k)$ is a linear non-homogeneous recurrence which can be solved with standard techniques \cite{bellman1963differential}.
 Solving and substituting into $N(k)$ we get another linear non-homogeneous recurrence which can be solved similarly.
 Finally, we get the closed forms:
 %
-\begin{equation}
+\begin{equation} \label{eq:lg-closed}
 L(k) = 2^{k} - 1,
-\label{eq:lg-closed}
 \end{equation}
 %
-\begin{equation}
+\begin{equation} \label{eq:ng-closed}
 N(k) = \frac{1}{21} \left( 7*2^{k} + 8^{k+1} + 6 \right) - 2^{k}, \quad\text{and}
-\label{eq:ng-closed}
 \end{equation}
 %
-\begin{equation}
+\begin{equation} \label{eq:t-closed}
 T(k) = S(k) + L(k) + N(k) = \frac{1}{21} \left( 7*2^{k} + 8^{k+1} + 6 \right).
-\label{eq:t-closed}
 \end{equation}
 %
-As far as we are aware, these formulations have not been provided in any of the existing literature on SDOG.
+As far as we are aware, these formulations have not been provided in any of the preexisting literature on SDOG.
 
 
-\subsection{Geometry of SDOG Cells} \label{sec:sdog-geometry}
+\subsection{Geometry of SDOG Cells} \label{chap:4:geom}
 In order to measure the volume preservation properties of SDOG and its modifications, it is necessary to be able to measure the volume of individual cells in the grid.
-Since each SDOG cell can be expressed as a range of each spherical coordinate (latitude $\phi$, longitude $\lambda$, and radius $r$), calculating the volume of an individual cell is a straightforward task.
-Note that we use the geographic convention for spherical coordinates in this paper.
-Let the subscripts $2$ and $1$ denote the maximum and minimum of a given spherical coordinate for an SDOG cell, then the volume is given by \cite{yu2009sdog}
+Since each SDOG cell represents a range of each spherical coordinate (latitude $\phi$, longitude $\lambda$, and radius $r$), calculating the volume of an individual cell is a straightforward task.
+Note that we use the geographic convention for spherical coordinates in this thesis.
+Let the subscripts $2$ and $1$ denote the maximum and minimum of a given spherical coordinate for an SDOG cell; then the volume is given by \cite{yu2009sdog}
 %
-\begin{equation}
+\begin{equation} \label{eq:volume}
 V = \frac{1}{3} \left( \lambda_{2} - \lambda_{1} \right) \left(r_{2}^{3} - r_{1}^{3} \right) \left(\sin\phi_{2} - \sin\phi_{1} \right).
-\label{eq:volume}
 \end{equation}
 
 
 In addition to the volume of a cell, surface area is another useful property to be able to measure.
-Combined with the volume of cells, this allows us to measure the compactness of cells, which we use in Section \ref{sec:results} to help evaluate the consequences of our modifications.
+Combined with the volume of cells, this allows us to measure the compactness of cells, which we use in Chapter~\ref{chap:4:results} to help evaluate the consequences of our modifications.
 From the fact that SDOG cells are refined using spherical coordinates, each face of a cell is a section of a simple geometric shape.
 Faces created by radial splitting surfaces are spherical, with surface area given by
 %
@@ -143,54 +130,48 @@ r^{2} \left( \lambda_{2} - \lambda_{1} \right) \left( \sin\phi_{2} - \sin\phi_{1
 \end{equation}
 %
 Faces created by longitudinal splitting surfaces are the difference of two circular sectors, and have an area of
+%
 \begin{equation}
 \frac{1}{2} \left( \phi_{2} - \phi_{1} \right) \left( r_{2}^{2} - r_{1}^{2} \right).
 \end{equation}
 %
 Finally, faces created by latitudinal splitting surfaces lie on a cone, with a surface area of
+%
 \begin{equation}
 \frac{1}{2} \cos\phi \left( \lambda_{2} - \lambda_{1} \right) \left( r_{2}^{2} - r_{1}^{2} \right).
 \end{equation}
 
 
-\section{Modified SDOG Subdivision} \label{sec:method}
-%\subsection{Ideal Placement of Splitting Surfaces}
-%\subsection{Blending Functions}
+\section{Modified SDOG Refinement} \label{chap:4:modified}
+The main goal of this work is to modify SDOG in such a way as to improve volume preservation while minimizing the impact on other desired properties of the grid.
+As a baseline, the distribution of cell volumes in a conventional SDOG grid is visualized in Figure~\ref{fig:sdog-volume}.
+In conventional SDOG refinement, the location of the different splitting surfaces is always at the midpoint of the respective spherical coordinate; we question if this should be the case.
+For an octree in Euclidean space, this type of refinement is desirable, as it generates children cells of identical size and shape.
+In spherical space, however, this property does not transfer.
+Using midpoints to refine cells makes for a simple refinement scheme, but it makes no guarantees about the shape or size of the resulting child cells.
 
-\begin{figure}[tb]
+
+\begin{figure}[ht!]
 	\includegraphics[width=0.85\textwidth]{sdog-volume.pdf}
 	\caption[Title]{
 		Distribution of cell volumes in an octant after four levels of conventional SDOG refinement
 	}
-	\label{fig:sdog-vol}
+	\label{fig:sdog-volume}
 \end{figure}
 
 
-The main goal of this work is to modify SDOG in such a way as to improve volume preservation while minimizing the impact on other desired properties of the grid.
-To aid in this task, we have developed a visualization framework for displaying and modifying SDOG grids.
-This framework allows for changes to refinement to be quickly implemented and allows visual analysis of said modifications.
-All of the figures in the paper (except for the charts) were created using the output of this framework.
-As an example and a baseline, the distribution of cell volumes in a conventional SDOG grid is visualized in Figure~\ref{fig:sdog-vol}.
-
-
-As previously discussed, in conventional SDOG refinement the location of the different splitting surfaces is always chosen to be at the midpoint of the respective spherical coordinate; we question if this should always be the case.
-For an octree in Euclidean space this type of refinement is desirable, as it generates children cells of identical size and shape.
-In spherical space, however, this property does not transfer.
-Using midpoints to refine cells makes for a simple refinement scheme, but it makes no guarantees about the shape or size of the resulting children cells.
-
-
-\begin{figure}[tb]
+\begin{figure}[ht!]
 	\includegraphics[width=0.5\textwidth]{sdog-functions.pdf}
 	\caption[Title]{
-		Each SDGO cell can be expressed as a range in each spherical coordinate, and the location of the splitting surface for each spherical coordinate can be expressed as a function of the maximum and minimum of the respective range.
-		Here we show only an NG cell, however the same applies to SG and LG cells.
+		Each SDGO cell represents a range in each spherical coordinate; the location of the splitting surfaces are expressed as a function of the maximum and minimum of the respective range.
+		Here we show only an NG cell; however, the same applies to SG and LG cells.
 		The functions $f$, $g$, and $h$ serve as placeholders for any valid function that results in the output being strictly between the two inputs
 	}
 	\label{fig:functions}
 \end{figure}
 
 
-By allowing the location of the splitting surfaces to be adjusted, we can modify the shape and size of children cells and as a result affect the volume preservation, compactness, and other properties of the grid.
+By allowing the location of the splitting surfaces to be adjusted, we can modify the shape and size of child cells and as a result affect the volume preservation, compactness, and other properties of the grid.
 Let $c_{s}$ be the location of the splitting surface, where $c$ is one of $\left\lbrace \phi, \lambda, r \right\rbrace$, then one way to express the location of the splitting surfaces used for refinement is as a convex combination of maximum and minimum values
 %
 \begin{equation} \label{eq:convex}
@@ -198,17 +179,15 @@ c_{s} = \alpha c_{2} + \left( 1-\alpha \right) c_{1}, \quad \alpha \in \left( 0,
 \end{equation}
 %
 where we call $\alpha$ the splitting factor.
-Conventional SDOG used midpoints (i.e.
-$\alpha = \frac{1}{2}$) for each spherical coordinate when refining, regardless of cell type.
+Conventional SDOG used midpoints (i.e. $\alpha = \frac{1}{2}$) for each spherical coordinate during refinement, regardless of cell type.
 While a convex combination is the most straightforward, any function of the maximum and minimum such that the result is strictly between the two is a valid method for determining the location of the splitting surfaces (Figure~\ref{fig:functions}).
-Thus, the location of splitting surfaces can be modified by changing this function, either by using a different value of $\alpha$, or by using a different function altogether.
+Thus, the location of splitting surfaces is modified by changing this function, either by using a different value of $\alpha$ or by using a different function altogether.
 Furthermore, the function used can be different for each cell type and spherical coordinate.
 
 
 A useful function for improving volume preservation is one that results in one of the new ranges having a specific percentage of the volume of the original range.
 We start with the radial splitting surface.
-Referring to Eq.
-(\ref{eq:volume}), let $p \in (0,1)$ be the percentage we wish for the lower range to have, then
+Referring to Eq.~(\ref{eq:volume}), let $p \in (0,1)$ be the percentage we wish for the lower range to have, then
 %
 \begin{equation*}
 p \left( r_{2}^{3} - r_{1}^{3} \right) = r_{s}^{3} - r_{1}^{3}
@@ -241,12 +220,12 @@ The derivations for the latitudinal and longitudinal splitting surfaces follow t
 \end{equation}
 
 
-The question then becomes which splitting surfaces can be modified, and in which ways, in order to improve the volume preservation of the grid.
+The question then becomes which splitting surfaces should be modified, and in which ways, in order to improve the volume preservation of the grid.
 We first look at which splitting surfaces should \textit{not} be modified.
-From Eq.~(\ref{eq:longVol}) it is clear a longitudinal splitting surface at the midpoint will always split a cell exactly in half, and therefore since all longitudinal splitting surfaces are symmetric, they should not be changed.
+From Eq.~(\ref{eq:longVol}), it is clear a longitudinal splitting surface at the midpoint will always split a cell exactly in half, and therefore they should not be changed.
 
 
-\begin{figure}[tb]
+\begin{figure}[ht!]
 	\includegraphics[width=0.6\textwidth]{sdog-shells.pdf}
 	\caption[Title]{
 		Spherical shells created by the radial splitting surfaces of SG cells.
@@ -258,7 +237,7 @@ From Eq.~(\ref{eq:longVol}) it is clear a longitudinal splitting surface at the 
 
 
 Less trivially, the radial splitting surface for SG cells should also be left at the midpoint.
-Referring to Figure~\ref{fig:sdog-shells}, we can see that the radial splitting surfaces for SG cells separate the grid into spherical shells.
+Referring to Figure~\ref{fig:sdog-shells}, we see that the radial splitting surfaces for SG cells separate the grid into spherical shells.
 Shell $n$ has a volume proportional to
 %
 \begin{equation}
@@ -276,98 +255,79 @@ We also know that in the limit, an SDOG grid at one level higher of refinement w
 Therefore, in order for cells in the grid to be close to equal volume, it must be that shell $n+1$ has one eighth the volume of shell $n$ (since it will have one eighth the number of cells), which occurs exactly when $\alpha = \frac{1}{2}$.
 
 
-This leaves five possible splitting surfaces that can be modified: the radial splitting surface for LG and NG cells, and the latitudinal splitting surface for SG, LG, and NG cells.
-An important decision then is whether to use convex combinations to calculate the location of these surfaces (Eq.~(\ref{eq:convex})), or to use the functions parameterized by the ratio of volumes (Eq.~(\ref{eq:radVol}) and (\ref{eq:latVol})).
-This is akin to a stationary refinement scheme in comparison to a non-stationary one.
-A stationary scheme will maintain the simplicity of refinement, however, offers less overall ability to improve volume preservation.
-Because of this, we provide both a stationary and non-stationary set of modifications.
+We are left with five possible splitting surfaces to be modified: the radial splitting surface for LG and NG cells, and the latitudinal splitting surface for SG, LG, and NG cells.
+Below we determine the ideal placement for each of these surfaces to maximize volume preservation between cells.
+We then propose other possible splitting surface combinations to balance the tradeoff between volume preservation and cell compactness.
 
 
-\subsection{Stationary Subdivision} \label{sec:method-stationary}
-By constraining splitting surfaces to be calculated via convex combinations, there are more restrictions on which splitting surfaces should be modified.
-An interesting property of SDOG refinement is that if a cell refines symmetrically in a given spherical dimension, all children of that cell also refine symmetrically in that dimension.
-Thus, symmetric splitting surfaces result in non-degenerate binary (in the given dimension) refinement at all further levels of refinement, and it becomes clear that using any other value than the midpoint results in divergence as the level of refinement gets large.
-Therefore, all symmetric splitting surfaces should be left at the midpoint, which leaves only the latitudinal splitting surface for SG and LG cells to be modified.
-We use $\alpha_{\phi}^{SG}$ and $\alpha_{\phi}^{LG}$ to refer to the splitting factors used for calculating the location of these surfaces.
+\subsection{Ideal Splitting Surfaces for Volume Preservation} \label{chap:4:ideal}
+Ideal splitting surfaces to maximize volume preservation are achieved using Eqs.~(\ref{eq:radVol}) and (\ref{eq:latVol}); all that is required is to determine the ideal value of $p$ for the different splitting surfaces and cell types.
+We start with the radial splitting surfaces for LG and NG cells, and the latitudinal one for NG cells, as these surfaces behave the same as regular refinement.
+Specifically, these splitting surfaces result in the same number and type of cells on both sides, a property that also holds for their children.
+We call these the regular splitting surfaces.
+Therefore, we require that the volume on each side of the regular splitting surfaces be equal, or in other words, we set $p = \frac{1}{2}$ for these splitting surfaces.
 
 
-\begin{figure}[tb]
+\begin{figure}[ht!]
 	\includegraphics[width=0.9859\textwidth]{sdog-zones.pdf}
 	\caption[Title]{
 		Spherical zones created by the latitudinal splitting surfaces of SG and LG cells.
-		At $k$ levels of refinement there are $k$ zones and one upper stack of LG cells in the outer most shell.
-		Each successively smaller shell has one fewer zones, until reaching the innermost SG cell.
-		Zones in the same shell are not exactly similar, but are regular and should have volume proportional to the number of cells they contain
+		At $k$ levels of refinement, there are $k$ zones and one upper stack of LG cells in the outermost shell.
+		Each successively smaller shell has one fewer zone than the previous until reaching the innermost SG cell.
+		Zones in the same shell are not exactly similar, but are regular grid regions and should have volume proportional to the number of cells they contain
 	}
 	\label{fig:sdog-zones}
 \end{figure}
 
 
-We first performed a simple search on the possible values of these splitting factors to see if it was possible to improve the volume preservation.
-We found that volume preservation could be improved by certain values of $\alpha_{\phi}^{SG}$, however, it was always the case that $\alpha_{\phi}^{LG}$ was best left equal to one half.
-To understand why this is the case, we look at where the ideal placements for these splitting surfaces would be if not constrained by convex combinations.
-Notice that these two latitudinal splitting surfaces have a similar effect as the radial splitting surface for SG cells.
-Referring now to Figure~\ref{fig:sdog-zones}, we see that these splitting surfaces further divide the spherical shells into spherical zones.
+Determining the ideal latitudinal splitting surfaces for SG and LG cells is more involved.
+First, notice that these two latitudinal splitting surfaces have a similar effect as the radial splitting surface for SG cells.
+Referring to Figure~\ref{fig:sdog-zones}, we see that these splitting surfaces further divide the spherical shells into spherical zones.
 Additionally, each zone is comprised entirely of NG cells.
-From this fact we conclude that zone $n$ has exactly four times as many cells as zone $n+1$, and thus in the ideal case would have exactly four times the volume as well.
-We can use Eq.~(\ref{eq:latVol}) to find these ideal locations using the proper value for $p$.
-Zone $n$ has a percentage $\left( 1 - p \right)^{n} p$ of the initial volume of the octant, then setting the ratio between zone $n+1$ and $n$ to be equal to $\frac{1}{4}$ gives us $p = \frac{3}{4}$, and finally
-%
-\begin{equation} \label{eq:idealLat}
-\phi_{s} = \sin^{-1} \left( \frac{3}{4} \sin\phi_{2} + \frac{1}{4} \sin\phi_{1} \right).
-\end{equation}
+From this, we conclude that zone $n$ has precisely four times as many cells as zone $n+1$, and thus, should have four times the volume as well.
+Using this information, we find the value for $p$.
+Zone $n$ has a volume equal to $\left( 1 - p \right)^{n} p$ that of the initial octant, then setting the ratio between zone $n+1$ and $n$ to be equal to $\frac{1}{4}$ gives us $p = \frac{3}{4}$.
 
 
-From here, we can now see why the latitudinal splitting surfaces for LG cells should remain at the midpoint.
-As $\phi_{1}$ approaches $\pm \frac{\pi}{2}$, this function is closely approximated by a convex combination with a factor of one half (see Appendix~\ref{app:lat}).
-Thus, as the level of refinement gets large, using $\alpha_{\phi}^{LG} = \frac{1}{2}$ approaches the ideal placement for the splitting surfaces, and thus is the ideal factor to use for a convex combination.
+\begin{figure}[ht!]
+	\includegraphics[width=0.85\textwidth]{modified-volume.pdf}
+	\caption[Title]{
+		Results of the volume method after four levels of refinement.
+		All NG cells have exactly the same volume, with the LG and SG cells having a lower volume.
+		Notice how the resulting NG cells are stretched and squashed in order to ensure they all have equal volume
+	}
+	\label{fig:modified-volume}
+\end{figure}
 
 
-\begin{figure}[tb]
+Figure~\ref{fig:modified-volume} shows the resulting grid from this method of calculating splitting surfaces, which we refer to as the \textit{volume} method.
+In this grid, all NG cells at the same level of refinement have equal volume; this dramatically improves the volume preservation, as only cells that extend to one of the singularities (SG and LG cells) will have a different volume than the other cells in the grid.
+
+
+\subsection{Balanced Splitting Surfaces} \label{chap:4:balanced}
+While the above refinement method significantly improves volume preservation in the grid, this gain does not come without consequence.
+Cells are stretched and squashed in order to achieve this volume preservation, which reduces cell compactness and may be an undesirable effect depending on the application.
+In order to address this issue, it is possible to use different splitting surfaces that achieve a better balance between volume preservation and cell compactness.
+
+
+\begin{figure}[ht!]
 	\includegraphics[width=0.85\textwidth]{alpha-volume.pdf}
 	\caption[Title]{
-		Results of the stationary scheme after four levels of refinement using $\alpha_{\phi}^{SG} \approx 0.54$.
-		Since only one type of splitting surface has been modified, the results are similar to that of conventional SDOG
+		Results of the latitude method after four levels of refinement.
+		Since only latitude splitting surface for SG and LG cells have been modified, the results are similar to that of conventional SDOG
 	}
 	\label{fig:alpha-volume}
 \end{figure}
 
 
-We can also use this formulation to find the theoretical ideal placement for the latitudinal splitting surface of SG cells.
-SG cells always have a minimum latitude of zero and a maximum of $\pm \frac{\pi}{2}$, thus Eq.~(\ref{eq:idealLat}) will always evaluate to plus or minus the same value.
-Substituting back into Eq.~(\ref{eq:convex}) we get
-%
-\begin{equation} \label{eq:latValue}
-\alpha_{\phi}^{SG} = \frac{ \sin^{-1} \left( \pm \frac{3}{4} \right) }{ \pm \frac{\pi}{2} } \approx 0.53989.
-\end{equation}
-%
-The grid resulting from using this value can be seen in Figure~\ref{fig:alpha-volume}.
-Interestingly, our initial search also found $\alpha_{\phi}^{SG} = 0.57$ to perform well, even resulting in a slightly lower maximum difference in cell volumes than the theoretical ideal.
-These findings are not necessarily in conflict, however, as the theoretical ideal results in much less variation in the volume of cells.
-We compare these two schemes more closely in Section \ref{sec:results}.
+Looking at Figure~\ref{fig:modified-volume}, we see that the regular splitting surfaces are responsible for the majority of the reduction in cell compactness.
+Our first balanced scheme then is to leave the regular splitting surfaces at the midpoints and only modify the latitudinal splitting surfaces for SG and LG cells.
+Figure~\ref{fig:alpha-volume} shows the results of this method, which we refer to as the \textit{latitude} method.
+Comparing this to conventional SDOG (refer back to Figure~\ref{fig:sdog-volume}), the two grids are nearly identical.
+Thus, this method offers only a slight improvement with regards to volume preservation, while also only slightly sacrificing cell compactness.
 
 
-\subsection{Non-Stationary Subdivision} \label{sec:method-nonStationary}
-By not limiting splitting surfaces to be calculated using convex combinations, we are allowed much more control over refinement and the resulting properties.
-Using Eq~(\ref{eq:radVol}) and (\ref{eq:latVol}) to calculate the modifiable splitting surfaces, all that is needed is to determine the ideal value of $p$ for the different splitting surfaces and cell types.
-We have already done this for the latitudinal splitting surfaces of SG and LG cells in Section \ref{sec:method-stationary} with Eq.~(\ref{eq:idealLat}).
-Therefore, all that is left is the radial splitting surfaces for LG and NG cells, and the latitudinal one for NG cells.
-However, since all of these remaining splitting surfaces are symmetric, we simply require that the volume on each side of these splitting surfaces be equal.
-In other words, we can simply set $p = \frac{1}{2}$ for these remaining splitting surfaces.
-
-
-\begin{figure}[tb]
-	\includegraphics[width=0.85\textwidth]{modified-volume.pdf}
-	\caption[Title]{
-		Results of the non-stationary scheme after four levels of refinement using $\beta = 1$.
-		All NG cells have exactly the same volume, with the LG and SG cells having a lower volume.
-		Notice how the resulting NG cells are stretched and squashed in order to ensure they all have equal volume
-	}
-	\label{fig:modified-results}
-\end{figure}
-
-
-\begin{figure}[tb]
+\begin{figure}[ht!]
 	\includegraphics[width=0.85\textwidth]{blend-volume.pdf}
 	\caption[Title]{
 		Results of the non-stationary scheme after four levels of refinement using $\beta = \frac{1}{2}$.
@@ -377,35 +337,56 @@ In other words, we can simply set $p = \frac{1}{2}$ for these remaining splittin
 \end{figure}
 
 
-Figure~\ref{fig:modified-results} shows the resulting grid from this method of calculating splitting surfaces.
-In this grid, all NG cells at the same level of refinement have exactly the same volume as one another.
-This greatly improves the volume preservation, as only cells that extend to one of the poles (SG and LG cells) will have a different volume than the other cells in the grid.
-This does not come without consequence though; cells are stretched and squashed in order to achieve this volume preservation, which may be an undesirable effect depending on the application.
-To offset this reduction in cell compactness, it is possible to use splitting factors that are somewhere in between these ones ($c_{s}'$), which give ideal volume preservation, and the conventional SDOG ones ($c_{m}$), which give better compactness.
-One simple way to calculate this would be as a convex combination of the two
-%
-\begin{equation}
-c_{s} = \beta c_{s}' + \left( 1 - \beta \right)c_{m}, \quad \beta \in \left( 0,1 \right),
-\label {eq:beta}
-\end{equation}
-%
-however other methods could give better results.
-We show a simple result in Figure~\ref{fig:blend-volume} using $\beta = \frac{1}{2}$.
+In order to achieve different tradeoffs between compactness and volume preservation, modifying the regular splitting surfaces is necessary.
+Eqs.~(\ref{eq:radVol}) and (\ref{eq:latVol}) give ideal placements for volume preservation as compared to the conventional midpoint functions which result in better compactness.
+Therefore, using different functions that blend between these two extremes allows for a more balanced tradeoff.
+There are endless possibilities for these functions; however, as will be required in Chapter~\ref{chap:mapping}, they should be easily invertible.
+That is, given a splitting surface, we need to be able to determine the corresponding value of $p$.
+For the radial splitting surfaces, we propose the function
+%%%%%%%%
+where $1 \leq t_r \leq 3$ blends between compactness at $t_r = 1$ (equivalent to midpoint) and volume preservation at $t_r=3$ (equivalent to Eq.~(\ref{eq:radVol})).
+For the latitudinal splitting surfaces, we propose
+%%%%%%%
+where $1 \leq t_\phi \leq \infty$ blends between volume preservation at $t_\phi = 1$ (equivalent to Eq.~(\ref{eq:latVol})) and compactness at $t_\phi = \infty$ (equivalent to midpoint). We found values of $t_r = 2$ and $t_\phi = 1.5$ to offer a relatively balanced tradeoff between the two properties, with the resulting grid shown in Figure~\ref{fig:blend-volume}.
+We refere to this method as the \textit{balanced} one.
 
-\section{Results}
-There are several potential methods for evaluating the volume preserving properties of a 3D DGGS.
-When first proposed in \cite{yu2009sdog}, the ratio between cells of largest and smallest volume was used to evaluate volume preserving properties of SDOG.
-This volume ratio is a useful measure for determining the worst-case difference in the volume of cells, however it does not give any information about the distribution of said volumes.
+
+\section{Results} \label{chap:4:results}
+There are several potential methods for evaluating the volume-preserving properties of a 3D DGGS.
+When first proposed by Yu and Wu, the ratio between cells of the largest and smallest volume was used to evaluate the volume-preserving properties of SDOG~\cite{yu2009sdog}.
+This volume ratio is a useful measure for determining the worst-case difference in the volume of cells; however, it does not give any information about the distribution of said volumes.
 For example, a grid with all cells except one having equal volume, and a grid where every cell has a distinct volume, could end up having the same volume ratio.
-To get a more complete understanding of volume preservation, we should also examine statistics that give a measure of distribution.
+To get a complete understanding of volume preservation, we should also examine statistics that give a measure of distribution.
 For this purpose, we use the coefficient of variation (CV), which is simply the ratio between the standard deviation and the mean.
 We use the CV over the standard deviation as it a dimensionless quantity.
 
 
+\begin{figure}[htp!]
+	\centering
+	\includegraphics[width=0.75\textwidth]{volume-ratio.pdf}
+	\caption[Title]{
+		Volume ratio for the different grids at increasing levels of refinement.
+		Note that for the non-stationary method ($\beta = 1$) the volume ratio does not change with refinement level
+	}
+	\label{fig:vr}
+\end{figure}
+
+
+
+\begin{figure}[htp!]
+	\centering
+	\includegraphics[width=0.75\textwidth]{cv-volume.pdf}
+	\caption[Title]{
+		CV of volume for the different grids at increasing levels of refinement
+	}
+	\label{fig:cv}
+\end{figure}
+
+
 In modifying the refinement for volume preservation, it is also important to evaluate the impact these changes have on other properties of the grid.
-In Section \ref{sec:mapping} we discussed how the modified grids can be indexed using a mapping between them and conventional SDOG, however we should also measure the effect our changes have on the compactness of the resulting cells.
+Specifically, we should measure the effect our changes have on the compactness of cells.
 To measure this, we use the notion of sphericity, which quantifies how closely the shape of an object approximates a sphere~\cite{wadell1935volume}.
-It is defined as the ratio between the surface area of a sphere with the same volume as the object and the surface area of the object itself.
+Sphericity is defined as the ratio between the surface area of a sphere with the same volume as the object and the surface area of the object itself.
 Therefore, a perfect sphere will have a sphericity of one, and any other object will have sphericity strictly less than one.
 Formally, given an object $\omega$ and a sphere $s$ such that $\operatorname{vol}(s) = \operatorname{vol}(\omega)$, the sphericity of $\omega$, $\Psi$, is given by $\frac{\operatorname{area}(s)}{\operatorname{area}(\omega)}$ , or equivalently 
 %
@@ -417,28 +398,7 @@ Formally, given an object $\omega$ and a sphere $s$ such that $\operatorname{vol
 We use the mean and standard deviation (SD) of sphericity for all cells in the grid to evaluate compactness globally.
 
 
-\begin{figure}[tb]
-	\centering
-	\includegraphics[width=0.75\textwidth]{volume-ratio.pdf}
-	\caption[Title]{
-		Volume ratio for the different grids at increasing levels of refinement.
-		Note that for the non-stationary method ($\beta = 1$) the volume ratio does not change with refinement level
-	}
-	\label{fig:vr}
-\end{figure}
-
-
-\begin{figure}[tb]
-	\centering
-	\includegraphics[width=0.75\textwidth]{cv-volume.pdf}
-	\caption[Title]{
-		CV of volume for the different grids at increasing levels of refinement
-	}
-	\label{fig:cv}
-\end{figure}
-
-
-\begin{figure}[tb]
+\begin{figure}[htp!]
 	\centering
 	\includegraphics[width=0.75\textwidth]{mean-sph.pdf}
 	\caption[Title]{
@@ -448,7 +408,7 @@ We use the mean and standard deviation (SD) of sphericity for all cells in the g
 \end{figure}
 
 
-\begin{figure}[tb]
+\begin{figure}[htp!]
 	\centering
 	\includegraphics[width=0.75\textwidth]{sd-sph.pdf}
 	\caption[Title]{
@@ -459,17 +419,17 @@ We use the mean and standard deviation (SD) of sphericity for all cells in the g
 
 
 As a baseline, we have calculated the value of these measures at each refinement level from one to fifteen for conventional SDOG.
-We then repeated this for the four modifications discussed in this paper: the two stationary modifications with $\alpha_{\phi}^{SG} \approx 0.54$ and $\alpha_{\phi}^{SG} = 0.57$, the non-stationary modification (referred to as $\beta = 1$), and finally the blending of the non-stationary with conventional SDOG using $\beta = \frac{1}{2}$.
-The results for each grid are displayed in Figures~\ref{fig:vr}, \ref{fig:cv}, \ref{fig:sph}, and \ref{fig:sd-sph} showing the volume ratio, CV of volume, mean sphericity, and SD of sphericity respectively.
-Table~\ref{tab:results} summarizes these charts with the convergence value of each property for the five different grids.
+We then repeated this for the three modifications discussed in this chapter: the volume method, the latitude method, and the balanced method.
+The results for each grid are displayed in Figures~\ref{fig:vr}, \ref{fig:cv}, \ref{fig:sph}, and \ref{fig:sd-sph} showing the volume ratio, CV of volume, mean sphericity, and SD of sphericity, respectively.
+Table~\ref{tab:results} summarizes these charts with the convergence value of each property for the four different grids.
 We also give convergence values for the maximum and minimum sphericity---and their difference---for each grid in Table~\ref{tab:results-sph}.
-It is important to note that for volume ratio and CV of volume lower values are better, but for mean sphericity a higher value is better.
+It is important to note that for volume ratio and CV of volume, lower values are better, but for mean sphericity, a higher value is better.
 
 
-\begin{table}[]
+\begin{table}[p!]
 	\centering
 	\caption[Title]{
-		Convergence value of each measure for the five discussed grids
+		Convergence value of each measure for the four discussed grids
 	}
 	\begin{tabular}{|c|c|c|c|c|c|}
 		\hline
@@ -483,10 +443,10 @@ It is important to note that for volume ratio and CV of volume lower values are 
 \end{table}
 
 
-\begin{table}[]
+\begin{table}[p!]
 	\centering
 	\caption[Title]{
-		Convergence value of max and min sphericity for the five discussed grids
+		Convergence value of max and min sphericity for the four discussed grids
 	}
 	\begin{tabular}{|c|c|c|c|c|c|}
 		\hline
@@ -498,6 +458,7 @@ It is important to note that for volume ratio and CV of volume lower values are 
 	\label{tab:results-sph}
 \end{table}
 
+\textbf{Update this with new discussion once results are in}
 
 The stationary scheme with $\alpha_{\phi}^{SG} \approx 0.54$ has a better volume ratio than conventional SDOG for all levels of refinement except the first, and a lower CV of volume for all levels of refinement after the second.
 Comparing this to the one with $\alpha_{\phi}^{SG} = 0.57$, both the volume ratio and CV of volume do not improve as compared to conventional SDOG until the fifth level of refinement.
@@ -514,3 +475,4 @@ The blending scheme has results in between that of conventional SDOG and the non
 The CV of volume, mean sphericity, and SD of sphericity are all near the respective halfway points, whereas the volume ratio still ends up being a significant improvement over conventional SDOG.
 
 \section{Summary}
+Pull from paper conclusion.

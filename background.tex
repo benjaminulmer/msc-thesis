@@ -35,7 +35,7 @@ However, projections that preserve only certain distances, such as all those to 
 Alternatively, some methods aim for a balanced trade-off between the different types of distortion, as opposed to eliminating a specific type (Figure~\ref{fig:robinson}).
 
 
-\begin{figure*}[p]
+\begin{figure*}[htp!]
 	\centering
 	\begin{subfigure}[]{0.5\textwidth}
 		\centering
@@ -90,14 +90,14 @@ While both groups overestimated distances on average, the group with the Eurocen
 These studies further show that the projection used for a map must be chosen and centred carefully to ensure readers correctly understand how the map relates to the actual Earth.
 
 
-\subsubsection{Polyhedral Projections} \label{chap:2:polyproj}
+\subsubsection{Polyhedral Projections} \label{chap:2:polyProj}
 At the cost of introducing additional map edges, cutting a map can reduce the amount of distortion introduced by projection~\cite{soliman2018optimal}.
 Such cuts are analogous to projecting the sphere to an underlying polyhedron, the net of which produces the final flat map.
 Figure~\ref{fig:poly-projection} shows one example of such a projection, the Dymaxion map.
 Aside from reducing distortion, this polyhedron based maps can serve as a pseudo-globe by folding the net into the corresponding polyhedron.
 
 
-\begin{figure}[h]
+\begin{figure}[ht!]
 	\centering
 	\includegraphics[width=\textwidth]{dymaxion.png}
 	\caption[The Dymaxion (or Fuller) Map Projection]{
@@ -239,7 +239,7 @@ This degeneration reduces the compactness of cells near the poles, produces a hi
 Thus, an LLG is neither a compact nor uniform DGG.
 
 
-\begin{figure}[h]
+\begin{figure}[ht!]
 	\centering
 	\includegraphics[width=0.4\textwidth]{llg.pdf}
 	\caption[A Latitude Longitude Grid]{
@@ -278,7 +278,7 @@ This style of grid avoids degeneracies in the grid at the poles, providing a mor
 Furthermore, the use of an area-preserving projection in conjunction with an area-preserving refinement of the polyhedron allows for an equal area grid without a significant reduction in cell compactness.
 
 
-\begin{figure}[h]
+\begin{figure}[ht!]
 	\centering
 	\includegraphics[width=0.30\textwidth]{polyhedron-grid.pdf}
 	\caption[An Icosahedron Based Grid]{
@@ -306,7 +306,7 @@ These operations are, correspondingly, known as grid decoding.
 Grid encoding and decoding, as they apply to a polyhedron based grid, are shown in Figure~\ref{fig:coding}.
 
 
-\begin{figure}[tb]
+\begin{figure}[ht!]
 	\centering
 	\includegraphics[width=\textwidth]{coding.pdf}
 	\caption[Grid Encoding and Decoding with a Polyhedral Grid]{

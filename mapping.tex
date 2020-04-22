@@ -1,5 +1,18 @@
 \chapter{Mapping Techniques for SDOG and Prismatoid Grids} \label{chap:mapping}
 
+\subsection{SDOG Indexing} \label{sec:sdog-indexing}
+In order to identify and distinguish the cells of a grid, there needs to be a method to assign a unique index to each cell.
+A good indexing scheme will allow for efficient data insertion, retrieval, and manipulation via a set of queries.
+Examples of some of these queries are: point to cell, which give the index of the cell containing a given point; index inversion, which calculates a cell's location and geometry from the index; neighbourhood queries; and in the case of a hierarchical grid, hierarchy traversal to find parent and children cells.
+
+
+Due to the fact that SDOG refinement is based on the midpoints of spherical coordinates, an indexing scheme that is efficient for many of the above operations can be easily developed.
+At any refinement level, $k$, each cell can be given an integer index in each spherical coordinate ranging from zero to $2^{k} - 1$.
+To address the degenerate refinement of certain cells, these integer indices are modified appropriately with divisions by powers of two, which can be done quickly with bit shift operations.
+The integer indices can then be linearized by various methods, one good choice being a Z-order curve \cite{morton1966computer} as used in \cite{yu2009sdog}.
+A more detailed description of degenerate Z-order indexing for SDOG grids, including algorithms for point to cell and index inversion operations, can be found in \cite{yu2009coding}.
+
+
 \section{Radial Mappings}
 \section{Latitude Mappings for SDOG}
 
