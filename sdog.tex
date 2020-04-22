@@ -1,7 +1,10 @@
 \chapter{Volume-Preserving SDOG Refinement} \label{chap:sdog}
+One of the goals of this thesis is to produce 3D DGGS's with cells of as equal volume as possible.
+The first approach we use for accomplishing this is modifying an existing 3D DGGS in order to improve its volume-preserving properties.
+To this end, we chose to modify SDOG, as its use of a semiregular degenerate refinement means it already satisfies the primary goal of the thesis---that is, support for unbounded ranges of altitude.
+The use of spherical coordinates also allows for efficient encoding and decoding operations, which we discuss in Chapter~\ref{chap:coding}.
 
-
-Most of the content of this chapter is taken from the article "Toward Volume Preserving Spheroid-Degenerated Octree Grid," authored by Benjamin Ulmer and Faramarz Samavati, which appeared in the journal \textit{Geoinformatica}~\cite{ulmer2020toward}.
+The content of this chapter is taken from the article "Toward Volume Preserving Spheroid-Degenerated Octree Grid," authored by Benjamin Ulmer and Faramarz Samavati, which appeared in the journal \textit{Geoinformatica}~\cite{ulmer2020toward}.
 Slight modifications have been made to maintain consistent terminology with the rest of the thesis, along with a more streamlined presentation of the methodology. Furthermore, the blending method presented in this chapter is different from the one that appears in the article.
 
 
@@ -491,4 +494,7 @@ The blending scheme has results in between that of conventional SDOG and the non
 The CV of volume, mean sphericity, and SD of sphericity are all near the respective halfway points, whereas the volume ratio still ends up being a significant improvement over conventional SDOG.
 
 \section{Summary}
-Pull from paper conclusion.
+This chapter presents modifications of conventional SDOG refinement that result in improved volume preservation properties in the resulting grids.
+The modifications improve volume preservation as measured by two different metrics, at the cost of reducing cell compactness.
+Two blending functions---each defined on a single parameter---enable different balances between volume preservation and compactness.
+When used for maximum volume preservation, our method results in all non-degenerate cells in the grid having exactly equal volume.
