@@ -19,7 +19,7 @@ Figure~\ref{fig:sdog} shows an SDOG octant after four applications of refinement
 \begin{figure}[ht!]
 	\centering
 	\includegraphics[width=\textwidth]{sdog.pdf}
-	\caption[Title]{
+	\caption[Different views of an SDOG octant]{
 		One octant of an SDOG grid after four levels of refinement viewed (a) from the side, (b) from the front, and (c) at an angle.
 		Compared to a 3D LLG, cells are more uniform in size and have better compactness.
 		Refer to Chapter~\ref{chap:4:results} for a detailed analysis of the volume and compactness properties of SDOG
@@ -31,7 +31,7 @@ Figure~\ref{fig:sdog} shows an SDOG octant after four applications of refinement
 \begin{figure}[ht!]
 	\centering
 	\includegraphics[width=\textwidth]{sdog-refinement.pdf}
-	\caption[Title]{
+	\caption[Splitting surfaces used in SDOG refinement]{
 		Location and extent of splitting surfaces in SDOG refinement for (a) SG cells, (b) LG cells, and (c) NG cells.
 		Only NG cells have all three splitting surfaces fully refine the cell into eight children, and make up the majority of cells as the grid becomes increasingly refined
 	}
@@ -158,7 +158,7 @@ Using midpoints to refine cells makes for a simple refinement scheme, but it mak
 \begin{figure}[ht!]
 	\centering
 	\includegraphics[width=0.85\textwidth]{sdog-volume.pdf}
-	\caption[Title]{
+	\caption[Distribution of cell volumes in SDOG]{
 		Distribution of cell volumes in an octant after four levels of conventional SDOG refinement
 	}
 	\label{fig:sdog-volume}
@@ -168,7 +168,7 @@ Using midpoints to refine cells makes for a simple refinement scheme, but it mak
 \begin{figure}[ht!]
 	\centering
 	\includegraphics[width=0.4\textwidth]{sdog-functions.pdf}
-	\caption[Title]{
+	\caption[How functions determine the location of SDOG splitting surfaces]{
 		Each SDGO cell represents a range in each spherical coordinate; the location of the splitting surfaces are expressed as a function of the maximum and minimum of the respective range.
 		Here we show only an NG cell; however, the same applies to SG and LG cells.
 		The functions $f$, $g$, and $h$ serve as placeholders for any valid function that results in the output being strictly between the two inputs
@@ -235,7 +235,7 @@ From Equation~(\ref{eq:longVol}), it is clear a longitudinal splitting surface a
 \begin{figure}[ht!]
 	\centering
 	\includegraphics[width=0.6\textwidth]{sdog-shells.pdf}
-	\caption[Title]{
+	\caption[Spherical shells that result from SDOG refinement]{
 		Spherical shells created by the radial splitting surfaces of SG cells.
 		At $k$ levels of refinement there are $k$ shells and one inner SG cell.
 		These shells are similar and should have volume proportional to the number of cells they contain
@@ -279,7 +279,7 @@ Therefore, we require that the volume on each side of the regular splitting surf
 \begin{figure}[ht!]
 	\centering
 	\includegraphics[width=0.9859\textwidth]{sdog-zones.pdf}
-	\caption[Title]{
+	\caption[Spherical zones that result from SDOG refinement]{
 		Spherical zones created by the latitudinal splitting surfaces of SG and LG cells.
 		At $k$ levels of refinement, there are $k$ zones and one upper stack of LG cells in the outermost shell.
 		Each successively smaller shell has one fewer zone than the previous until reaching the innermost SG cell.
@@ -301,7 +301,7 @@ Zone $n$ has a volume equal to $\left( 1 - p \right)^{n} p$ that of the initial 
 \begin{figure}[ht!]
 	\centering
 	\includegraphics[width=0.85\textwidth]{modified-volume.pdf}
-	\caption[Title]{
+	\caption[Distribution of cell volumes in the volume modification]{
 		Results of the volume method after four levels of refinement.
 		All NG cells have exactly the same volume, with the LG and SG cells having a lower volume.
 		Notice how the resulting NG cells are stretched and squashed in order to ensure they all have equal volume
@@ -323,7 +323,7 @@ In order to address this issue, it is possible to use different splitting surfac
 \begin{figure}[ht!]
 	\centering
 	\includegraphics[width=0.85\textwidth]{alpha-volume.pdf}
-	\caption[Title]{
+	\caption[Distribution of cell volumes in the latitude modification]{
 		Results of the latitude method after four levels of refinement.
 		Since only latitude splitting surface for SG and LG cells have been modified, the results are similar to that of conventional SDOG
 	}
@@ -341,7 +341,7 @@ Thus, this method offers only a slight improvement with regards to volume preser
 \begin{figure}[ht!]
 	\centering
 	\includegraphics[width=0.85\textwidth]{blend-volume.pdf}
-	\caption[Title]{
+	\caption[Distribution of cell volumes in the balanced modification]{
 		Results of the balanced method after four levels of refinement.
 		NG cells are still stretched and squashed in order to better preserve volume; however, the effect is less pronounced than in the volume method
 	}
@@ -384,7 +384,7 @@ We use the CV over the SD as it a dimensionless quantity.
 \begin{figure}[htp!]
 	\centering
 	\includegraphics[width=0.75\textwidth]{volume-ratio.pdf}
-	\caption[Title]{
+	\caption[Graph of volume ratio for the different grids]{
 		Volume ratio for the different grids at increasing levels of refinement.
 		Note that for the non-stationary method ($\beta = 1$) the volume ratio does not change with refinement level
 	}
@@ -396,7 +396,7 @@ We use the CV over the SD as it a dimensionless quantity.
 \begin{figure}[htp!]
 	\centering
 	\includegraphics[width=0.75\textwidth]{cv-volume.pdf}
-	\caption[Title]{
+	\caption[Graph of CV of volume for the different grids]{
 		CV of volume for the different grids at increasing levels of refinement
 	}
 	\label{fig:cv}
@@ -420,7 +420,7 @@ We use the mean and SD of sphericity for all cells in the grid to evaluate compa
 \begin{figure}[htp!]
 	\centering
 	\includegraphics[width=0.75\textwidth]{mean-sph.pdf}
-	\caption[Title]{
+	\caption[Graph of mean sphericity for the different grids]{
 		Mean sphericity for the different grids at increasing levels of refinement
 	}
 	\label{fig:sph}
@@ -430,7 +430,7 @@ We use the mean and SD of sphericity for all cells in the grid to evaluate compa
 \begin{figure}[htp!]
 	\centering
 	\includegraphics[width=0.75\textwidth]{sd-sph.pdf}
-	\caption[Title]{
+	\caption[Graph of SD of sphericity for the different grids]{
 		Standard deviation of sphericity for the different grids at increasing levels of refinement
 	}
 	\label{fig:sd-sph}
@@ -447,16 +447,16 @@ It is important to note that for volume ratio and CV of volume, lower values are
 
 \begin{table}[htp!]
 	\centering
-	\caption[Title]{
+	\caption[Convergence values of volume and compactness measures for the different grids]{
 		Convergence value of each measure for the four discussed grids
 	}
-	\begin{tabular}{|c|c|c|c|c|c|}
-		\hline
-		& SDOG & $\alpha_{\phi}^{SG} \approx 0.54$ & $\alpha_{\phi}^{SG} = 0.57$ & $\beta = 1$ & $\beta = 0.5$ \\ \hline
-		Volume Ratio     & 8.88   & 8.17   & 8.15   & 2.63      & 4.37   \\ \hline
-		CV of Volume     & 0.412  & 0.399  & 0.409  & 6.44E-19  & 0.211  \\ \hline
-		Mean Sphericity  & 0.799  & 0.797  & 0.795  & 0.767     & 0.787  \\ \hline
-		SD of Sphericity & 0.00639& 0.00629& 0.00727& 0.0271    & 0.0141 \\ \hline
+	\begin{tabular}{@{} c c c c c c @{}}
+		\toprule
+		& SDOG & $\alpha_{\phi}^{SG} \approx 0.54$ & $\alpha_{\phi}^{SG} = 0.57$ & $\beta = 1$ & $\beta = 0.5$ \\ \midrule
+		Volume Ratio     & 8.88   & 8.17   & 8.15   & 2.63      & 4.37   \\
+		CV of Volume     & 0.412  & 0.399  & 0.409  & 6.44E-19  & 0.211  \\
+		Mean Sphericity  & 0.799  & 0.797  & 0.795  & 0.767     & 0.787  \\
+		SD of Sphericity & 0.00639& 0.00629& 0.00727& 0.0271    & 0.0141 \\ \bottomrule
 	\end{tabular}
 	\label{tab:results}
 \end{table}
@@ -464,15 +464,15 @@ It is important to note that for volume ratio and CV of volume, lower values are
 
 \begin{table}[htp!]
 	\centering
-	\caption[Title]{
+	\caption[Convergence values of sphericity measures for the different grids]{
 		Convergence value of max and min sphericity for the four discussed grids
 	}
-	\begin{tabular}{|c|c|c|c|c|c|}
-		\hline
-		& SDOG & $\alpha_{\phi}^{SG} \approx 0.54$ & $\alpha_{\phi}^{SG} = 0.57$ & $\beta = 1$ & $\beta = 0.5$ \\ \hline
-		Max sphericity & 0.806  & 0.806  & 0.806  & 0.806 & 0.806  \\ \hline
-		Min sphericity & 0.754  & 0.763  & 0.766  & 0.672 & 0.728  \\ \hline
-		Difference     & 0.0520 & 0.0428 & 0.0404 & 0.134 & 0.0780 \\ \hline
+	\begin{tabular}{@{} c c c c c c @{}}
+		\toprule
+		& SDOG & $\alpha_{\phi}^{SG} \approx 0.54$ & $\alpha_{\phi}^{SG} = 0.57$ & $\beta = 1$ & $\beta = 0.5$ \\ \midrule
+		Max sphericity & 0.806  & 0.806  & 0.806  & 0.806 & 0.806  \\
+		Min sphericity & 0.754  & 0.763  & 0.766  & 0.672 & 0.728  \\
+		Difference     & 0.0520 & 0.0428 & 0.0404 & 0.134 & 0.0780 \\ \bottomrule
 	\end{tabular}
 	\label{tab:results-sph}
 \end{table}
