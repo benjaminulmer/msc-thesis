@@ -44,7 +44,6 @@ These midpoints create splitting surfaces used to split parent cells into smalle
 As described in Chapter~\ref{chap:3:semiregDegen}, a semiregular degenerate refinement is used to prevent excessive degeneration in cell size and compactness near the poles and centre of the sphere.
 As a result, SDOG cells are grouped into three classes, depending on which singularities they border.
 Figure~\ref{fig:sdog-refinement} shows the resulting splitting surfaces for each type of SDOG cell.
-%We call a splitting surface symmetric if it creates the same number and type(s) of cells on both sides; otherwise we call it degenerate.
 
 
 Cells that extend to the centre of the sphere and one of the poles are referred to as Sphere-degenerated Grid (SG) cells (Figure~\ref{fig:sdog-refinement}a) and include the original eight octants.
@@ -58,12 +57,10 @@ We describe LG and NG cells below.
 LG cells (Figure~\ref{fig:sdog-refinement}b) are similar to SG ones, except that they only extend to one of the poles and not the centre of the sphere.
 Therefore, the longitudinal splitting surface does not extend beyond the latitudinal one in the direction towards the pole.
 This refinement results in six children cells: two LG cells and four NG cells.
-%The longitudinal and radial splitting surfaces for LG cells are symmetric.
 
 
 NG cells (Figure~\ref{fig:sdog-refinement}c) extend to neither the pole nor the centre of the sphere and make up the majority of SDOG cells.
 These cells are fully refined into eight children NG cells and are the regular case for SDOG refinement.
-%All splitting surfaces for NG cells are symmetric.
 
 
 \subsection{Number of SDOG Cells} \label{chap:4:numCells}
@@ -169,7 +166,7 @@ Using midpoints to refine cells makes for a simple refinement scheme, but it mak
 	\centering
 	\includegraphics[width=0.4\textwidth]{sdog-functions.pdf}
 	\caption[How functions determine the location of SDOG splitting surfaces]{
-		Each SDGO cell represents a range in each spherical coordinate; the location of the splitting surfaces are expressed as a function of the maximum and minimum of the respective range.
+		Each SDGO cell represents a range in each spherical coordinate; the location of the splitting surfaces is expressed as a function of the maximum and minimum of the respective range.
 		Here we show only an NG cell; however, the same applies to SG and LG cells.
 		The functions $f$, $g$, and $h$ serve as placeholders for any valid function that results in the output being strictly between the two inputs
 	}
@@ -367,7 +364,7 @@ For the latitudinal splitting surfaces, we propose
 \phi_{s} = h \sin^{-1} \left( p \sin \left( \frac{1}{h} \phi_\mathrm{max} \right) + \left( 1 - p \right) \sin \left( \frac{1}{h} \phi_\mathrm{min} \right) \right)
 \end{equation*}
 %
-where $1 \leq h \leq \infty$ blends between volume preservation at $h = 1$ (equivalent to Equation~(\ref{eq:latVol})) and compactness at $h = \infty$ (equivalent to midpoint). We found values of $t = 2$ and $h = 1.5$ to offer a relatively balanced tradeoff between the two properties, with the resulting grid shown in Figure~\ref{fig:blend-volume}.
+where $1 \leq h \leq \infty$ blends between volume preservation at $h = 1$ (equivalent to Equation~(\ref{eq:latVol})) and compactness at $h = \infty$ (equivalent to midpoint). We found values of $t = 2$ and $h = 1.45$ to offer a relatively balanced tradeoff between the two properties, with the resulting grid shown in Figure~\ref{fig:blend-volume}.
 We refer to this method as the \textit{balanced} one.
 
 
@@ -379,28 +376,6 @@ For example, a grid with all cells except one having equal volume, and a grid wh
 To get a complete understanding of volume preservation, we should also examine statistics that give a measure of distribution.
 For this purpose, we use the coefficient of variation (CV), which is simply the ratio between the standard deviation (SD) and the mean.
 We use the CV over the SD as it a dimensionless quantity.
-
-
-\begin{figure}[htp!]
-	\centering
-	\includegraphics[width=0.75\textwidth]{volume-ratio.pdf}
-	\caption[Graph of volume ratio for the different grids]{
-		Volume ratio for the different grids at increasing levels of refinement.
-		Note that for the non-stationary method ($\beta = 1$) the volume ratio does not change with refinement level
-	}
-	\label{fig:vr}
-\end{figure}
-
-
-
-\begin{figure}[htp!]
-	\centering
-	\includegraphics[width=0.75\textwidth]{cv-volume.pdf}
-	\caption[Graph of CV of volume for the different grids]{
-		CV of volume for the different grids at increasing levels of refinement
-	}
-	\label{fig:cv}
-\end{figure}
 
 
 In modifying the refinement for volume preservation, it is also important to evaluate the impact these changes have on other properties of the grid.
@@ -416,10 +391,30 @@ Formally, given an object $\omega$ and a sphere $s$ such that $\operatorname{vol
 %
 We use the mean and SD of sphericity for all cells in the grid to evaluate compactness globally.
 
-
-\begin{figure}[htp!]
+\begin{figure}[p!]
 	\centering
-	\includegraphics[width=0.75\textwidth]{mean-sph.pdf}
+	\includegraphics[width=0.8\textwidth]{volume-ratio.pdf}
+	\caption[Graph of volume ratio for the different grids]{
+		Volume ratio for the different grids at increasing levels of refinement.
+		Note that for the volume method, the volume ratio does not change with refinement level
+	}
+	\label{fig:vr}
+\end{figure}
+
+
+\begin{figure}[p!]
+	\centering
+	\includegraphics[width=0.8\textwidth]{cv-volume.pdf}
+	\caption[Graph of CV of volume for the different grids]{
+		CV of volume for the different grids at increasing levels of refinement
+	}
+	\label{fig:cv}
+\end{figure}
+
+
+\begin{figure}[p!]
+	\centering
+	\includegraphics[width=0.8\textwidth]{mean-sph.pdf}
 	\caption[Graph of mean sphericity for the different grids]{
 		Mean sphericity for the different grids at increasing levels of refinement
 	}
@@ -427,9 +422,9 @@ We use the mean and SD of sphericity for all cells in the grid to evaluate compa
 \end{figure}
 
 
-\begin{figure}[htp!]
+\begin{figure}[p!]
 	\centering
-	\includegraphics[width=0.75\textwidth]{sd-sph.pdf}
+	\includegraphics[width=0.8\textwidth]{sd-sph.pdf}
 	\caption[Graph of SD of sphericity for the different grids]{
 		Standard deviation of sphericity for the different grids at increasing levels of refinement
 	}
@@ -442,21 +437,21 @@ We then repeated this for the three modifications discussed in this chapter: the
 The results for each grid are displayed in Figures~\ref{fig:vr}, \ref{fig:cv}, \ref{fig:sph}, and \ref{fig:sd-sph} showing the volume ratio, CV of volume, mean sphericity, and SD of sphericity, respectively.
 Table~\ref{tab:results} summarizes these charts with the convergence value of each property for the four different grids.
 We also give convergence values for the maximum and minimum sphericity---and their difference---for each grid in Table~\ref{tab:results-sph}.
-It is important to note that for volume ratio and CV of volume, lower values are better, but for mean sphericity, a higher value is better.
+It is important to note that for volume ratio and CV of volume, lower values are better, but for sphericity, a higher value is better.
 
 
 \begin{table}[htp!]
 	\centering
-	\caption[Convergence values of volume and compactness measures for the different grids]{
-		Convergence value of each measure for the four discussed grids
+	\caption[Convergence values of measures for the different grids]{
+		Convergence value of each measure for the different grids
 	}
-	\begin{tabular}{@{} c c c c c c @{}}
+	\begin{tabular}{@{} c c c c c @{}}
 		\toprule
-		& SDOG & $\alpha_{\phi}^{SG} \approx 0.54$ & $\alpha_{\phi}^{SG} = 0.57$ & $\beta = 1$ & $\beta = 0.5$ \\ \midrule
-		Volume Ratio     & 8.88   & 8.17   & 8.15   & 2.63      & 4.37   \\
-		CV of Volume     & 0.412  & 0.399  & 0.409  & 6.44E-19  & 0.211  \\
-		Mean Sphericity  & 0.799  & 0.797  & 0.795  & 0.767     & 0.787  \\
-		SD of Sphericity & 0.00639& 0.00629& 0.00727& 0.0271    & 0.0141 \\ \bottomrule
+		& SDOG    & Latitude & Balanced & Volume   \\ \midrule
+		Volume Ratio     & 8.88    & 7.99     & 4.470    & 2.63     \\
+		CV of Volume     & 0.412   & 0.399    & 0.201    & $\approx$0 \\
+		Mean Sphericity  & 0.799   & 0.797    & 0.786    & 0.768    \\
+		SD of Sphericity & 0.00639 & 0.00626  & 0.0147   & 0.0271   \\ \bottomrule
 	\end{tabular}
 	\label{tab:results}
 \end{table}
@@ -464,33 +459,31 @@ It is important to note that for volume ratio and CV of volume, lower values are
 
 \begin{table}[htp!]
 	\centering
-	\caption[Convergence values of sphericity measures for the different grids]{
-		Convergence value of max and min sphericity for the four discussed grids
+	\caption[Convergence values of max and min sphericity for the different grids]{
+		Convergence value of max and min sphericity for the different grids
 	}
-	\begin{tabular}{@{} c c c c c c @{}}
+	\begin{tabular}{@{} c c c c c @{}}
 		\toprule
-		& SDOG & $\alpha_{\phi}^{SG} \approx 0.54$ & $\alpha_{\phi}^{SG} = 0.57$ & $\beta = 1$ & $\beta = 0.5$ \\ \midrule
-		Max sphericity & 0.806  & 0.806  & 0.806  & 0.806 & 0.806  \\
-		Min sphericity & 0.754  & 0.763  & 0.766  & 0.672 & 0.728  \\
-		Difference     & 0.0520 & 0.0428 & 0.0404 & 0.134 & 0.0780 \\ \bottomrule
+		& SDOG   & Latitude & Balanced & Volume \\ \midrule
+		Max sphericity & 0.806  & 0.806    & 0.806    & 0.806  \\
+		Min sphericity & 0.754  & 0.765    & 0.730    & 0.672  \\
+		Difference     & 0.0520 & 0.0406   & 0.0761   & 0.134  \\ \bottomrule
 	\end{tabular}
 	\label{tab:results-sph}
 \end{table}
 
-\textbf{Update this with new discussion once results are in}
 
-The stationary scheme with $\alpha_{\phi}^{SG} \approx 0.54$ has a better volume ratio than conventional SDOG for all levels of refinement except the first, and a lower CV of volume for all levels of refinement after the second.
-Comparing this to the one with $\alpha_{\phi}^{SG} = 0.57$, both the volume ratio and CV of volume do not improve as compared to conventional SDOG until the fifth level of refinement.
-Both of these methods also reduce the mean sphericity of cells at all levels of refinement, with $\alpha_{\phi}^{SG} = 0.57$ having more than twice the absolute reduction of $\alpha_{\phi}^{SG} \approx 0.54$.
-The variation in sphericity is similar between all three of these grids.
-Using $\alpha_{\phi}^{SG} = 0.57$ does give a slightly better volume ratio than $\alpha_{\phi}^{SG} \approx 0.54$ as the level of refinement gets large, however this difference is quite small and likely not worth the lower cell compactness and higher variation in volume.
+The latitude method has a better volume ratio than conventional SDOG for all levels of refinement except the first and fourth, and a lower CV of volume for all levels of refinement after the second.
+However, the mean sphericity of cells in this method is slightly reduced as compared to conventional SDOG.
+The variation in sphericity is nearly identical between these two refinement methods, with the latitude one having a minuscule reduction.
 
 
-The non-stationary scheme gives a much larger improvement to both the volume ratio and the CV of volume.
-This is to be expected, as all NG cells in this scheme have exactly equal volume.
+As to be expected, with all NG cells having equal volume, the volume method gives a much larger improvement to both the volume ratio and the CV of volume for all refinement levels but the first.
 As the level of refinement gets large, the CV of volume quickly approaches zero since the number of NG cells is much larger than the number of LG and SG cells in the grid.
-The cost of this improved volume preservation is a much larger reduction in the sphericity of cells and an increase in the variation of sphericity, which is to be expected.
-The blending scheme has results in between that of conventional SDOG and the non-stationary scheme, which was also expected.
+The cost of this improved volume preservation is a much larger reduction in the sphericity of cells and an increase in the variation of sphericity, which is also to be expected.
+
+
+By construction, the balanced method has measures in between that of conventional SDOG and the volume method.
 The CV of volume, mean sphericity, and SD of sphericity are all near the respective halfway points, whereas the volume ratio still ends up being a significant improvement over conventional SDOG.
 
 \section{Summary}

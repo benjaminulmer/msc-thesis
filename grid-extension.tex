@@ -145,7 +145,7 @@ This equation is used iteratively to find the best number of layers for successi
 Table~\ref{tab:layers} lists our proposed layering sequences for surface refinement factors from 1:2 up to 1:9.
 
 
-\begin{table}[ht!]
+\begin{table}[htp!]
 	\centering
 	\caption[Layering sequences for different surface refinement factors]{
 		Our proposed layering sequences for different surface refinement factors.
@@ -169,7 +169,7 @@ Table~\ref{tab:layers} lists our proposed layering sequences for surface refinem
 \end{table}
 
 
-\begin{figure}[ht!]
+\begin{figure}[htp!]
 	\centering
 	\includegraphics[width=\textwidth]{semireg-hexagons.pdf}
 	\caption[Semiregular prismatoid refinement for hexagons]{
@@ -186,7 +186,7 @@ In the second level, however, two radial splits are performed in the normal laye
 In the next level of refinement, which is not shown, normal layers would not have any radial refinements per the proposed sequence in Table~\ref{tab:layers}.
 
 
-\subsection{Cell Aspect Ratio} \label{chap:5:ar}
+\section{Cell Aspect Ratio} \label{chap:5:ar}
 The surface and radial dimensions of Earth are inherently very different, and because of this, it is often desirable for these two dimensions to be at different resolutions in a 3D global grid.
 For our 3D DGGSs, achieving this entails changing the width of cells in the grid (surface resolution) relative to their depth (radial resolution).
 We refer to the ratio between a cell's width and depth as the \textit{aspect ratio} of the cell.
