@@ -1,21 +1,43 @@
-\chapter{Extending Polyhedral DGGSs to Create 3D Prismatoid Grids} \label{chap:extension}
-This is an intro.
+\chapter{Extending Polyhedral DGGS's to Create 3D Prismatoid Grids} \label{chap:extension}
+While our modifications of SDOG refinement result in grids with many desirable properties, they may not be the best choice for all applications.
+Due to widely differing needs, no single DGGS---2D or 3D---is ideal for all situations.
+This need to have different grids for different applications is one reason there is such a wide variety of DGGS's currently available.
+
+
+\begin{figure}[ht!]
+	\centering
+	\includegraphics[width=\textwidth]{grid-extension-overview.pdf}
+	\caption[Overview of the grid extension method]{
+		Overview of how the input DGGS is used to define the geometry of the 3D DGGS.
+		The faces of the initial polyhedron of the input DGGS are first extruded to create the prismatoid base cells of the 3D DGGS.
+		For refinement, the bases of these prismatoid cells are refined using the same refinement scheme as the input DGGS and combined with a radial refinement.
+		A semiregular degenerate refinement is suggested; however, regular refinement is also possible
+	}
+	\label{fig:extension}
+\end{figure}
+
+
+In this chapter we present method for creating 3D DGGS that uses conventional one---input DGGS---as starting point and specificaiton using semiregular degenerate refinement approach.
+Figure 123 shows overview of the method.
+This chapter discusses only the creation of the grid geometry. Mapping and coding are discussed in Chapters 345 and 345, respectively.
+
 
 The content of this chapter is taken from the article "General Method for Extending Discrete Global Grid Systems to Three Dimensions," authored by Benjamin Ulmer, John Hall, and Faramarz Samavati, which appeared in the journal \textit{ISPRS International Journal of Geo-Information} in a special issue on Global Grid Systems~\cite{ulmer2020general}.
 Slight modifications have been made to maintain consistent terminology with the rest of the thesis.
 
 
 \section{Prismatoid Grid Generation and Refinement} \label{chap:5:grid}
-Using the input DGGS as an input specification, our goal is to define the key elements of the corresponding 3D DGGS logically and consistently.
-In this section, we discuss the approach for generating the initial discretization and define two refinement methods.
+Using the input DGGS as a specification, our goal is to define the key elements of the corresponding 3D DGGS logically and consistently.
+Below, we discuss the approach for generating the initial discretization and define regular and semiregular degenerate refinement methods. 
 
 
 \subsection{Initial 3D Discretization} \label{chap:5:discretization}
-For this paper, we define the radius of a polyhedron to be the radius of its circumscribed sphere. Thus, all points on a polyhedron have the same `radius' (Figure~\ref{fig:layers}).
+For this thesis, we define the radius of a polyhedron to be the radius of its circumscribed sphere. Thus, all points on a polyhedron have the same `radius' (Figure~\ref{fig:layers}).
 Let $R_\mathrm{min}$ and $R_\mathrm{max}$ be the minimum and maximum radii that are to be supported by the 3D DGGS, respectively.
 The initial 3D discretization, then, is generated from two copies of the input polyhedron at these radii with their edges connected.
 If the minimum radius is zero, these base cells are pyramids; otherwise, they are frusta.
 In both cases, the cells belong to a parent class of polyhedra known as prismatoids.
+For the remainder of this thesis, we assume that $R_\mathrm{min} = 0$; however, other values can be supported by truncating the resulting grid below the desired minimum.
 With this discretization, each cell represents the full radial domain of the grid---subsequent refinements will address this issue.
 
 
@@ -23,7 +45,7 @@ With this discretization, each cell represents the full radial domain of the gri
 	\centering
 	\includegraphics[width=0.5\columnwidth]{layers.pdf}
 	\caption[How the radius of a polyhedron is defined]{
-		The radius of a polyhedron is defined as the radius of its circumscribing sphere.
+		We define the radius of a polyhedron as the radius of its circumscribing sphere.
 		In this figure, all points on a solid line of a given colour have the same radius as they all have the same circumscribing sphere (i.e. lie on the same polyhedron).
 		The corresponding spheres are shown in the same colours but with a dashed line
 	}
@@ -34,7 +56,7 @@ With this discretization, each cell represents the full radial domain of the gri
 \subsection{Regular Prismatoid Refinement} \label{chap:5:regular}
 With an initial 3D discretization for the space of the grid system, we now need a method for refining cells to create more fine discretizations.
 We also want to ensure that the 3D DGGS will make use of the same refinement scheme used by the input DGGS, referred to as the surface refinement.
-For simplicity, we initially assume the surface refinement factor is 1:4; a generalization to other refinement factors is given in Section~\ref{sec:grid:factors}.
+For simplicity, we initially assume the surface refinement factor is 1:4; a generalization to other refinement factors is given later in Chapter~\ref{sec:grid:factors}.
 
 
 \begin{figure}[ht!]
@@ -47,23 +69,21 @@ For simplicity, we initially assume the surface refinement factor is 1:4; a gene
 \end{figure}
 
 
-The regular method for refining prismatoid cells is shown in Figure~\ref{fig:regular}.
+Figure~\ref{fig:regular} demonstrates the regular method for refining prismatoid cells.
 The bases of the cells are refined using the surface refinement and the resulting edges extruded to meet.
 At the same time, a radial split is placed at the midpoint of the two bases.
 This refinement results in an inner and outer layer of cells, each containing the same number of cells as one another.
 The outer layer is always composed of frustum cells, whereas the inner layer has the same shape as the cells that were being refined.
-This refinement is repeated by treating each of the new layers the same as the initial discretization.
-Defining the refinement in terms of layers of cells as opposed to individual cells allows non-congruent surface refinements to be accommodated inherently.
+Defining the refinement in terms of layers of cells as opposed to individual cells allows for native accommodation of non-congruent surface refinements.
 
 
-\subsection{Semiregular Prismatoid Refinement} \label{chap:5:semireg}
-While the regular prismatoid refinement proposed above is simple, it has a key drawback if the ratio between $R_\mathrm{max}$ and $R_\mathrm{min}$ is large.
-In this situation, layers that are near the minimum radius end up being much smaller than those near the maximum.
-A different refinement method is needed to generate more uniformly sized cells.
-To do this, we classify the layers of the grid as either central or normal.
+\subsection{Semiregular Degenerate Prismatoid Refinement} \label{chap:5:semireg}
+While the regular prismatoid refinement proposed above is simple, it has the same issues near the central singularity as other Earth-centric 3D DGGS's.
+To address this issue, we define a semiregular degenerate refinement for the prismatoid cells.
+Aiding in this, we classify the layers of the grid as either central or normal.
 We use $r_\mathrm{min}$ and $r_\mathrm{max}$ to refer to the minimum and maximum radius of a layer, respectively.
-As with the polyhedra used for the initial discretization, these radii are equal to the radii of the circumscribed spheres.
-Central layers are those that border the innermost portion of the grid ($r_\mathrm{min} = R_\mathrm{min}$) and all other layers are considered normal.
+As with the polyhedra used for the initial discretization, these radii are equal to the radii of the circumscribing spheres.
+Central layers are those that border the central singularity of the grid ($r_\mathrm{min} = 0$), and all other layers are considered normal.
 By definition, at any resolution of the 3D DGGS, there is only one central layer.
 Furthermore, the initial discretization is entirely composed of this central layer.
 We continue our assumption of a 1:4 surface refinement factor from before.
@@ -72,47 +92,44 @@ We continue our assumption of a 1:4 surface refinement factor from before.
 \begin{figure}[ht!]
 	\centering
 	\includegraphics[width=\columnwidth]{semireg-refinement.pdf}
-	\caption[Semiregular prismatoid refinement]{
-		Semiregular prismatoid refinement as applied to a single pyramid cell (a) once and (b) twice.
+	\caption[Semiregular degenerate prismatoid refinement]{
+		Semiregular degenerate prismatoid refinement as applied to a single pyramid cell (a) once and (b) twice.
 		In (b), the number of times the surface refinement has been applied ($k_s$) is shown for each layer; see how the radial refinements of central layers separate regions of the grid with different values of $k_s$}
 	\label{fig:semiregular}
 \end{figure}
 
 
-In this refinement scheme, refinement of central layers is different from the above regular method.
-We assert that $R_\mathrm{min}$ be treated as equal to zero, and therefore central layers are composed of pyramid cells.
-If the actual value of $R_\mathrm{min}$ is non-zero, then any resulting layers below this radius are discarded or ignored.
-Just as before, the bases of the pyramid cells are refined using the surface scheme, and a radial split is made in the middle of the layer.
-However, the new edges do not extend fully toward the apex of the pyramid but instead are stopped at the radial split (Figure \ref{fig:semiregular}).
+Just as with regular refinement, the bases of the pyramid cells are refined using the surface scheme with a radial split made in the middle of the layer.
+However, to make this refinement semiregular degenerate, the new edges do not extend beyond the radial split in the direction toward the centre (Figure \ref{fig:semiregular}).
 This refinement results in two new layers: an inner central layer, which is similar to the initial central layer, and an outer normal layer.
-As demonstrated in Figure~\ref{fig:semiregular}b, the resolution---or refinement level---a layer appears in at the 3D grid does not necessarily correspond to how many times the surface refinement scheme has been applied to it.
-We define the number of times the surface refinement has been applied to a given layer as the surface resolution, given by $k_s$.
+As demonstrated in Figure~\ref{fig:semiregular}b, the resolution---or refinement level---a layer appears in at the 3D grid does not necessarily correspond to how many times the surface refinement scheme has been applied.
+We define the number of applications of the surface refinement to a given layer as the surface resolution, given by $k_s$.
 Thus, if we say the initial discretization has $k_s = 0$, after one level of refinement the inner central layer also has $k_s = 0$, whereas the normal layer has $k_s = 1$.
-This surface resolution is needed for grid encoding/decoding and various indexing queries, but as will be seen later can be computed and does not need to be explicitly stored.
+We require this surface resolution in Chapter~\ref{chap:coding} for grid encoding, decoding, and various indexing queries. As will be seen, however, it can be computed and does not need to be explicitly stored.
 
 
 \begin{figure}[ht!]
 	\centering
 	\includegraphics[width=\textwidth]{reg-vs-semireg.pdf}
-	\caption[Comparison of regular and semiregular prismatoid refinement]{
-		Three levels of successive applications of regular (top) and semiregular (bottom) prismatoid refinement.
+	\caption[Comparison of regular and semiregular degenerate prismatoid refinement]{
+		Three levels of successive applications of regular (top) and semiregular degenerate (bottom) prismatoid refinement.
 		Only the side of a single pyramid starting cell is shown to highlight the behaviour of the two schemes at different radii.
-		Note how cells degenerate towards the centre with regular refinement, whereas this issue is not present in the semiregular scheme
+		Note how cells degenerate towards the centre with regular refinement, whereas this issue is not present in the semiregular degenerate scheme
 	}
 	\label{fig:reg-vs-semireg}
 \end{figure}
 
 
-Normal layers in this scheme are simply refined using regular prismatoid refinement.
-This results in two normal layers, both of which have $k_s$ equal to one greater than that of the starting layer.
-Figure~\ref{fig:reg-vs-semireg} compares three successive applications of regular and semiregular prismatoid refinement to a single pyramid cell.
+As with other semiregular degenerate refinements, normal layers in this scheme are refined using the regular method.
+This regular refinement results in two normal layers, both of which have $k_s$ equal to one greater than that of the starting layer.
+Figure~\ref{fig:reg-vs-semireg} compares three successive applications of regular and semiregular degenerate prismatoid refinement to a single pyramid cell.
 
 
 \subsection{Other Surface Refinement Factors} \label{chap:5:factors}
 While it is possible to use the above refinement methods for surface refinement factors other than 1:4, doing so results in a potentially significant issue that should be addressed.
 First, we introduce the idea of a one-dimensional (1D) refinement factor, which we find by taking the square root of the surface (2D) one.
 For example, the 1D refinement factor of a 1:4 surface refinement scheme (Figures~\ref{fig:regular} and \ref{fig:semiregular}) is 1:2.
-While the surface refinement scheme need not be uniform across the two dimensions, the 1D refinement factor gives an idea of the \textit{average} refinement that is expected along each dimension.
+While the surface refinement scheme need not be uniform across the two dimensions, the 1D refinement factor gives an idea of the \textit{average} refinement expected along each dimension.
 
 
 To create uniform cells, it is clear that the refinement factor along the radial dimension for regular prismatoid refinement should be equal to the 1D refinement factor.
@@ -141,11 +158,11 @@ Formally,
 \end{equation*}
 %
 where $\ell_{i}$ is the number of layers produced at refinement level $i$, $k$ is the level of refinement, and $f$ is the 1D refinement factor.
-This equation is used iteratively to find the best number of layers for successive levels of refinement with prime surface refinement factors.
+We use this equation iteratively to find the best number of layers for successive levels of refinement with prime surface refinement factors.
 Table~\ref{tab:layers} lists our proposed layering sequences for surface refinement factors from 1:2 up to 1:9.
 
 
-\begin{table}[htp!]
+\begin{table}[ht!]
 	\centering
 	\caption[Layering sequences for different surface refinement factors]{
 		Our proposed layering sequences for different surface refinement factors.
@@ -169,7 +186,7 @@ Table~\ref{tab:layers} lists our proposed layering sequences for surface refinem
 \end{table}
 
 
-\begin{figure}[htp!]
+\begin{figure}[ht!]
 	\centering
 	\includegraphics[width=\textwidth]{semireg-hexagons.pdf}
 	\caption[Semiregular prismatoid refinement for hexagons]{
@@ -180,28 +197,28 @@ Table~\ref{tab:layers} lists our proposed layering sequences for surface refinem
 \end{figure}
 
 
-An example of semiregular prismatoid refinement with 1:3 hexagonal surface refinement is shown in Figure~\ref{fig:hexagons}.
+Figure~\ref{fig:hexagons} showcases an example of semiregular prismatoid refinement with a 1:3 hexagonal surface refinement.
 The first level of refinement is identical to the cases for a 1:4 surface refinement factor since no normal layers have been refined.
 In the second level, however, two radial splits are performed in the normal layers as opposed to one.
-In the next level of refinement, which is not shown, normal layers would not have any radial refinements per the proposed sequence in Table~\ref{tab:layers}.
+In the next level of refinement (not shown), normal layers would not have any radial refinements per the proposed sequence in Table~\ref{tab:layers}.
 
 
 \section{Cell Aspect Ratio} \label{chap:5:ar}
-The surface and radial dimensions of Earth are inherently very different, and because of this, it is often desirable for these two dimensions to be at different resolutions in a 3D global grid.
-For our 3D DGGSs, achieving this entails changing the width of cells in the grid (surface resolution) relative to their depth (radial resolution).
+The surface and radial dimensions of Earth are inherently very different, and because of this, it is often desirable for these two dimensions to be at different resolutions in a 3D DGGS.
+For our 3D DGGS's, achieving this entails changing the width of cells in the grid (surface resolution) relative to their depth (radial resolution).
 We refer to the ratio between a cell's width and depth as the \textit{aspect ratio} of the cell.
-While the refinement methods described thus far produces cells with a similar aspect ratio---both between cells in the same and different resolutions---there is no direct mechanism for controlling what this aspect ratio will be.
+While the refinement methods described thus far produce cells with a similar aspect ratio---both between cells in the same and different resolutions---there is no direct mechanism for controlling what this aspect ratio will be.
 To address this issue, we introduce two modifications that can be made to prismatoid refinement to decrease and increase this aspect ratio.
 
 
-In order to decrease the aspect ratio of cells in the grid, the number of times the surface refinement is applied relative to the number of radial splits should be increased.
-Since further applications of the prismatoid refinement will maintain the expected cell aspect ratio (a result of the surface and expected radial refinement factors being equal), this only needs to be done the first time a layer would have the bases of its cells refined with the surface scheme.
+In order to decrease the aspect ratio of cells in the grid, we must increase the number of applications of the surface refinement relative to the number of radial splits.
+Since further applications of the prismatoid refinement will maintain the expected cell aspect ratio---a result of the surface and expected radial refinement factors being equal---this only needs to be done the first time a layer would have the bases of its cells refined with the surface scheme.
 Thus, for semiregular prismatoid refinement, this is done while refining the outer normal layer that results from refining central layers.
-In the case where only regular prismatoid refinement is used, this is then only done during the first level of refinement.
+%In the case where only regular prismatoid refinement is used, this is then only done during the first level of refinement.
 
 
 Likewise, to increase the aspect ratio of cells, we need to decrease the number of times the surface refinement scheme is applied relative to the number of radial splits.
-This is done by first \textit{not} applying the surface refinement to a layer the first time it would usually be done, and if needed applying additional radial splits at the same time.
+We accomplish this by \textit{not} applying the surface refinement to a layer the first time it would usually be done, and if needed applying additional radial splits at the same time.
 These modifications would be done at the same time as the method for decreasing the aspect ratio for the same reasons.
 
 
@@ -291,9 +308,9 @@ w = \log_{f} \left( \frac{2}{a \upsilon} \sqrt{ \frac{\pi}{n}} \right).
 
 The actual values of $x$ and $w$ selected for use is determined by which one is negative.
 If $x$ is negative, it is set to zero, and the value of $w$ is used---vice versa for if $w$ is negative.
-Since $x$ or $w$ may not be integers, we simply round them to the nearest whole number to get the actual value to be used during refinement.
+Since $x$ or $w$ may not be integers, we simply round them to the nearest whole number to get the actual value used during refinement.
 The results of refinement with different target aspect ratios are demonstrated in Figure~\ref{fig:extraDPS}.
 
 
 \section{Summary}
-This is a summary.
+A summary goes here.
