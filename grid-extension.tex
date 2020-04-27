@@ -1,4 +1,4 @@
-\chapter{Extending Polyhedral DGGS's to Create 3D Prismatoid Grids} \label{chap:extension}
+\chapter{Extending 2D DGGS's to Three Dimensions} \label{chap:extension}
 While SDOG and its variants proposed in the previous chapter have many desirable properties, it may not be the ideal 3D DGGS in all circumstances.
 The varying uses for a DGGS means each application has different needs of the DGGS it employs.
 As such, no single DGGG---2D or 3D---is ideal for every use case.
@@ -38,13 +38,12 @@ Below, we discuss the approach for generating the initial discretization and def
 
 
 \subsection{Initial 3D Discretization} \label{chap:5:discretization}
-For this thesis, we define the radius of a polyhedron to be the radius of its circumscribed sphere. Thus, all points on a polyhedron have the same `radius' (Figure~\ref{fig:layers}).
 Let $R_\mathrm{min}$ and $R_\mathrm{max}$ be the minimum and maximum radii that are to be supported by the 3D DGGS, respectively.
-The initial 3D discretization, then, is generated from two copies of the input polyhedron at these radii with their edges connected.
-If the minimum radius is zero, these base cells are pyramids; otherwise, they are frusta.
-In both cases, the cells belong to a parent class of polyhedra known as prismatoids.
-For the remainder of this thesis, we assume that $R_\mathrm{min} = 0$; however, other values can be supported by truncating the resulting grid below the desired minimum.
-With this discretization, each cell represents the full radial domain of the grid---subsequent refinements will address this issue.
+The initial 3D discretization, then, is generated from two copies of the initial discretization of the input DGGS at these radii with their edges connected.
+For an input DGGS defined directly on the sphere, the radius is well defined.
+For a polyhedron based DGGS, we need to define this radius.
+Since the polyhedron is serving as an approximation of the sphere, we define the radius of a polyhedron to be the radius of its circumscribed sphere.
+Thus, all points on a polyhedron have the same `radius' (Figure~\ref{fig:layers}).
 
 
 \begin{figure}[ht!]
@@ -57,6 +56,12 @@ With this discretization, each cell represents the full radial domain of the gri
 	}
 	\label{fig:layers}
 \end{figure}
+
+
+If the minimum radius of the 3D DGGS is zero, the base cells are pyramids; otherwise, they are frusta.
+In both cases, the cells belong to a parent class of polyhedra known as prismatoids.
+For the remainder of this thesis, we assume that $R_\mathrm{min} = 0$; however, other values can be supported by truncating the resulting grid below the desired minimum.
+With this discretization, each cell represents the full radial domain of the grid---subsequent refinements will address this issue.
 
 
 \subsection{Regular Prismatoid Refinement} \label{chap:5:regular}

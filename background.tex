@@ -304,6 +304,7 @@ The most basic type of encoding is for points---finding the cell which contains 
 Likewise, the inverse process of mapping a set of cells in the grid domain to the corresponding regions of the Earth is also needed.
 These operations are, correspondingly, known as grid decoding.
 Grid encoding and decoding, as they apply to a polyhedron based grid, are shown in Figure~\ref{fig:coding}.
+In this thesis, we refer to grid encoding and decoding collectively as coding.
 
 
 \begin{figure}[ht!]
@@ -319,7 +320,7 @@ Grid encoding and decoding, as they apply to a polyhedron based grid, are shown 
 
 
 \subsubsection{Indexing Scheme} \label{chap:2:indexing}
-Closely related to encoding and decoding operations is the method used to assign a unique identifier to each cell in a DGG or DGGS.
+Closely related to coding operations is the method used to assign a unique identifier to each cell in a DGG or DGGS.
 Such an index is necessary in order to unambiguously distinguish between cells in the grid so that data can be associated with a set of cells via association with the corresponding index or indices.
 Indices are also used to traverse through the grid with neighbour relationships and, in a DGGS, traverse the hierarchy with parent and child relationships.
 
