@@ -1,7 +1,7 @@
 \chapter{Background and Related Work} \label{chap:background}
 Providing a complete history of map and globe making (cartography) is much beyond both the scope and ability of this thesis.
 Instead, this chapter aims to provide the necessary background to illuminate how these disciplines influenced the development of Digital Earth systems.
-We go on to discuss the different approaches for a Digital Earth, starting with traditional GIS, and then techniques used for globe based systems and analysis.
+We go on to discuss the different approaches for a Digital Earth, starting with traditional GIS, and then techniques used for globe-based systems and analysis.
 We also provide background and related work on discrete global grids and grid systems, looking at different methods for constructing these data structures.
 
 
@@ -94,14 +94,14 @@ These studies further show that the projection used for a map must be chosen and
 At the cost of introducing additional map edges, cutting a map can reduce the amount of distortion introduced by projection~\cite{soliman2018optimal}.
 Such cuts are analogous to projecting the sphere to an underlying polyhedron, the net of which produces the final flat map.
 Figure~\ref{fig:poly-projection} shows one example of such a projection, the Dymaxion map.
-Aside from reducing distortion, this polyhedron based maps can serve as a pseudo-globe by folding the net into the corresponding polyhedron.
+Aside from reducing distortion, these polyhedron-based maps can serve as a pseudo-globe by folding the net into the corresponding polyhedron.
 
 
 \begin{figure}[ht!]
 	\centering
 	\includegraphics[width=\textwidth]{dymaxion.png}
 	\caption[The Dymaxion (or Fuller) map projection]{
-		The Dymaxion, also known as Fuller, map projection: one of the first examples of a polyhedron based map projection.
+		The Dymaxion, also known as Fuller, map projection: one of the first examples of a polyhedron-based map projection.
 		Image courtesy of Justin Haruaki Kunimune~\cite{dymaxion} -- CC BY-SA 4.0
 	}
 	\label{fig:poly-projection}
@@ -109,7 +109,7 @@ Aside from reducing distortion, this polyhedron based maps can serve as a pseudo
 
 
 
-As will be discussed later, this class of projection methods is also a core component of any polyhedron based discretization of the Earth.
+As will be discussed later, this class of projection methods is also a core component of any polyhedron-based discretization of the Earth.
 Since equal-area cells are often desired for such discretizations, many area-preserving projections between the sphere and various polyhedron have been developed~\cite{bradley1946equal, snyder1992equal, van2006slice, rocsca2011uniform, rocsca2012area, holhocs2014octahedral}.
 There has also been work to improve the efficiency of these projections for use with Digital Earth systems~\cite{harrison2011optimization}.
 
@@ -145,15 +145,15 @@ Furthermore, due to the use of a planar coordinate system, distortion from proje
 Which map projection to use for which use cases must be considered carefully, which also requires sufficient domain expertise.
 
 
-\subsection{Globe Based Digital Earth} \label{chap:2:globeDE}
-A more recent approach to a Digital Earth---and one more in line with Al Gore's initial proposal---is a globe based Digital Earth.
+\subsection{Globe-Based Digital Earth} \label{chap:2:globeDE}
+A more recent approach to a Digital Earth---and one more in line with Al Gore's initial proposal---is a globe-based Digital Earth.
 While physical globes have practical drawbacks in comparison to a map, in a digital setting, these drawbacks are reduced if not completely negated. 
 Modern computer graphics algorithms and hardware have made creating, storing, and displaying a virtual globe in real-time no more difficult than displaying the equivalent map.
 Interactive systems allow digital measurements and zooming on a globe to show any region of the Earth at the desired scale.
 Virtual globes still cannot display the entire Earth at once; however, novel interaction techniques such as multi-view focus plus context rendering can help alleviate this limitation~\cite{sherlock2017visualizations}.
 
 
-Due to the reduced distortion with a globe, there has been a push toward globe based Digital Earth systems as opposed to conventional map based ones~\cite{goodchild2018reimagining}.
+Due to the reduced distortion with a globe, there has been a push toward globe-based Digital Earth systems as opposed to conventional map-based ones~\cite{goodchild2018reimagining}.
 One approach for doing so is to still use a flat map as the underlying representation of the Earth but map back to a globe for visualization.
 While this solves the issues of map edges and distortion for visual analysis purposes, it does not address the distortion present for any analysis using the flat map and the corresponding errors introduced.
 The alternative is to do analysis directly in spherical---or even more accurately, ellipsoidal---space.
@@ -161,7 +161,7 @@ While ellipsoidal analysis is often prohibitively complicated and expensive due 
 While spherical analyses are still significantly more involved than the planar equivalents, modern computational capabilities are making them more feasible. 
 In addition to standard methods, there have been several recent works on techniques for more complex spherical analysis and operations.
 Some examples include better representations for rational points on the sphere~\cite{bahrdt2017rational}, multiresolution representations of B-spline~\cite{alderson2016multiresolution} and NURBS curves~\cite{alderson2019multiscale}, and methods for offsetting both vector and raster curves~\cite{alderson2018offsetting}.
-For these reasons, direct spherical analysis on a globe based Digital Earth is becoming a compelling alternative to traditional GIS. For a detailed analysis of different Digital Earth systems, refer to~\cite{mahdavi2015survey} and~\cite{alderson2020digital}.
+For these reasons, direct spherical analysis on a globe-based Digital Earth is becoming a compelling alternative to traditional GIS. For a detailed analysis of different Digital Earth systems, refer to~\cite{mahdavi2015survey} and~\cite{alderson2020digital}.
 
 
 \subsection{Volumetric Digital Earth} \label{chap:2:VDE}
@@ -281,7 +281,7 @@ Furthermore, the use of an area-preserving projection in conjunction with an are
 \begin{figure}[ht!]
 	\centering
 	\includegraphics[width=0.30\textwidth]{polyhedron-grid.pdf}
-	\caption[An icosahedron based grid]{
+	\caption[An icosahedron-based grid]{
 		\textbf{Placeholder and temporary caption} A simple triangular grid based on a regular icosahedron.
 		Probably also show projection between polyhedron domain and spherical domain
 	}
@@ -289,7 +289,7 @@ Furthermore, the use of an area-preserving projection in conjunction with an are
 \end{figure}
 
 
-One of the earliest polyhedron based DGGS's is the Sphere Quadtree, proposed by Fekete in 1990~\cite{fekete1990sphere}.
+One of the earliest polyhedron-based DGGS's is the Sphere Quadtree, proposed by Fekete in 1990~\cite{fekete1990sphere}.
 This system uses a regular icosahedron as the initial discretization, along with standard 1:4 triangle refinement and a simple normalization projection.
 Dutton later adopted a similar method to the regular octahedron~\cite{dutton1996encoding}.
 While these two approaches are straightforward, they served as the groundwork for more sophisticated polyhedron-based DGGS's.
@@ -303,7 +303,7 @@ This class of operations is known as grid encoding.
 The most basic type of encoding is for points---finding the cell which contains a given point---however, operations for more complex geometry such as vector polylines and polygons is often also required~\cite{du2018duality}.
 Likewise, the inverse process of mapping a set of cells in the grid domain to the corresponding regions of the Earth is also needed.
 These operations are, correspondingly, known as grid decoding.
-Grid encoding and decoding, as they apply to a polyhedron based grid, are shown in Figure~\ref{fig:coding}.
+Grid encoding and decoding, as they apply to a polyhedron-based grid, are shown in Figure~\ref{fig:coding}.
 In this thesis, we refer to grid encoding and decoding collectively as coding.
 
 
@@ -339,7 +339,7 @@ For example, an indexing scheme designed for a regular quadrilateral grid is unl
 Thus, grids with different cell shapes and connectivities will require different indexing schemes designed specifically for the qualities of that grid.
 Regular quadrilateral and triangular grids have well-understood techniques for indexing from the computer graphics literature.
 Furthermore, Atlas of Connectivity Maps, proposed by Mahdavai-Amiri and Samavati, extend these techniques to semiregular grids like those of most polyhedral DGGS~\cite{mahdavi2014atlas}.
-However, hexagon based grids, which are an increasingly popular choice due to their desirable sampling properties resulting from the high compactness of hexagons, are more difficult to index.
+However, hexagon-based grids, which are an increasingly popular choice due to their desirable sampling properties resulting from the high compactness of hexagons, are more difficult to index.
 Despite this, there are some works on developing efficient indexing for both 1:3~\cite{vince2006indexing} and 1:4~\cite{tong2013efficient} hexagon DGGS's, along with general methods for hierarchical hexagonal grids~\cite{mahdavi2015hexagonal}.
 There has also been work done to categorize different DGGS indexing schemes to facilitate conversion and data transference between different systems~\cite{mahdavi2015categorization}.
 

@@ -18,6 +18,114 @@ A more detailed description of degenerate Z-order indexing for SDOG grids, inclu
 
 
 \section{Radial Mappings}
+In these mappings, we use $\hat{r}$ to refer to a radius $r$ normalized to the range of the grid ($r/R_\mathrm{max}$).
+
+Referring to Figure~\ref{fig:central-split}, we see that the radial splits for central layers divide the grid into regions representing spherical shells.
+We also note that each of these shells contains a different number of cells.
+More specifically, shell $n$ has a value of $k_s$ one greater than that of shell $n+1$, and therefore as refinement continues, we expect shell $n$ to contain $f^3$ times as many cells.
+Ideally, then, shell $n$ will represent a region with $f^3$ times the volume as well.
+To accomplish this, we can define a radial mapping that maps radial splits in the grid to corresponding radial splits that result in the appropriate volume.
+We summarize the method below, with more details available in~\cite{ulmertoward2020}.
+The volume shell $n$ represents is proportional to
+
+
+\begin{equation*}
+c^{3n} - c^{3 \left( n + 1 \right)}.
+\end{equation*}%
+%
+where $c \in (0, 1)$ is the distance along $r_\mathrm{max}$ to map the radial splits to.
+Thus, the ratio of the volume between shell $n$ and $n+1$ is
+
+\begin{equation*}
+\frac{ c^{3n} - c^{3 \left( n + 1 \right)} }{ c^{3 \left(n + 1 \right)} - c^{3\left( n + 2 \right)} } = \frac{ c^{3n} \left( 1 - c^{3} \right) }{ c^{3} c^{3n} \left( 1 - c^{3} \right) } = \frac{1}{c^{3}}.
+\end{equation*}%
+%
+Equating this to the desired ratio of volumes, we get
+
+\begin{equation*}
+\frac{1}{c^3} = {f^3}, \quad c = \frac{1}{f}.
+\end{equation*}
+
+From this, we conclude that radii at powers of $c$ should be mapped to powers of $1/2$; radii that are in between are linearly interpolated.
+We first calculate the physical shell that contains the radius, which is simply $s = \lfloor \log_c \hat{r} \rfloor$.
+The shell is then used to find the (normalized) minimum and maximum radius of the shell in both physical and grid space.
+We refer to these as $\ell$ and $u$, respectively, with subscripts $g$ for grid space and $p$ for physical.
+These are given by
+
+\begin{equation*}
+\ell_p = c^{s+1}, \quad u_p = c^s, \quad \ell_g = 0.5^{s+1}, \quad \text{and} \quad u_g = 0.5^s.
+\end{equation*}
+
+The full mapping is thus
+
+\begin{equation*}
+m(\hat{r}) = du_g + (1-d)\ell_g, \quad \text{where}
+\end{equation*}
+%
+\begin{equation*}
+d = \frac{ \hat{r} - \ell_p}{u_p - \ell_p}.
+\end{equation*}
+%
+For the inverse, we have
+
+\begin{equation*}
+m^{-1}(\hat{r}) = du_p + (1-d)\ell_p, \quad \text{where}
+\end{equation*}
+%
+\begin{equation*}
+d = \frac{ \hat{r} - \ell_g}{u_g - \ell_g}.
+\end{equation*}
+%
+For the inverse, shell $s$ would be carried forward from the layer parameterization (Section~\ref{sec:encoding:param}), however it can also be calculated independently with $s = \lfloor \log_{0.5} \hat{r} \rfloor$.
+
+The results of this mapping are shown in Figure~\ref{fig:proj-grids} left.
+Note that for a 1:4 surface refinement factor, $c = 1/2$, which means this mapping is equivalent to the identity.
+In the case where only regular prismatoid refinement is used, this mapping is also equivalent to the identity.
+
+
+This mapping---and the subsequent ones---have the side effect of changing the aspect ratio of cells in grid space as compared to the corresponding cells in physical space.
+This means that when determining the refinement parameters needed to achieve the desired aspect ratio, the cells in physical space should be considered as opposed to grid space, as done in Section~\ref{sec:grid:ar}.
+This is easily addressed by changing the value of $\upsilon$ used in Equations~\ref{eq:extraSplits} and \ref{eq:num2D} to be $(1 - c)$.
+
+
+%\paragraph{Volume preserving mapping}
+While the above mapping preserves volume between shells of the grid, cells within a given shell will still have varying volumes.
+This is due to the volume of cells growing cubically with respect to radius.
+To accommodate this, we replace the linear interpolation of the above mapping with one that maps changes in volume in physical space to linear distance in grid space, the result of which is
+
+\begin{equation*}
+m(\hat{r}) = du_g + (1-d)\ell_g, \quad \text{where}
+\end{equation*}
+%
+\begin{equation*}
+d = \frac{ \hat{r}^3 - \ell_p^3} {u_p^3 - \ell_p^3}.
+\end{equation*}
+%
+Likewise, the inverse is given by
+
+\begin{equation*}
+m^{-1}(\hat{r}) = \sqrt[3]{ d u_p^{3} + \left( 1 - d \right) \ell_p^{3} }, \quad \text{where}
+\end{equation*}
+%
+\begin{equation*}
+d = \frac{\hat{r} - \ell_g}{u_g - \ell_g}.
+\end{equation*}
+%
+With this mapping, cells in the same layer will have perfect volume preservation assuming the input DGGS is \textit{area} preserving.
+Depending on the layering sequence, however, volume will not necessarily be preserved between cells in different shells.
+Additionally, the centre layer will never have volume preservation with the other layers.
+The results of this mapping are shown in Figure~\ref{fig:proj-grids} right.
+As can be seen, cells in each shell are stretched and squashed in order to ensure they have equal volume.
+
+
+%\paragraph{Balanced mapping}
+While volume preservation is an important property for certain applications, it may also be desirable to avoid the stretching and squashing noted above.
+To accommodate different balances of volume preservation and cell compactness, we use a mapping that blends between the results of the first and second proposed mappings.
+Mapping one uses linear interpolation, and results in cells with equal radial extent; mapping two uses a cubic interpolation and results in cells with equal volume.
+Using a different power, $t$, between one and three will result in a blending between these two properties.
+A result using $t=2$ is shown in Figure~\ref{fig:proj-grids} centre.
+
+
 \section{Latitude Mappings for SDOG}
 
 %\section{Mapping Modified SDOG Grids} \label{sec:mapping}

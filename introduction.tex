@@ -22,7 +22,7 @@ These individual layers are overlayed to create a complete model of the Earth (o
 However, being created and gathered by diverse organizations, geospatial data exists in many different formats and resolutions.
 The conventional GIS pipeline---which requires experts to clean, process, integrate, and distribute data---is unsustainable in the face of geospatial big data.
 Furthermore, even after integrating data with a GIS, overlay operations such as intersections and data extraction are computationally expensive when many data layers are present~\cite{wang2015improving}.
-Coordinate based representations of geospatial data also do not provide proper facilities to represent the uncertainty or error of the data they are used to represent~\cite{goodchild2018reimagining}.
+Coordinate-based representations of geospatial data also do not provide proper facilities to represent the uncertainty or error of the data they are used to represent~\cite{goodchild2018reimagining}.
 
 
 Another challenge with GIS is the use of a flat map as the underlying representation.
@@ -37,8 +37,9 @@ Despite this, the ability for physical maps to be easily made and stored, displa
 With the advent of a Digital Earth, however, many the drawbacks of physical globes are lessened or negated.
 Computer graphics algorithms and hardware allow rendering of globes in real-time, storage is no different than for a digital map, and interactive systems allow zooming and panning to show any part of the Earth at any scale.
 The only challenge unsolved is displaying the entire Earth at once; however, even this is partially addressed with multi-view focus plus context rendering techniques~\cite{sherlock2017visualizations}
-Because of this, there has been a recent push toward globe based Digital Earth systems, one of the most well-known examples of which being Google Earth\footnote{\url{https://www.google.com/earth/}}.
-In these systems, data is visualized on a 3D model of the Earth---approximated as a sphere or ellipsoid---as opposed to a traditional planar map. While globe based Digital Earths are becoming more popular, many of these systems still use a flat map as the underlying representation for geospatial data.
+Because of this, there has been a recent push toward globe-based Digital Earth systems, one of the most well-known examples of which being Google Earth\footnote{\url{https://www.google.com/earth/}}.
+In these systems, data is visualized on a 3D model of the Earth---approximated as a sphere or ellipsoid---as opposed to a traditional planar map.
+While globe-based Digital Earths are becoming more popular, many of these systems still use a flat map as the underlying representation for geospatial data.
 Thus, these systems still suffer errors introduced by distortion resulting from any planar operations done with the underlying coordinate system.
 
 
@@ -139,7 +140,7 @@ The extent of these splitting surfaces (and the number of resulting children cel
 We perform the modifications by analyzing the placement of these splitting surfaces and finding ideal new locations that result in cells of the most uniform volume possible given certain constraints.
 
 
-The second approach is a general method for creating a 3D DGGS that uses a conventional polyhedron based DGGS as a starting point and specification.
+The second approach is a general method for creating a 3D DGGS that uses a conventional polyhedron-based DGGS as a starting point and specification.
 First, we create the initial 3D discretization by extruding the faces of the initial polyhedron of the input DGGS into prismatoid cells.
 Bases of prismatoid cells are then refined using the same refinement scheme as the input DGGS and combined with a radial refinement.
 Such an approach for creating a 3D DGGS allows the research, development, and data integration achieved with conventional DGGS to readily be leveraged with the 3D one.
@@ -148,7 +149,7 @@ The extension also allows for an additional property, a target aspect ratio for 
 
 
 For both of these approaches, we define mappings between physical points and their corresponding locations in grid space, which we use to implement efficient encoding and decoding operations.
-For the SDOG based approach, we provide constant time encoding and decoding algorithms that outperform the standard versions of these algorithms at high levels of refinement.
+For the SDOG-based approach, we provide constant time encoding and decoding algorithms that outperform the standard versions of these algorithms at high levels of refinement.
 These new algorithms can be used both with conventional SDOG and, by using the provided mappings, the volume-preserving one.
 We also provide similar algorithms for the 3D DGGS's that result from the extension method.
 
