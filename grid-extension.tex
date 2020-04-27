@@ -1,7 +1,18 @@
 \chapter{Extending Polyhedral DGGS's to Create 3D Prismatoid Grids} \label{chap:extension}
-While our modifications of SDOG refinement result in grids with many desirable properties, they may not be the best choice for all applications.
-Due to widely differing needs, no single DGGS---2D or 3D---is ideal for all situations.
-This need to have different grids for different applications is one reason there is such a wide variety of DGGS's currently available.
+While SDOG and its variants proposed in the previous chapter have many desirable properties, it may not be the ideal 3D DGGS in all circumstances.
+The varying uses for a DGGS means each application has different needs of the DGGS it employs.
+As such, no single DGGG---2D or 3D---is ideal for every use case.
+Therefore, there is a need for many different DGGS's, each with unique properties and intended use cases.
+
+
+Addressing the needs of different applications, researchers have developed a large variety of different 2D DGGS currently available; the creation of new 3D DGGS's should build off these existing methods.
+A natural way to do so is with a method to extend a DGGS to 3D, as seen in~\cite{xie2013interactive} and~\cite{sirdeshmukh2019utilizing}.
+However, existing extension methods are not generalizable to any possible DGGS and fail to address cell degeneration toward the centre of the grid.
+In this chapter, we aim to address these shortcomings.
+We present a general method for extending \textit{any} existing DGGS, referred to as the input DGGS, to the third dimension using a semiregular degenerate refinement strategy.
+This extension is done with care to allow the efficient and straightforward transference of data between 2D and 3D while preserving---as best as possible---desirable properties of the input DGGS in the 3D one.
+Figure~\ref{fig:extension} shows an overview of the method.
+This chapter discusses only the creation of grid geometry; mapping and coding are discussed in Chapters~\ref{chap:mapping} and \ref{chap:coding}, respectively.
 
 
 \begin{figure}[ht!]
@@ -15,11 +26,6 @@ This need to have different grids for different applications is one reason there
 	}
 	\label{fig:extension}
 \end{figure}
-
-
-In this chapter we present method for creating 3D DGGS that uses conventional one---input DGGS---as starting point and specificaiton using semiregular degenerate refinement approach.
-Figure 123 shows overview of the method.
-This chapter discusses only the creation of the grid geometry. Mapping and coding are discussed in Chapters 345 and 345, respectively.
 
 
 The content of this chapter is taken from the article "General Method for Extending Discrete Global Grid Systems to Three Dimensions," authored by Benjamin Ulmer, John Hall, and Faramarz Samavati, which appeared in the journal \textit{ISPRS International Journal of Geo-Information} in a special issue on Global Grid Systems~\cite{ulmer2020general}.
@@ -56,7 +62,7 @@ With this discretization, each cell represents the full radial domain of the gri
 \subsection{Regular Prismatoid Refinement} \label{chap:5:regular}
 With an initial 3D discretization for the space of the grid system, we now need a method for refining cells to create more fine discretizations.
 We also want to ensure that the 3D DGGS will make use of the same refinement scheme used by the input DGGS, referred to as the surface refinement.
-For simplicity, we initially assume the surface refinement factor is 1:4; a generalization to other refinement factors is given later in Chapter~\ref{sec:grid:factors}.
+For simplicity, we initially assume the surface refinement factor is 1:4; a generalization to other refinement factors is given later in Chapter~\ref{chap:5:factors}.
 
 
 \begin{figure}[ht!]
@@ -313,4 +319,8 @@ The results of refinement with different target aspect ratios are demonstrated i
 
 
 \section{Summary}
-A summary goes here.
+This chapter provides a complete and comprehensive method for extending any 2D DGGS into a 3D DGGS.
+The approach is general and properly accommodates any potential DGGS regardless of the initial polyhedron, refinement, or projection employed.
+Semiregular degenerate refinement allows unbounded ranges of altitudes without significant degradation in cell shape or size.
+Techniques are employed to ensure cells have the desired aspect ratio while maintaining the aspect ratio and relative volume of cells during refinement.
+The following chapters explain how to handle mapping and coding with these grids. 
