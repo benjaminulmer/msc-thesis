@@ -138,13 +138,13 @@ Given this mapping, all indexing operations can be done using the standard algor
 
 
 For the stationary subdivision schemes this mapping is straightforward.
-Since only the latitudinal splitting surface of SG cells is modified, latitudes in the range $[0, \pm\frac{\pi}{4})$ should be mapped to the range $[0, \pm\alpha_{\phi}^{SG} \frac{\pi}{2})$ and likewise the range $[\pm\frac{\pi}{4}, \pm\frac{\pi}{2}]$ to the range $[\pm\alpha_{\phi}^{SG} \frac{\pi}{2}, \pm\frac{\pi}{2}]$.
+Since only the latitudinal splitting surface of SG cells is modified, latitudes in the range $[0, \pm\frac{\pi}{4})$ should be mapped to the range $[0, \pm\alpha_{\varphi}^{SG} \frac{\pi}{2})$ and likewise the range $[\pm\frac{\pi}{4}, \pm\frac{\pi}{2}]$ to the range $[\pm\alpha_{\varphi}^{SG} \frac{\pi}{2}, \pm\frac{\pi}{2}]$.
 This can be done with a simple linear map, and the inverse follows trivially.
 
 
 For the non-stationary schemes this mapping is more complicated.
-We wish to define a function $M \colon (\phi, r) \rightarrow (\phi, r)$ that converts a latitude and radius in a conventional SDOG grid to the corresponding latitude and radius in the modified grid (longitude does not need to be mapped, as it is not changed between the two grids).
-The two coordinates act independently of each other, so we can split this function into its two components, $M_{\phi}(\phi)$ and $M_{r}(r)$, and derive each one and its inverse individually.
+We wish to define a function $M \colon (\varphi, r) \rightarrow (\varphi, r)$ that converts a latitude and radius in a conventional SDOG grid to the corresponding latitude and radius in the modified grid (longitude does not need to be mapped, as it is not changed between the two grids).
+The two coordinates act independently of each other, so we can split this function into its two components, $M_{\varphi}(\varphi)$ and $M_{r}(r)$, and derive each one and its inverse individually.
 This is done by parameterizing points inside an NG cell using the function(s) used to calculate its splitting surfaces (Eq.~(\ref{eq:convex}) for conventional SDOG and Eq.~(\ref{eq:radVol}) and (\ref{eq:latVol}) for the modified grid).
 NG cells are used for this purpose as all children cells are also NG, and therefore use the same formulations for calculating splitting surfaces.
 By finding the boundaries of the coarsest NG cell that contains a given point, these parameterizations can be used to go from one space to the other by finding a relationship between them---in this case $d = \alpha = p$---all of which can be done in constant time.
@@ -153,19 +153,19 @@ Let $R_m$ be the radius of the grid.
 Latitude forward:
 %
 \begin{equation*}
-M_{\phi}(\phi) = \sin^{-1} \left( d u_{v} + \left( 1 - d \right) \ell_{v} \right), \quad \text{where}
+M_{\varphi}(\varphi) = \sin^{-1} \left( d u_{v} + \left( 1 - d \right) \ell_{v} \right), \quad \text{where}
 \end{equation*}
 %
 \begin{equation*}
-d = \frac{\frac{2\phi}{\pi} - \ell_{c}}{u_{c} - \ell_{c}},
+d = \frac{\frac{2\varphi}{\pi} - \ell_{c}}{u_{c} - \ell_{c}},
 \end{equation*}
 %
 \begin{equation*}
-u_{c} = 1 - \left( \frac{1}{2} \right)^{ \left\lceil \log_{0.5} \left( 1 - \frac{2\phi}{\pi} \right) \right\rceil }, \quad u_{v} = 2 u_{c} - u_{c}^{2}.
+u_{c} = 1 - \left( \frac{1}{2} \right)^{ \left\lceil \log_{0.5} \left( 1 - \frac{2\varphi}{\pi} \right) \right\rceil }, \quad u_{v} = 2 u_{c} - u_{c}^{2}.
 \end{equation*}
 %
 \begin{equation*}
-\ell_{c} = 1 - \left( \frac{1}{2} \right)^{ \left\lfloor \log_{0.5} \left( 1 - \frac{2\phi}{\pi} \right) \right\rfloor }, \quad \text{and} \quad \ell_{v} = 2 \ell_{c} - \ell_{c}^{2}.
+\ell_{c} = 1 - \left( \frac{1}{2} \right)^{ \left\lfloor \log_{0.5} \left( 1 - \frac{2\varphi}{\pi} \right) \right\rfloor }, \quad \text{and} \quad \ell_{v} = 2 \ell_{c} - \ell_{c}^{2}.
 \end{equation*}
 %
 %
@@ -191,19 +191,19 @@ u = \left( \frac{1}{2} \right)^{ \left\lfloor \log_{0.5} \left( \frac{r}{R_{m}} 
 Latitude inverse:
 %
 \begin{equation*}
-M^{-1}_{\phi}(\phi) = \frac{\pi}{2} \left( d u_{c} + \left( 1 - d \right) \ell_{c} \right), \quad \text{where}
+M^{-1}_{\varphi}(\varphi) = \frac{\pi}{2} \left( d u_{c} + \left( 1 - d \right) \ell_{c} \right), \quad \text{where}
 \end{equation*}
 %
 \begin{equation*}
-d = \frac{\sin \phi - \ell_{v}}{u_{v} - \ell_{v}},
+d = \frac{\sin \varphi - \ell_{v}}{u_{v} - \ell_{v}},
 \end{equation*}
 %
 \begin{equation*}
-u_{c} = 1 - \left( \frac{1}{2} \right)^{ \left\lceil \log_{0.5} \left( \sqrt{1 - \sin \phi} \right) \right\rceil },
+u_{c} = 1 - \left( \frac{1}{2} \right)^{ \left\lceil \log_{0.5} \left( \sqrt{1 - \sin \varphi} \right) \right\rceil },
 \end{equation*}
 %
 \begin{equation*}
-\ell_{c} = 1 - \left( \frac{1}{2} \right)^{ \left\lfloor \log_{0.5} \left( \sqrt{1 - \sin \phi} \right) \right\rfloor },
+\ell_{c} = 1 - \left( \frac{1}{2} \right)^{ \left\lfloor \log_{0.5} \left( \sqrt{1 - \sin \varphi} \right) \right\rfloor },
 \end{equation*}
 %
 %
@@ -222,7 +222,7 @@ and both $u$ and $\ell$ follow the same as the forward.
 
 
 In the case where a division by zero occurs, (i.e. when $u = \ell$ or $u_{c} = \ell_{c}$), the result of said division is treated as zero.
-The latitude mappings assume $\phi \ge 0$, however, from symmetry a negative value of $\phi$ can easily be accommodated by using the absolute value and negating the final result.
+The latitude mappings assume $\varphi \ge 0$, however, from symmetry a negative value of $\varphi$ can easily be accommodated by using the absolute value and negating the final result.
 This mapping is applicable to the first non-stationary scheme discussed in Section \ref{sec:method-nonStationary}; schemes derived from Eq.~(\ref{eq:beta}) cannot be mapped, as this formulation cannot easily be expressed in terms of a parameter.
 In the future, other blending methods may be explored that allow for a similar mapping to be derived.
 

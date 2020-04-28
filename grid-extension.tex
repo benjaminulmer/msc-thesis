@@ -121,19 +121,19 @@ We require this surface resolution in Chapter~\ref{chap:coding} for grid encodin
 
 \begin{figure}[ht!]
 	\centering
-	\includegraphics[width=\textwidth]{reg-vs-semireg.pdf}
+	\includegraphics[width=\textwidth]{semireg-vs-reg.pdf}
 	\caption[Comparison of regular and semiregular degenerate prismatoid refinement]{
 		Three levels of successive applications of regular (top) and semiregular degenerate (bottom) prismatoid refinement.
 		Only the side of a single pyramid starting cell is shown to highlight the behaviour of the two schemes at different radii.
 		Note how cells degenerate towards the centre with regular refinement, whereas this issue is not present in the semiregular degenerate scheme
 	}
-	\label{fig:reg-vs-semireg}
+	\label{fig:semireg-vs-reg}
 \end{figure}
 
 
 As with other semiregular degenerate refinements, normal layers in this scheme are refined using the regular method.
 This regular refinement results in two normal layers, both of which have $k_s$ equal to one greater than that of the starting layer.
-Figure~\ref{fig:reg-vs-semireg} compares three successive applications of regular and semiregular degenerate prismatoid refinement to a single pyramid cell.
+Figure~\ref{fig:semireg-vs-reg} compares three successive applications of regular and semiregular degenerate prismatoid refinement to a single pyramid cell.
 
 
 \subsection{Other Surface Refinement Factors} \label{chap:5:factors}

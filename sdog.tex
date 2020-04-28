@@ -20,7 +20,7 @@ Figure~\ref{fig:sdog} shows an SDOG octant after four applications of refinement
 	\centering
 	\includegraphics[width=\textwidth]{sdog.pdf}
 	\caption[Different views of an SDOG octant]{
-		One octant of an SDOG grid after four levels of refinement viewed (a) from the side, (b) from the front, and (c) at an angle.
+		One octant of an SDOG grid after four levels of refinement viewed (a) at an angle, (b) from the front, and (c) from the side.
 		Compared to a 3D LLG, cells are more uniform in size and have better compactness.
 		Refer to Chapter~\ref{chap:4:results} for a detailed analysis of the volume and compactness properties of SDOG
 	}
@@ -112,12 +112,12 @@ As far as we are aware, these formulations have not been provided in any of the 
 
 \subsection{Geometry of SDOG Cells} \label{chap:4:geom}
 In order to measure the volume preservation properties of SDOG and its modifications, it is necessary to be able to measure the volume of individual cells in the grid.
-Since each SDOG cell represents a range of each spherical coordinate (latitude $\phi$, longitude $\lambda$, and radius $r$), calculating the volume of an individual cell is a straightforward task.
+Since each SDOG cell represents a range of each spherical coordinate (latitude $\varphi$, longitude $\lambda$, and radius $r$), calculating the volume of an individual cell is a straightforward task.
 Note that we use the geographic convention for spherical coordinates in this thesis.
 Let the subscripts $\mathrm{max}$ and $\mathrm{min}$ denote the maximum and minimum of a given spherical coordinate for an SDOG cell; then, the volume is \cite{yu2009sdog}
 %
 \begin{equation} \label{eq:volume}
-V = \frac{1}{3} \left( \lambda_\mathrm{max} - \lambda_\mathrm{min} \right) \left(r_\mathrm{max}^{3} - r_\mathrm{min}^{3} \right) \left(\sin\phi_\mathrm{max} - \sin\phi_\mathrm{min} \right).
+V = \frac{1}{3} \left( \lambda_\mathrm{max} - \lambda_\mathrm{min} \right) \left(r_\mathrm{max}^{3} - r_\mathrm{min}^{3} \right) \left(\sin\varphi_\mathrm{max} - \sin\varphi_\mathrm{min} \right).
 \end{equation}
 
 
@@ -127,19 +127,19 @@ From the fact that SDOG cells are refined using spherical coordinates, each face
 Faces created by radial splitting surfaces are spherical, with surface area given by
 %
 \begin{equation*}
-r^2 \left( \lambda_\mathrm{max} - \lambda_\mathrm{min} \right) \left( \sin\phi_\mathrm{max} - \sin\phi_\mathrm{min} \right).
+r^2 \left( \lambda_\mathrm{max} - \lambda_\mathrm{min} \right) \left( \sin\varphi_\mathrm{max} - \sin\varphi_\mathrm{min} \right).
 \end{equation*}
 %
 Faces created by longitudinal splitting surfaces are the difference of two circular sectors, and have an area of
 %
 \begin{equation*}
-\frac{1}{2} \left( \phi_\mathrm{max} - \phi_\mathrm{min} \right) \left( r_\mathrm{max}^{2} - r_\mathrm{min}^{2} \right).
+\frac{1}{2} \left( \varphi_\mathrm{max} - \varphi_\mathrm{min} \right) \left( r_\mathrm{max}^{2} - r_\mathrm{min}^{2} \right).
 \end{equation*}
 %
 Finally, faces created by latitudinal splitting surfaces lie on a cone, with a surface area of
 %
 \begin{equation*}
-\frac{1}{2} \cos\phi \left( \lambda_\mathrm{max} - \lambda_\mathrm{min} \right) \left( r_\mathrm{max}^{2} - r_\mathrm{min}^{2} \right).
+\frac{1}{2} \cos\varphi \left( \lambda_\mathrm{max} - \lambda_\mathrm{min} \right) \left( r_\mathrm{max}^{2} - r_\mathrm{min}^{2} \right).
 \end{equation*}
 
 
@@ -155,8 +155,8 @@ Using midpoints to refine cells makes for a simple refinement scheme, but it mak
 \begin{figure}[ht!]
 	\centering
 	\includegraphics[width=0.85\textwidth]{sdog-volume.pdf}
-	\caption[Distribution of cell volumes in SDOG]{
-		Distribution of cell volumes in an octant after four levels of conventional SDOG refinement
+	\caption[Visualization of cell volumes in SDOG]{
+		Cell volumes in an octant after four applications of conventional SDOG refinement
 	}
 	\label{fig:sdog-volume}
 \end{figure}
@@ -164,7 +164,7 @@ Using midpoints to refine cells makes for a simple refinement scheme, but it mak
 
 \begin{figure}[ht!]
 	\centering
-	\includegraphics[width=0.4\textwidth]{sdog-functions.pdf}
+	\includegraphics[width=0.55\textwidth]{sdog-functions.pdf}
 	\caption[How functions determine the location of SDOG splitting surfaces]{
 		Each SDGO cell represents a range in each spherical coordinate; the location of the splitting surfaces is expressed as a function of the maximum and minimum of the respective range.
 		Here we show only an NG cell; however, the same applies to SG and LG cells.
@@ -175,7 +175,7 @@ Using midpoints to refine cells makes for a simple refinement scheme, but it mak
 
 
 By allowing the location of the splitting surfaces to be adjusted, we can modify the shape and size of child cells and as a result affect the volume preservation, compactness, and other properties of the grid.
-Let $c_{s}$ be the location of the splitting surface, where $c$ is one of $\left\lbrace \phi, \lambda, r \right\rbrace$.
+Let $c_{s}$ be the location of the splitting surface, where $c$ is one of $\left\lbrace \varphi, \lambda, r \right\rbrace$.
 One way to express the location of the splitting surfaces used for refinement is as a convex combination of maximum and minimum values:
 %
 \begin{equation*}
@@ -216,7 +216,7 @@ r_{s} = \sqrt[3]{ p r_\mathrm{max}^{3} + \left( 1 - p \right) r_\mathrm{min}^{3}
 The derivations for the latitudinal and longitudinal splitting surfaces follow the same, with results
 %
 \begin{equation} \label{eq:latVol}
-\phi_{s} = \sin^{-1} \left( p \sin\phi_\mathrm{max} + \left( 1 - p \right) \sin\phi_\mathrm{min} \right) \quad\text{and}
+\varphi_{s} = \sin^{-1} \left( p \sin\varphi_\mathrm{max} + \left( 1 - p \right) \sin\varphi_\mathrm{min} \right) \quad\text{and}
 \end{equation}
 %
 \begin{equation} \label{eq:longVol}
@@ -231,7 +231,7 @@ From Equation~(\ref{eq:longVol}), it is clear a longitudinal splitting surface a
 
 \begin{figure}[ht!]
 	\centering
-	\includegraphics[width=0.6\textwidth]{sdog-shells.pdf}
+	\includegraphics[width=0.675\textwidth]{sdog-shells.pdf}
 	\caption[Spherical shells that result from SDOG refinement]{
 		Spherical shells created by the radial splitting surfaces of SG cells.
 		At $k$ levels of refinement there are $k$ shells and one inner SG cell.
@@ -297,9 +297,9 @@ Zone $n$ has a volume equal to $\left( 1 - p \right)^{n} p$ that of the initial 
 
 \begin{figure}[ht!]
 	\centering
-	\includegraphics[width=0.85\textwidth]{modified-volume.pdf}
-	\caption[Distribution of cell volumes in the volume modification]{
-		Results of the volume method after four levels of refinement.
+	\includegraphics[width=0.85\textwidth]{vol-volume.pdf}
+	\caption[Visualization of cell volumes in the volume modification]{
+		Results of the volume method after four applications of refinement.
 		All NG cells have exactly the same volume, with the LG and SG cells having a lower volume.
 		Notice how the resulting NG cells are stretched and squashed in order to ensure they all have equal volume
 	}
@@ -319,30 +319,30 @@ In order to address this issue, it is possible to use different splitting surfac
 
 \begin{figure}[ht!]
 	\centering
-	\includegraphics[width=0.85\textwidth]{alpha-volume.pdf}
-	\caption[Distribution of cell volumes in the latitude modification]{
-		Results of the latitude method after four levels of refinement.
+	\includegraphics[width=0.85\textwidth]{lat-volume.pdf}
+	\caption[Visualization of cell volumes in the latitude modification]{
+		Results of the latitude method after four applications of refinement.
 		Since only latitude splitting surface for SG and LG cells have been modified, the results are similar to that of conventional SDOG
 	}
-	\label{fig:alpha-volume}
+	\label{fig:latitude-volume}
 \end{figure}
 
 
 Looking at Figure~\ref{fig:modified-volume}, we see that the regular splitting surfaces are responsible for the majority of the reduction in cell compactness.
 Our first balanced scheme then is to leave these splitting surfaces at the midpoints and only modify the latitudinal splitting surfaces for SG and LG cells.
-Figure~\ref{fig:alpha-volume} shows the results of this method, which we refer to as the \textit{latitude} method.
+Figure~\ref{fig:latitude-volume} shows the results of this method, which we refer to as the \textit{latitude} method.
 Comparing this to conventional SDOG (refer back to Figure~\ref{fig:sdog-volume}), the two grids are nearly identical.
 Thus, this method offers only a slight improvement with regards to volume preservation, while also only slightly sacrificing cell compactness.
 
 
 \begin{figure}[ht!]
 	\centering
-	\includegraphics[width=0.85\textwidth]{blend-volume.pdf}
-	\caption[Distribution of cell volumes in the balanced modification]{
-		Results of the balanced method after four levels of refinement.
+	\includegraphics[width=0.85\textwidth]{bal-volume.pdf}
+	\caption[Visualization of cell volumes in the balanced modification]{
+		Results of the balanced method after four applications of refinement.
 		NG cells are still stretched and squashed in order to better preserve volume; however, the effect is less pronounced than in the volume method
 	}
-	\label{fig:blend-volume}
+	\label{fig:balanced-volume}
 \end{figure}
 
 
@@ -361,7 +361,7 @@ where $1 \leq t \leq 3$ blends between compactness at $t = 1$ (equivalent to mid
 For the latitudinal splitting surfaces, we propose
 %
 \begin{equation*}
-\phi_{s} = h \sin^{-1} \left( p \sin \left( \frac{1}{h} \phi_\mathrm{max} \right) + \left( 1 - p \right) \sin \left( \frac{1}{h} \phi_\mathrm{min} \right) \right)
+\varphi_{s} = h \sin^{-1} \left( p \sin \left( \frac{1}{h} \varphi_\mathrm{max} \right) + \left( 1 - p \right) \sin \left( \frac{1}{h} \varphi_\mathrm{min} \right) \right)
 \end{equation*}
 %
 where $1 \leq h \leq \infty$ blends between volume preservation at $h = 1$ (equivalent to Equation~(\ref{eq:latVol})) and compactness at $h = \infty$ (equivalent to midpoint). We found values of $t = 2$ and $h = 1.45$ to offer a relatively balanced tradeoff between the two properties, with the resulting grid shown in Figure~\ref{fig:blend-volume}.
