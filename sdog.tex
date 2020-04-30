@@ -100,11 +100,11 @@ L(k) = 2^{k} - 1,
 \end{equation*}
 %
 \begin{equation*}
-N(k) = \frac{1}{21} \left( 7*2^{k} + 8^{k+1} + 6 \right) - 2^{k}, \quad\text{and}
+N(k) = \frac{1}{21} \left( 7 \cdot 2^{k} + 8^{k+1} + 6 \right) - 2^{k}, \quad\text{and}
 \end{equation*}
 %
 \begin{equation*}
-T(k) = S(k) + L(k) + N(k) = \frac{1}{21} \left( 7*2^{k} + 8^{k+1} + 6 \right).
+T(k) = S(k) + L(k) + N(k) = \frac{1}{21} \left( 7 \cdot 2^{k} + 8^{k+1} + 6 \right).
 \end{equation*}
 %
 As far as we are aware, these formulations have not been provided in any of the preexisting literature on SDOG.
@@ -117,7 +117,7 @@ Note that we use the geographic convention for spherical coordinates in this the
 Let the subscripts $\mathrm{max}$ and $\mathrm{min}$ denote the maximum and minimum of a given spherical coordinate for an SDOG cell; then, the volume is \cite{yu2009sdog}
 %
 \begin{equation} \label{eq:volume}
-V = \frac{1}{3} \left( \lambda_\mathrm{max} - \lambda_\mathrm{min} \right) \left(r_\mathrm{max}^{3} - r_\mathrm{min}^{3} \right) \left(\sin\varphi_\mathrm{max} - \sin\varphi_\mathrm{min} \right).
+V = \frac{1}{3} \left( \lambda_\mathrm{max} - \lambda_\mathrm{min} \right) \left(r_\mathrm{max}^{\,3} - r_\mathrm{min}^{\,3} \right) \left(\sin\varphi_\mathrm{max} - \sin\varphi_\mathrm{min} \right).
 \end{equation}
 
 
@@ -127,19 +127,19 @@ From the fact that SDOG cells are refined using spherical coordinates, each face
 Faces created by radial splitting surfaces are spherical, with surface area given by
 %
 \begin{equation*}
-r^2 \left( \lambda_\mathrm{max} - \lambda_\mathrm{min} \right) \left( \sin\varphi_\mathrm{max} - \sin\varphi_\mathrm{min} \right).
+r^{\,2} \left( \lambda_\mathrm{max} - \lambda_\mathrm{min} \right) \left( \sin\varphi_\mathrm{max} - \sin\varphi_\mathrm{min} \right).
 \end{equation*}
 %
 Faces created by longitudinal splitting surfaces are the difference of two circular sectors, and have an area of
 %
 \begin{equation*}
-\frac{1}{2} \left( \varphi_\mathrm{max} - \varphi_\mathrm{min} \right) \left( r_\mathrm{max}^{2} - r_\mathrm{min}^{2} \right).
+\frac{1}{2} \left( \varphi_\mathrm{max} - \varphi_\mathrm{min} \right) \left( r_\mathrm{max}^{\,2} - r_\mathrm{min}^{\,2} \right).
 \end{equation*}
 %
 Finally, faces created by latitudinal splitting surfaces lie on a cone, with a surface area of
 %
 \begin{equation*}
-\frac{1}{2} \cos\varphi \left( \lambda_\mathrm{max} - \lambda_\mathrm{min} \right) \left( r_\mathrm{max}^{2} - r_\mathrm{min}^{2} \right).
+\frac{1}{2} \cos\varphi \left( \lambda_\mathrm{max} - \lambda_\mathrm{min} \right) \left( r_\mathrm{max}^{\,2} - r_\mathrm{min}^{\,2} \right).
 \end{equation*}
 
 
@@ -194,23 +194,23 @@ We start with the radial splitting surface.
 Referring to Equation~(\ref{eq:volume}), let $p \in (0,1)$ be the percentage we wish for the lower range to have, then
 %
 \begin{equation*}
-p \left( r_\mathrm{max}^{3} - r_\mathrm{min}^{3} \right) = r_{s}^{3} - r_\mathrm{min}^{3}
+p \left( r_\mathrm{max}^{\,3} - r_\mathrm{min}^{\,3} \right) = r_{s}^{\,3} - r_\mathrm{min}^{\,3}
 \end{equation*}
 %
 \begin{equation*}
-p r_\mathrm{max}^{3} - p r_\mathrm{min}^{3} = r_{s}^{3} - r_\mathrm{min}^{3}
+p r_\mathrm{max}^{\,3} - p r_\mathrm{min}^{\,3} = r_{s}^{\,3} - r_\mathrm{min}^{\,3}
 \end{equation*}
 %
 \begin{equation*}
-r_{s}^{3} = p r_\mathrm{max}^{3} + r_\mathrm{min}^{3} - p r_\mathrm{min}^{3}
+r_{s}^{\,3} = p r_\mathrm{max}^{\,3} + r_\mathrm{min}^{\,3} - p r_\mathrm{min}^{\,3}
 \end{equation*}
 %
 \begin{equation*}
-r_{s}^{3} = p r_\mathrm{max}^{3} + \left( 1 - p \right) r_\mathrm{min}^{3}
+r_{s}^{\,3} = p r_\mathrm{max}^{\,3} + \left( 1 - p \right) r_\mathrm{min}^{\,3}
 \end{equation*}
 %
 \begin{equation} \label{eq:radVol}
-r_{s} = \sqrt[3]{ p r_\mathrm{max}^{3} + \left( 1 - p \right) r_\mathrm{min}^{3} }.
+r_{s} = \sqrt[3]{ p r_\mathrm{max}^{\,3} + \left( 1 - p \right) r_\mathrm{min}^{\,3} }.
 \end{equation}
 %
 The derivations for the latitudinal and longitudinal splitting surfaces follow the same, with results
@@ -251,7 +251,7 @@ Shell $n$ has a volume proportional to
 %
 so the ratio of the volumes of shell $n+1$ and $n$ is
 %
-\begin{equation*}
+\begin{equation*} \label{eq:shellVolume}
 \frac{ \alpha^{3 \left(n + 1 \right)} - \alpha^{3\left( n + 2 \right)} }{ \alpha^{3n} - \alpha^{3 \left( n + 1 \right)} } = \frac{ \alpha^{3} \alpha^{3n} \left( 1 - \alpha^{3} \right) }{ \alpha^{3n} \left( 1 - \alpha^{3} \right) } = \alpha^{3}.
 \end{equation*}
 %
@@ -354,7 +354,7 @@ That is, given a splitting surface, we need to be able to determine the correspo
 For the radial splitting surfaces, we propose the function
 %
 \begin{equation*}
-r_{s} = \sqrt[t]{ p r_\mathrm{max}^{t} + \left( 1 - p \right) r_\mathrm{min}^{t} }
+r_{s} = \sqrt[t]{ p r_\mathrm{max}^{\,t} + \left( 1 - p \right) r_\mathrm{min}^{\,t} }
 \end{equation*}
 %
 where $1 \leq t \leq 3$ blends between compactness at $t = 1$ (equivalent to midpoint) and volume preservation at $t=3$ (equivalent to Equation~(\ref{eq:radVol})).

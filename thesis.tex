@@ -22,6 +22,10 @@
 \comment{
 	For example, this is a comment.
 }
+\let\originalleft\left
+\let\originalright\right
+\renewcommand{\left}{\mathopen{}\mathclose\bgroup\originalleft}
+\renewcommand{\right}{\aftergroup\egroup\originalright}
 
 % Packages
 \usepackage{amsmath}
