@@ -1,7 +1,66 @@
 \chapter{Efficient Encoding, Decoding, and Indexing} \label{chap:coding}
 
 \section{SDOG}
-\subsection{Encoding Algorithm}
+
+Explain SDOG indexing.
+Modified Morton based.
+Conventional algorithms are hierarchical (linear on k).
+We derive direct index versions (constant on k).
+
+\subsection{Encoding Algorithms}
+Below provide hierarchal algorithm and our new one.
+Then we compare runtime.
+
+\subsubsection{Hierarchical}
+Provide pseudo code here.
+
+\subsubsection{Direct}
+
+\begin{equation*}
+\hat{r} = \frac{r}{R_\mathrm{max}}
+\end{equation*}
+
+\begin{equation*}
+\hat{\varphi} = \frac{2 \varphi}{\pi}
+\end{equation*}
+
+\begin{equation*}
+\hat{\lambda} = \frac{2 \lambda}{\pi}
+\end{equation*}
+
+\begin{equation*}
+s = \lfloor \log_{0.5} \hat{r} \rfloor
+\end{equation*}
+
+\begin{equation*}
+z = \lfloor \log_{0.5} ( 1 - \hat{\varphi} ) \rfloor
+\end{equation*}
+
+\begin{equation*}
+k_\varphi = \min ( s, k )
+\end{equation*}
+
+\begin{equation*}
+k_\lambda = \min ( k_\varphi + z, k )
+\end{equation*}
+
+\begin{equation*}
+r_i = 2^k \cdot ( 1 - \hat{r} )
+\end{equation*}
+
+\begin{equation*}
+\varphi_i = 2^{k - k_\varphi} \cdot \hat{\varphi}
+\end{equation*}
+
+\begin{equation*}
+\lambda_i = 2^{k - k_\lambda} \cdot \hat{\lambda}
+\end{equation*}
+
+\begin{equation*}
+i = \operatorname{Morton}( \lambda_i, \varphi_i, r_i ) + 2^{3k}
+\end{equation*}
+
+
 \subsubsection{Runtime Comparison}
 
 
@@ -21,7 +80,64 @@
 \end{figure}
 
 
-\subsection{Decoding Algorithm}
+\subsection{Decoding Algorithms}
+Below provide hierarchal algorithm and our new one.
+Then we compare runtime.
+
+\subsubsection{Hierarchical}
+Provide pseudo code here.
+
+\subsubsection{Direct}
+
+\begin{equation*}
+k = \left\lfloor \frac{ \log_{2}i}{3} \right\rfloor
+\end{equation*}
+
+\begin{equation*}
+( \lambda_i, \varphi_i, r_i ) = \operatorname{Morton}^{-1} (i \oplus 2^{3k})
+\end{equation*}
+
+\begin{equation*}
+\hat{r}_\mathrm{max} = 1 - \frac{r_i}{2^k}
+\end{equation*}
+
+\begin{equation*}
+\hat{r}_\mathrm{min} = 1 - \frac{r_i + 1}{2^k}
+\end{equation*}
+
+\begin{equation*}
+s = \lfloor \log_{0.5} \hat{r}_\mathrm{max} \rfloor
+\end{equation*}
+
+\begin{equation*}
+k_\varphi = \min ( s, k )
+\end{equation*}
+
+\begin{equation*}
+\hat{\varphi}_\mathrm{max} = \frac{\varphi_i + 1}{2^{k - k_\varphi}}
+\end{equation*}
+
+\begin{equation*}
+\hat{\varphi}_\mathrm{min} = \frac{\varphi_i}{2^{k - k_\varphi}}
+\end{equation*}
+
+\begin{equation*}
+z = \lfloor \log_{0.5} ( 1 - \hat{\varphi}_\mathrm{min} ) \rfloor
+\end{equation*}
+
+\begin{equation*}
+k_\lambda = \min ( k_\varphi + z, k )
+\end{equation*}
+
+\begin{equation*}
+\hat{\lambda}_\mathrm{max} = \frac{\lambda_i + 1}{2^{k - k_\lambda}}
+\end{equation*}
+
+\begin{equation*}
+\hat{\lambda}_\mathrm{min} = \frac{\lambda_i}{2^{k - k_\lambda}}
+\end{equation*}
+
+
 \subsubsection{Runtime Comparison}
 
 
@@ -39,13 +155,21 @@
 	}
 	\label{fig:index-to-range}
 \end{figure}
+
+
 \subsection{Indexing Operations}
+
+Indexing stuff here I guess?
+Neighbours are tricky...
 
 
 \section{Extension Method}
+
 \subsection{Encoding Algorithm}
+
 \subsection{Decoding Algorithm}
-\subsection{Indexing Operations} \label{sec:indexing}
+
+\subsection{Indexing Operations}
 An important component of a conventional DGGS is the indexing scheme for cells.
 Indices in a DGGS are used to not only identify and linearize cells but also as a means of navigating the grid for various spatial queries~\cite{alderson2020digital}.
 To this end, it is important to be able to perform certain operations on said indices efficiently.
