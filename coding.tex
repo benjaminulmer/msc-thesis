@@ -1,18 +1,48 @@
 \chapter{Efficient Encoding, Decoding, and Indexing} \label{chap:coding}
 
-\section{SDOG}
 
+\section{SDOG}
 Explain SDOG indexing.
 Modified Morton based.
 Conventional algorithms are hierarchical (linear on k).
 We derive direct index versions (constant on k).
 
+All algorithms provided operate on a standard octant. For full SDOG implementations, pre and post operations needed.
+Encoding. Pre: convert coordinates to standard octant. Post: prepend leading bit and octant code
+Decoding. Pre: get k and convert coordinates to standard octant. Post: convert output to coordinates of actual octant
+
+
 \subsection{Encoding Algorithms}
 Below provide hierarchal algorithm and our new one.
 Then we compare runtime.
 
+
 \subsubsection{Hierarchical}
-Provide pseudo code here.
+Provide pseudo code here. Algorithm~\ref{alg:encode}. Input is a point $p$ after going through pre and refinement level $k$. Output is index $i$ to feed into post.
+
+
+\begin{algorithm}
+	\caption{Hierarchical point encoding for SDOG}
+	
+	\begin{algorithmic}
+		
+		\STATE cellBoundaries $\leftarrow$ boundaries of octant
+		\STATE currCellType $\leftarrow$ SG
+		\STATE $i \leftarrow 0$
+		
+		\FOR{$k$ iterations}
+			\STATE use refinement rules for currCellType with cellBoundaries to find child cells
+			\STATE determine which child contains $p$
+			\STATE cellBoundaries $\leftarrow$ boundaries of child
+			\STATE currCellType $\leftarrow$ type of child
+			\STATE $i \leftarrow \operatorname{append}(i, \mathrm{child~index})$
+		\ENDFOR
+		\RETURN $i$
+		 
+	\end{algorithmic}
+	\label{alg:encode}
+\end{algorithm}
+
 
 \subsubsection{Direct}
 
@@ -84,17 +114,43 @@ i = \operatorname{Morton}( \lambda_i, \varphi_i, r_i ) + 2^{3k}
 Below provide hierarchal algorithm and our new one.
 Then we compare runtime.
 
+
 \subsubsection{Hierarchical}
 Provide pseudo code here.
+Algorithm~\ref{alg:decode}. Input is an index $i$ after going through pre-operations (so also $k$). Output is index cell boundaries to go into post.
+
+
+\begin{algorithm}
+	\caption{Hierarchical cell decoding for SDOG}
+	
+	\begin{algorithmic}
+		
+		\STATE cellBoundaries $\leftarrow$ boundaries of octant
+		\STATE currCellType $\leftarrow$ SG
+		
+		\FOR{$k$ iterations}
+			\STATE use refinement rules for currCellType with cellBoundaries to find child cells
+			\STATE $c \leftarrow$ highest three bits of $i$
+			\STATE remove highest three bits of $i$
+			\STATE determine which child cell matches $c$
+			\STATE cellBoundaries $\leftarrow$ boundaries of $c$
+			\STATE currCellType $\leftarrow$ type of $c$
+		\ENDFOR
+		\RETURN cellBoundaries
+		
+	\end{algorithmic}
+	\label{alg:decode}
+\end{algorithm}
+
 
 \subsubsection{Direct}
 
-\begin{equation*}
-k = \left\lfloor \frac{ \log_{2}i}{3} \right\rfloor
-\end{equation*}
+%\begin{equation*}
+%k = \left\lfloor \frac{ \log_{2}i}{3} \right\rfloor
+%\end{equation*}
 
 \begin{equation*}
-( \lambda_i, \varphi_i, r_i ) = \operatorname{Morton}^{-1} (i \oplus 2^{3k})
+( \lambda_i, \varphi_i, r_i ) = \operatorname{Morton}^{-1} (i)% \oplus 2^{3k})
 \end{equation*}
 
 \begin{equation*}
@@ -158,16 +214,18 @@ k_\lambda = \min ( k_\varphi + z, k )
 
 
 \subsection{Indexing Operations}
-
 Indexing stuff here I guess?
 Neighbours are tricky...
 
 
 \section{Extension Method}
 
+
 \subsection{Encoding Algorithm}
 
+
 \subsection{Decoding Algorithm}
+
 
 \subsection{Indexing Operations}
 An important component of a conventional DGGS is the indexing scheme for cells.
