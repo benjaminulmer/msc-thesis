@@ -216,7 +216,7 @@ r_{s} = \sqrt[3]{ p r_\mathrm{max}^{\,3} + \left( 1 - p \right) r_\mathrm{min}^{
 The derivations for the latitudinal and longitudinal splitting surfaces follow the same, with results
 %
 \begin{equation} \label{eq:latVol}
-\varphi_{s} = \sin^{-1} \left( p \sin\varphi_\mathrm{max} + \left( 1 - p \right) \sin\varphi_\mathrm{min} \right) \quad\text{and}
+\varphi_{s} = \arcsin \left( p \sin\varphi_\mathrm{max} + \left( 1 - p \right) \sin\varphi_\mathrm{min} \right) \quad\text{and}
 \end{equation}
 %
 \begin{equation} \label{eq:longVol}
@@ -361,10 +361,10 @@ where $1 \leq t \leq 3$ blends between compactness at $t = 1$ (equivalent to mid
 For the latitudinal splitting surfaces, we propose
 %
 \begin{equation*}
-\varphi_{s} = h \sin^{-1} \left( p \sin \left( \frac{1}{h} \varphi_\mathrm{max} \right) + \left( 1 - p \right) \sin \left( \frac{1}{h} \varphi_\mathrm{min} \right) \right)
+\varphi_{s} = h \arcsin \left( p \sin \left( \frac{1}{h} \varphi_\mathrm{max} \right) + \left( 1 - p \right) \sin \left( \frac{1}{h} \varphi_\mathrm{min} \right) \right)
 \end{equation*}
 %
-where $1 \leq h \leq \infty$ blends between volume preservation at $h = 1$ (equivalent to Equation~(\ref{eq:latVol})) and compactness at $h = \infty$ (equivalent to midpoint). We found values of $t = 2$ and $h = 1.45$ to offer a relatively balanced tradeoff between the two properties, with the resulting grid shown in Figure~\ref{fig:blend-volume}.
+where $1 \leq h \leq \infty$ blends between volume preservation at $h = 1$ (equivalent to Equation~(\ref{eq:latVol})) and compactness as $h \rightarrow \infty$ (equivalent to midpoint). We found values of $t = 2$ and $h = 1.45$ to offer a relatively balanced tradeoff between the two properties, with the resulting grid shown in Figure~\ref{fig:blend-volume}.
 We refer to this method as the \textit{balanced} one.
 
 

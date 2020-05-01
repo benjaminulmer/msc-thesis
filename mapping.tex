@@ -38,6 +38,7 @@ However, the refinement factor for the extension method is not always 1:8, as it
 Instead, we want $\alpha^3 = 1 / f^{\ 3}$ and thus $\alpha = 1/f$.
 Therefore, SDOG mappings are special case of extension one where $f = 2$.
 
+
 \begin{figure}[ht!]
 	\centering
 	\includegraphics[width=0.675\textwidth]{prismatoid-shells.pdf}
@@ -49,13 +50,14 @@ Therefore, SDOG mappings are special case of extension one where $f = 2$.
 	\label{fig:prismatoid-shells}
 \end{figure}
 
+
 Radii at powers of $1/2$ in the grid should be mapped to corresponding powers of $\alpha$ in physical domain.
 For a given $\hat{r}$ then, need to find one above and one below.
 Shell $s = \lfloor \log_{0.5} \hat{r} \rfloor$.
 Can then find these splits in both grid and physical domain by raising to appropriate power.
 %
 \begin{equation*}
-\ell_p = \alpha^{s+1}, \quad u_p = \alpha^s, \quad \ell_g = 0.5^{s + 1}, \quad \text{and} \quad u_g = 0.5^s.
+\ell_p = \alpha^{s + 1}, \quad u_p = \alpha^s, \quad \ell_g = 0.5^{s + 1}, \quad \text{and} \quad u_g = 0.5^s.
 \end{equation*}
 %
 Mapping can be achieved then by finding a percent between $\ell_g$ and $u_g$ and then mapping said percent between $\ell_p$ and $u_p$.
@@ -86,7 +88,7 @@ d = \frac{ \hat{r}^{\,t} - \ell_p^{\,t} }{ u_p^{\,t} - \ell_p^{\,t} }
 and solve Equation~\ref{eq:radialInvD} for $\hat{r}$ to get
 %
 \begin{equation} \label{eq:radialForw}
-M_r (\hat{r}) = d u_p + \left( 1 - d \right) \ell_p 
+M_r (\hat{r}) = d u_g + \left( 1 - d \right) \ell_g
 \end{equation}
 %
 Uppers and lowers are the calculated the same, but the shell is now $s = \lfloor \log_{c} \hat{r} \rfloor$.
@@ -95,107 +97,89 @@ Uppers and lowers are the calculated the same, but the shell is now $s = \lfloor
 The results of this mapping for different values of $t$ applied to the grid extension method are shown in Figure~X. These mappings have the side effect of changing the aspect ratio of cells in grid space as compared to in physical space. This means that when determining the refinement parameters needed to achieve the desired aspect ratio, the cells in physical space should be considered as opposed to grid space.
 This is accomplished by setting the value of $\nu$ in Equations~X and X to be $(1 - \alpha)$.
 
+
 \section{Latitude Mappings for SDOG} \label{chap:6:latitude}
-
-%\section{Mapping Modified SDOG Grids} \label{sec:mapping}
-By modifying the splitting surfaces used for subdivision, any SDOG indexing operations that depend on the location of cells in the grid will no longer function properly.
-Examples of these operations include point to cell queries, which give the cell that contains a given point, and index inversion, which calculates the location and geometry of a cell from its index.
-The obvious solution is to simply redefine these operations on the new geometry, however, this is not necessarily practical as it would have to be done individually for each modified grid.
-Additionally, the more complex geometry of the modified grids may make these algorithms more difficult to design and/or more computationally expensive to perform as compared to the ones for conventional SDOG.
-A better solution is to find a mapping (and corresponding inverse mapping) between a conventional SDOG grid and the grid resulting from the modified subdivision scheme.
-Given this mapping, all indexing operations can be done using the standard algorithms, with inputs and outputs converted between the conventional SDOG grid and the modified one accordingly.
+Goal is to define function $M_\varphi(\varphi)$. Consider latitude to be normalized with $\hat{\varphi} = (2\varphi) / \pi$.
 
 
-For the stationary subdivision schemes this mapping is straightforward.
-Since only the latitudinal splitting surface of SG cells is modified, latitudes in the range $[0, \pm\frac{\pi}{4})$ should be mapped to the range $[0, \pm\alpha_{\phi}^{SG} \frac{\pi}{2})$ and likewise the range $[\pm\frac{\pi}{4}, \pm\frac{\pi}{2}]$ to the range $[\pm\alpha_{\phi}^{SG} \frac{\pi}{2}, \pm\frac{\pi}{2}]$.
-This can be done with a simple linear map, and the inverse follows trivially.
+Follows same general principles as radial mapping.
+Zones go in opposite direction as shells in parameter space.
+At 1 - powers of 0.5 as opposed to powers themselves.
+So then zone $z = \lfloor \log_{0.5} ( 1 - \hat{\varphi} ) \rfloor$.
+We then calculate uppers and lowers just as with radial mapping, but accounting for opposite direction
+%
+\begin{equation*}
+\ell_p = 1 - 0.25^{z}, \quad u_p = 1 - 0.25^{z + 1}, \quad \ell_g = 1 - 0.5^z, \quad \text{and} \quad u_g = 1 - 0.5^{z + 1}.
+\end{equation*}
+%
+Remember, these are in parameter domain, not angles themselves. Get angles with inverse sin.
+Mapping can be achieved then by finding a percent between $\ell_g$ and $u_g$ and then mapping said percent between $\ell_p$ and $u_p$.
+Call percent $d$, then
+%
+\begin{equation} \label{eq:latInvD}
+d = \frac{ \hat{\varphi} - \ell_g }{ u_g - \ell_g }
+\end{equation}
+%
+How $d$ is interpolated between $\ell_p$ and $u_p$ affects volume preservation.
+Using a linear interpolation is the same as conventional SDOG and latitude method, sin is the volume method, and a scaled sin by $h$ gives the balanced method.
+Thus, the general formulation is
+%
+\begin{equation} \label{eq:latInv}
+M_\varphi^{-1}(\hat{\varphi}) = h \arcsin \left( d \sin \left( \frac{1}{h} \arcsin u_p \right) + \left( 1 - d \right) \sin \left( \frac{1}{h} \arcsin \ell_p \right) \right)
+\end{equation}
+%
+This simplifies to
+%
+\begin{equation*}
+M_\varphi^{-1}(\hat{\varphi}) = d \arcsin u_p  + \left( 1 - d \right) \arcsin \ell_p
+\end{equation*}
+%
+for the latitude method as $h \rightarrow \infty$ and
+%
+\begin{equation*}
+M_\varphi^{-1}(\hat{\varphi}) = \arcsin \left( d u_p + \left( 1 - d \right) \ell_p \right)
+\end{equation*}
+%
+for the volume method when $h = 1$.
+Volume is efficient (one arcsin), latitude is moderately efficient (two arcsin), and balanced is worst (three arcsin, two sin).
 
 
-For the non-stationary schemes this mapping is more complicated.
-We wish to define a function $M \colon (\phi, r) \rightarrow (\phi, r)$ that converts a latitude and radius in a conventional SDOG grid to the corresponding latitude and radius in the modified grid (longitude does not need to be mapped, as it is not changed between the two grids).
-The two coordinates act independently of each other, so we can split this function into its two components, $M_{\phi}(\phi)$ and $M_{r}(r)$, and derive each one and its inverse individually.
-This is done by parameterizing points inside an NG cell using the function(s) used to calculate its splitting surfaces (Eq.~(\ref{eq:convex}) for conventional SDOG and Eq.~(\ref{eq:radVol}) and (\ref{eq:latVol}) for the modified grid).
-NG cells are used for this purpose as all children cells are also NG, and therefore use the same formulations for calculating splitting surfaces.
-By finding the boundaries of the coarsest NG cell that contains a given point, these parameterizations can be used to go from one space to the other by finding a relationship between them---in this case $d = \alpha = p$---all of which can be done in constant time.
-The final formulations are as follows, with the full derivation found in Appendix \ref{app:map}.
-Let $R_m$ be the radius of the grid.
-Latitude forward:
+From this we can derive the forward mapping by inverting the inverse.
+Can solve Equation~\ref{eq:latInv} for $d$ to get
+%
+\begin{equation} \label{latForwD}
+d = \frac{ \sin \left( \frac{1}{h} \hat{\varphi} \right) - \sin \left( \frac{1}{h} \arcsin \ell_p \right) }{ \sin \left( \frac{1}{h} \arcsin u_p \right) - \sin \left( \frac{1}{h} \arcsin \ell_p \right) }
+\end{equation}
+%
+and solve Equation~\ref{eq:latInvD} for $\hat{\varphi}$ to get
+%
+\begin{equation} \label{eq:latForw}
+M_\varphi (\hat{\varphi}) = d u_g + \left( 1 - d \right) \ell_g
+\end{equation}
+%
+Uppers and lowers are the calculated the same, but the zone is now $z = \lfloor \log_{0.25} ( 1 - \sin \hat{\varphi} ) \rfloor$.
+Once again, Equation~\ref{latForwD} simplifies to
 %
 \begin{equation*}
-M_{\phi}(\phi) = \sin^{-1} \left( d u_{v} + \left( 1 - d \right) \ell_{v} \right), \quad \text{where}
+d = \frac{ \hat{\varphi} - \arcsin \ell_p }{ \arcsin u_p - \arcsin \ell_p}
 \end{equation*}
+%
+for the latitude method as $h \rightarrow \infty$ and
 %
 \begin{equation*}
-d = \frac{\frac{2\phi}{\pi} - \ell_{c}}{u_{c} - \ell_{c}},
+d = \frac{ \sin \hat{\varphi} - \ell_p }{ u_p - \ell_p }
 \end{equation*}
 %
-\begin{equation*}
-u_{c} = 1 - \left( \frac{1}{2} \right)^{ \left\lceil \log_{0.5} \left( 1 - \frac{2\phi}{\pi} \right) \right\rceil }, \quad u_{v} = 2 u_{c} - u_{c}^{2}.
-\end{equation*}
-%
-\begin{equation*}
-\ell_{c} = 1 - \left( \frac{1}{2} \right)^{ \left\lfloor \log_{0.5} \left( 1 - \frac{2\phi}{\pi} \right) \right\rfloor }, \quad \text{and} \quad \ell_{v} = 2 \ell_{c} - \ell_{c}^{2}.
-\end{equation*}
-%
-%
-Radius forward:
-%
-\begin{equation*}
-M_{r}(r) = R_{m} \sqrt[3]{ d u^{3} + \left( 1 - d \right) \ell^{3} }, \quad \text{where}
-\end{equation*}
-%
-\begin{equation*}
-d = \frac{\frac{r}{R_{m}} - \ell}{u - \ell},
-\end{equation*}
-%
-\begin{equation*}
-u = \left( \frac{1}{2} \right)^{ \left\lfloor \log_{0.5} \left( \frac{r}{R_{m}} \right) \right\rfloor }, \quad \text{and} \quad
-\end{equation*}
-%
-\begin{equation*}
-\ell = \left( \frac{1}{2} \right)^{ \left\lceil \log_{0.5} \left( \frac{r}{R_{m}} \right) \right\rceil }.
-\end{equation*}
-%
-%
-Latitude inverse:
-%
-\begin{equation*}
-M^{-1}_{\phi}(\phi) = \frac{\pi}{2} \left( d u_{c} + \left( 1 - d \right) \ell_{c} \right), \quad \text{where}
-\end{equation*}
-%
-\begin{equation*}
-d = \frac{\sin \phi - \ell_{v}}{u_{v} - \ell_{v}},
-\end{equation*}
-%
-\begin{equation*}
-u_{c} = 1 - \left( \frac{1}{2} \right)^{ \left\lceil \log_{0.5} \left( \sqrt{1 - \sin \phi} \right) \right\rceil },
-\end{equation*}
-%
-\begin{equation*}
-\ell_{c} = 1 - \left( \frac{1}{2} \right)^{ \left\lfloor \log_{0.5} \left( \sqrt{1 - \sin \phi} \right) \right\rfloor },
-\end{equation*}
-%
-%
-and both $u_{v}$ and $\ell_{v}$ follow the same as the forward.
-Radius inverse:
-%
-\begin{equation*}
-M^{-1}_{r}(r) = R_m \left( d u + \left( 1 - d \right) \ell \right), \quad \text{where}
-\end{equation*}
-%
-\begin{equation*}
-d = \frac{ \left( \frac{r}{R_{m}} \right)^{3} - \ell^{3}}{u^{3} - \ell^{3}}
-\end{equation*}
-%
-and both $u$ and $\ell$ follow the same as the forward.
-
-
-In the case where a division by zero occurs, (i.e. when $u = \ell$ or $u_{c} = \ell_{c}$), the result of said division is treated as zero.
-The latitude mappings assume $\phi \ge 0$, however, from symmetry a negative value of $\phi$ can easily be accommodated by using the absolute value and negating the final result.
-This mapping is applicable to the first non-stationary scheme discussed in Section \ref{sec:method-nonStationary}; schemes derived from Eq.~(\ref{eq:beta}) cannot be mapped, as this formulation cannot easily be expressed in terms of a parameter.
-In the future, other blending methods may be explored that allow for a similar mapping to be derived.
-
-
+for the volume method when $h = 1$.
+Once again, volume is efficient (one sin), latitude is moderately efficient (three arcsin), and balances is worst (three arcsin, four sin).
 
 
 \section{Summary}
+Provide mappings for use with modified SDOG grids and extension method.
+For SDOG, mapping go between the modified grids and conventional SDOG.
+This allows efficient algorithms defined on regular midpoint SDOG to be used with modified grids.
+For extension, allows same volume preserving properties (in radial dimension) of modified SDOG grids to be applied to grid extension method.
+Mapping are all closed form and constant time (no iterative solves) for both forward and inverse.
+Efficiency varies significantly for latitude depending on which scheme.
+Balanced method particularly bad; this is result of function chosen in Chapter~\ref{chap:sdog}.
+A different function could help alleviate this, however we could not find one that met other needed properties as well.
