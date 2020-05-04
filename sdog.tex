@@ -353,16 +353,16 @@ There are endless possibilities for these functions; however, as will be require
 That is, given a splitting surface, we need to be able to determine the corresponding value of $p$.
 For the radial splitting surfaces, we propose the function
 %
-\begin{equation*}
+\begin{equation} \label{eq:radBlend}
 r_{s} = \sqrt[t]{ p r_\mathrm{max}^{\,t} + \left( 1 - p \right) r_\mathrm{min}^{\,t} }
-\end{equation*}
+\end{equation}
 %
 where $1 \leq t \leq 3$ blends between compactness at $t = 1$ (equivalent to midpoint) and volume preservation at $t=3$ (equivalent to Equation~(\ref{eq:radVol})).
 For the latitudinal splitting surfaces, we propose
 %
-\begin{equation*}
+\begin{equation} \label{eq:latBlend}
 \varphi_{s} = h \arcsin \left( p \sin \left( \frac{1}{h} \varphi_\mathrm{max} \right) + \left( 1 - p \right) \sin \left( \frac{1}{h} \varphi_\mathrm{min} \right) \right)
-\end{equation*}
+\end{equation}
 %
 where $1 \leq h \leq \infty$ blends between volume preservation at $h = 1$ (equivalent to Equation~(\ref{eq:latVol})) and compactness as $h \rightarrow \infty$ (equivalent to midpoint). We found values of $t = 2$ and $h = 1.45$ to offer a relatively balanced tradeoff between the two properties, with the resulting grid shown in Figure~\ref{fig:blend-volume}.
 We refer to this method as the \textit{balanced} one.
