@@ -29,10 +29,23 @@ We then derive the forward mappings from the inverses.
 
 \section{Mapping Functions} \label{chap:6:functions}
 The mapping functions for semiregular degenerate refinement have two primary objectives: shift the boundaries of the regular regions of the grid and warp the interiors of these regions.
-Figure~X demonstrates how we accomplish this for a generic semiregular degenerate refinement grid when mapping a point.
+Figure~\ref{fig:mapping} demonstrates how we accomplish this for a generic semiregular degenerate refinement grid when mapping a point.
 The boundaries of the regular region that contain a point are first determined in both the grid and physical domains.
 A parameterization function then parameterizes the location of the point relative to the two boundaries in its current domain, and an interpolation function converts said parameter into a location in the other domain.
 Below, we derive these parameterization and interpolation functions for the radial and latitudinal coordinate mappings.
+
+
+\begin{figure}[ht!]
+	\centering
+	\includegraphics[width=\textwidth]{mapping.pdf}
+	\caption[Overview of mapping for semiregular degenerate refinement grids]{
+		Overview of mapping between grid and physical domains for a semiregular degenerate refinement grids.
+		The upper and lower values of the regular region containing the point are first calculated in both domains.
+		The point is then parameterized between these two values in the appropriate space (physical for forward, grid for inverse).
+		Finally, an interpolation functions convert this parameter into a value in the other domain (grid for forward, physical for inverse)
+	}
+	\label{fig:mapping}
+\end{figure}
 
 
 \subsection{Radial Mappings} \label{chap:6:radial}
@@ -75,7 +88,7 @@ Thus,
 %
 
 We now need to find the appropriate parameterization and interpolation functions for the mapping.
-Since radial splits are spaced regularly in the grid domain, we use a linear parameterization
+Since radial splits are spaced uniformly in the grid domain, we use a linear parameterization
 %
 \begin{equation} \label{eq:radialInvD}
 d = \frac{ \hat{r} - \ell_g }{ u_g - \ell_g }.
@@ -114,7 +127,7 @@ The values of $\ell$ and $u$ are the calculated the same as the inverse, but the
 	\includegraphics[width=\textwidth]{prismatoid-mappings.pdf}
 	\caption[Radial mappings applied to the grid extension method]{
 		Radial mappings with different values of $t$---along with a normalization polyhedral projection---applied to a prismatoid grid resulting from the grid extension method.
-		Just as with the modified SDOG refinements, cells are stretched and squashed to preserve volume with the effect increasing with $t$.
+		Just as with the modified SDOG refinements, cells are stretched and squashed to preserve volume with the effect increasing with $t$
 	}
 	\label{fig:prismatoid-mappings}
 \end{figure}
@@ -148,7 +161,7 @@ The final values are then
 %
 
 Again, we now need to find the appropriate parameterization and interpolation functions for the mapping.
-Since latitude splits are also spaced regularly in the grid domain, we once again use a linear parameterization
+Since latitude splits are also spaced uniformly in the grid domain, we once again use a linear parameterization
 %
 \begin{equation} \label{eq:latInvD}
 d = \frac{ \hat{\varphi} - \ell_g }{ u_g - \ell_g }.
@@ -212,11 +225,9 @@ Just as with the inverse, the volume method is most efficient (one sin), the lat
 
 
 \section{Summary}
-Provide mappings for use with modified SDOG grids and extension method.
-For SDOG, mapping go between the modified grids and conventional SDOG.
-This allows efficient algorithms defined on regular midpoint SDOG to be used with modified grids.
-For extension, allows same volume preserving properties (in radial dimension) of modified SDOG grids to be applied to grid extension method.
-Mapping are all closed form and constant time (no iterative solves) for both forward and inverse.
-Efficiency varies significantly for latitude depending on which scheme.
-Balanced method particularly bad; this is result of function chosen in Chapter~\ref{chap:sdog}.
-A different function could help alleviate this, however we could not find one that met other needed properties as well.
+The use of 3D mapping functions allows for geospatial data---which represent physical locations---to located within the domain of a 3D DGGS.
+Furthermore, these mappings allow for achieving properties such as volume preservation in the resulting grid system.
+In this chapter, we provide two similar sets of mapping functions that operate independently from each other on radius and latitude, respectively.
+Both the forward and the inverse of the functions provided are closed-form (no iterative solves) and operate in constant time regardless of the inputs.
+Efficiency for the latitude mapping varies significantly on the level of volume preservation desired, which is a result of the blending function chosen in Chapter~\ref{chap:4:balanced}.
+We explore the efficiency of these mappings more in the next chapter.
