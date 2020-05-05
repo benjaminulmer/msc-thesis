@@ -9,7 +9,7 @@ We refer to these mapping functions by $M$ to distinguish them from their 2D pro
 
 
 Since our modifications of SDOG have the same grid domain as the physical space, such mappings are not strictly required; despite this, they can still be useful.
-As we will explore in Chapter~\ref{chap:coding}, the regularity of midpoint refinement in SDOG allows for efficient encoding and decoding algorithms, which is not the case for our modifications.
+As we will explore in Chapter~\ref{chap:coding}, the regularity of midpoint refinement in SDOG allows for efficient encoding and decoding algorithms---this is not the case for our modifications.
 A mapping between SDOG and the modified grids, then, allows for efficient encoding and decoding to be done with the conventional grid with inputs and outputs converted between the two representations.
 
 
@@ -17,7 +17,7 @@ On the other hand, for 3D DGGS's resulting from the extension of a polyhedron-ba
 Beyond their necessity, though, these mappings also allow for other properties of the grid system to be achieved. Most notably, volume preservation can be improved with appropriate mapping functions.
 
 
-In this chapter, we present two sets of mapping functions for use with our SDOG modifications and our grid extension method:
+In this chapter, we present two sets of mapping functions for use with our SDOG modifications and grid extension method:
 the first is a set of radial mappings used for both approaches;
 the second is a set of latitude mappings for SDOG, which operate on similar principles as the radial ones.
 We do not provide mappings for the surface coordinates in the grid extension method, as the projection scheme of the input DGGS is responsible for this.
@@ -77,8 +77,8 @@ We derive the mappings below generally in terms of $\alpha$, starting with the i
 In order to achieve the desired results of the mapping, radii at powers of $1/2$ in grid space should be mapped to corresponding powers of $\alpha$ in the physical domain.
 For a given value of $\hat{r}$ in the grid domain, then, we need to find the appropriate powers that bound the point.
 Looking at Figures~\ref{fig:sdog-shells} and \ref{fig:prismatoid-shells}, we see these are simply the shell number and shell number plus one for the upper and lower, respectively.
-The shell that contains $\hat{r}$, then, is given by $s = \lfloor \log_{0.5} \hat{r} \rfloor$.
-The actual radii in both physical and grid space are obtained by raising $\alpha$ and $0.5$ to these powers.
+The shell that contains $\hat{r}$ is given by $s = \lfloor \log_{0.5} \hat{r} \rfloor$.
+Therefore, the actual radii in both physical and grid space are obtained by raising $\alpha$ and $0.5$ to these powers.
 We use $\ell$ to refer to the lower value and $u$ the upper one---subscripts $g$ and $p$ refer to the grid and physical domain, respectively.
 Thus,
 %
@@ -94,8 +94,8 @@ Since radial splits are spaced uniformly in the grid domain, we use a linear par
 d = \frac{ \hat{r} - \ell_g }{ u_g - \ell_g }.
 \end{equation}
 %
-For the interpoplation function, how $d$ is interpolated between $\ell_p$ and $u_p$ affects volume preservation.
-A linear interpolation gives conventional SDOG and the latitude method, cubic gives the volume method, and a power of $t$ gives the balanced method.
+For the interpolation function, how $d$ is interpolated between $\ell_p$ and $u_p$ affects volume preservation.
+A linear interpolation gives conventional SDOG and the latitude method (which are identical radially), cubic gives the volume method, and a power of $t$ gives the balanced method.
 Thus, the general function defined on $t$ is
 %
 \begin{equation} \label{eq:radialInv}
@@ -119,7 +119,7 @@ and solving Equation~\ref{eq:radialInvD} for $\hat{r}$ yields
 M_r (\hat{r}) = d u_g + \left( 1 - d \right) \ell_g.
 \end{equation}
 %
-The values of $\ell$ and $u$ are the calculated the same as the inverse, but the shell is now $s = \lfloor \log_{c} \hat{r} \rfloor$.
+The values of $\ell$ and $u$ are calculated the same as the inverse, but the shell is now $s = \lfloor \log_{c} \hat{r} \rfloor$.
 
 
 \begin{figure}[ht!]
@@ -135,7 +135,7 @@ The values of $\ell$ and $u$ are the calculated the same as the inverse, but the
 
 The results of this mapping for different values of $t$ applied to the grid extension method are shown in Figure~\ref{fig:prismatoid-mappings}.
 When $t=3$, all cells in the same shell have perfect volume preservation assuming the input DGGS is \textit{area} preserving.
-Depending on the layer sequence, however, volume will not necessarily be preserved between cells in different shells.
+Depending on the layering sequence, however, volume will not necessarily be preserved between cells in different shells.
 Additionally, just as with SG and LG cells in SDOG, the central layer will never have volume preservation with the others.
 
 
@@ -148,9 +148,9 @@ We accomplish this by setting the value of $\nu$ in Equations~\ref{eq:extraSplit
 Just as with the radial mappings, our goal is to define a function $M_\varphi(\varphi)$ that maps a physical latitude to one in the grid domain. Likewise, we consider latitude to be normalized with $\hat{\varphi} = (2\varphi) / \pi$.
 
 
-The derivation follows the structure as that of the radial mappings.
+The derivation follows the same steps as the radial mappings.
 Referencing Figure~\ref{fig:sdog-zones}, zones increase with increasing latitude as opposed to shells which increase with \textit{decreasing} radius.
-Thus, the zone $z$ is equal to $\lfloor \log_{0.5} ( 1 - \hat{\varphi} ) \rfloor$.
+Thus, the zone that contains $\hat{\varphi}$ is $z = \lfloor \log_{0.5} ( 1 - \hat{\varphi} ) \rfloor$.
 We then calculate values of $\ell$ and $u$ just as with the radial mapping but accounting for the opposite direction.
 Additionally, for the physical domain values, these are the sine of angles as opposed to angles themselves since Equation~\ref{eq:latVol} operates on the sine of angles.
 The final values are then
@@ -225,7 +225,7 @@ Just as with the inverse, the volume method is most efficient (one sin), the lat
 
 
 \section{Summary}
-The use of 3D mapping functions allows for geospatial data---which represent physical locations---to located within the domain of a 3D DGGS.
+The use of mapping functions allows for geospatial data---which represent physical locations---to be located within the domain of a 3D DGGS.
 Furthermore, these mappings allow for achieving properties such as volume preservation in the resulting grid system.
 In this chapter, we provide two similar sets of mapping functions that operate independently from each other on radius and latitude, respectively.
 Both the forward and the inverse of the functions provided are closed-form (no iterative solves) and operate in constant time regardless of the inputs.
