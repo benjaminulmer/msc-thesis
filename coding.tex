@@ -1,21 +1,34 @@
 \chapter{Efficient Encoding, Decoding, and Indexing} \label{chap:coding}
+The mappings described in the previous chapter are only one part of the process for associating geospatial data to cells of a 3D DGGS.
+With geospatial data mapped to the domain of the grid system, the set of cells associated with the geometry of the data---and the indices of said cells---must be obtained.
+As described earlier, this entire process is known as grid encoding.
+Likewise, there needs to be a process to obtain the geometry of a cell (in grid space) from its index, so that the geometry can be mapped to the corresponding cell geometry in physical space.
+This process is known as grid decoding.
+
+
+Beyond encoding and decoding, there are also operations and queries done with a DGGS directly in grid space.
+These operations often use algorithms for traversing the grid through neighbour, parent, and child relationships between cells.
+Thus, queries that give these relationships for a given cell are another essential component of a fully functioning DGGS.
+
+
+This chapter completes the 3D DGGS's described in the preceding chapters by providing encoding, decoding, and indexing operations for the SDOG modifications and grid extension method.
+Different types of geometry typically require their own encoding algorithms.
+In this thesis, we focus on point encoding as it is the most fundamental, with the encoding of more complex geometries built off this operation.
+While SDOG already has hierarchical encoding and decoding algorithms~\cite{yu2009sdog, yu2009coding} that are trivially adapted to work with the modified grids, we derive constant time alternatives that work for both the conventional grid and our modifications.
+For completeness, we also describe algorithms for performing neighbour, parent, and child queries.
+For the grid extension method, we derive these operations in such a way as to ensure interoperability and consistency between the 3D and input DGGS.
 
 
 \section{SDOG}
-In order to identify and distinguish the cells of a grid, there needs to be a method to assign a unique index to each cell.
-A good indexing scheme will allow for efficient data insertion, retrieval, and manipulation via a set of queries.
-Examples of some of these queries are: point to cell, which give the index of the cell containing a given point; index inversion, which calculates a cell's location and geometry from the index; neighbourhood queries; and in the case of a hierarchical grid, hierarchy traversal to find parent and children cells.
+When first proposed, indexing scheme for cells based on modified morton code.
+Proposed a single resolution and hierarchy version.
+Since working with systems, we focus on hierarchy version.
+
+High level idea:
+Morton code done as normal as if all cells in fully regular are there.
+Codes that are actually in same cell use lower one for both.
 
 
-Due to the fact that SDOG refinement is based on the midpoints of spherical coordinates, an indexing scheme that is efficient for many of the above operations can be easily developed.
-At any refinement level, $k$, each cell can be given an integer index in each spherical coordinate ranging from zero to $2^{k} - 1$.
-To address the degenerate refinement of certain cells, these integer indices are modified appropriately with divisions by powers of two, which can be done quickly with bit shift operations.
-The integer indices can then be linearized by various methods, one good choice being a Z-order curve \cite{morton1966computer} as used in \cite{yu2009sdog}.
-
-
-A more detailed description of degenerate Z-order indexing for SDOG grids, including algorithms for point to cell and index inversion operations, can be found in \cite{yu2009coding}.
-Explain SDOG indexing.
-Modified Morton based.
 Conventional algorithms are hierarchical (linear on k).
 We derive direct index versions (constant on k).
 
@@ -25,12 +38,13 @@ Encoding. Pre: convert coordinates to standard octant. Post: prepend leading bit
 Decoding. Pre: get k and convert coordinates to standard octant. Post: convert output to coordinates of actual octant
 
 
-\subsection{Encoding Algorithms}
-Below provide hierarchal algorithm and our new one.
-Then we compare runtime.
+\subsection{Hierarchical Algorithms}
+Hierarchical operations work one resolution at a time using refinement rules for current cells.
+Linear on k.
+Trivially modified to work with modified grids by modifying refinement rules used in algorithm.
 
 
-\subsubsection{Hierarchical}
+\subsubsection{Encoding}
 Provide pseudo code here. Algorithm~\ref{alg:encode}. Input is a point $p$ after going through pre and refinement level $k$. Output is index $i$ to feed into post.
 
 
@@ -44,20 +58,55 @@ Provide pseudo code here. Algorithm~\ref{alg:encode}. Input is a point $p$ after
 		\STATE $i \leftarrow 0$
 		
 		\FOR{$k$ iterations}
-			\STATE use refinement rules for currCellType with cellBoundaries to find child cells
-			\STATE determine which child contains $p$
-			\STATE cellBoundaries $\leftarrow$ boundaries of child
-			\STATE currCellType $\leftarrow$ type of child
-			\STATE $i \leftarrow \operatorname{append}(i, \mathrm{child~index})$
+		\STATE use refinement rules for currCellType with cellBoundaries to find child cells
+		\STATE determine which child contains $p$
+		\STATE cellBoundaries $\leftarrow$ boundaries of child
+		\STATE currCellType $\leftarrow$ type of child
+		\STATE $i \leftarrow \operatorname{append}(i, \mathrm{child~index})$
 		\ENDFOR
 		\RETURN $i$
-		 
+		
 	\end{algorithmic}
 	\label{alg:encode}
 \end{algorithm}
 
 
-\subsubsection{Direct}
+\subsubsection{Decoding}
+Provide pseudo code here.
+Algorithm~\ref{alg:decode}. Input is an index $i$ after going through pre-operations (so also $k$). Output is index cell boundaries to go into post.
+
+
+\begin{algorithm}
+	\caption{Hierarchical cell decoding for SDOG}
+	
+	\begin{algorithmic}
+		
+		\STATE cellBoundaries $\leftarrow$ boundaries of octant
+		\STATE currCellType $\leftarrow$ SG
+		
+		\FOR{$k$ iterations}
+		\STATE use refinement rules for currCellType with cellBoundaries to find child cells
+		\STATE $c \leftarrow$ highest three bits of $i$
+		\STATE remove highest three bits of $i$
+		\STATE determine which child cell matches $c$
+		\STATE cellBoundaries $\leftarrow$ boundaries of $c$
+		\STATE currCellType $\leftarrow$ type of $c$
+		\ENDFOR
+		\RETURN cellBoundaries
+		
+	\end{algorithmic}
+	\label{alg:decode}
+\end{algorithm}
+
+
+\subsection{Direct Algorithms}
+One benefit of morton codes over other space filling curves for linearizing 2D index is ease at which conversion is done.
+Use simple bit interleaving.
+In general not constant time, but bit operations and magic numbers allow very efficient for fixed integer width.
+
+
+\subsubsection{Encoding}
+Explanation goes here.
 
 \begin{equation*}
 \hat{r} = \frac{r}{R_\mathrm{max}}
@@ -104,44 +153,8 @@ i = \operatorname{Morton}( \lambda_i, \varphi_i, r_i ) + 2^{3k}
 \end{equation*}
 
 
-\subsection{Decoding Algorithms}
-Below provide hierarchal algorithm and our new one.
-Then we compare runtime.
-
-
-\subsubsection{Hierarchical}
-Provide pseudo code here.
-Algorithm~\ref{alg:decode}. Input is an index $i$ after going through pre-operations (so also $k$). Output is index cell boundaries to go into post.
-
-
-\begin{algorithm}
-	\caption{Hierarchical cell decoding for SDOG}
-	
-	\begin{algorithmic}
-		
-		\STATE cellBoundaries $\leftarrow$ boundaries of octant
-		\STATE currCellType $\leftarrow$ SG
-		
-		\FOR{$k$ iterations}
-			\STATE use refinement rules for currCellType with cellBoundaries to find child cells
-			\STATE $c \leftarrow$ highest three bits of $i$
-			\STATE remove highest three bits of $i$
-			\STATE determine which child cell matches $c$
-			\STATE cellBoundaries $\leftarrow$ boundaries of $c$
-			\STATE currCellType $\leftarrow$ type of $c$
-		\ENDFOR
-		\RETURN cellBoundaries
-		
-	\end{algorithmic}
-	\label{alg:decode}
-\end{algorithm}
-
-
-\subsubsection{Direct}
-
-%\begin{equation*}
-%k = \left\lfloor \frac{ \log_{2}i}{3} \right\rfloor
-%\end{equation*}
+\subsubsection{Decoding}
+Explanation goes here.
 
 \begin{equation*}
 ( \lambda_i, \varphi_i, r_i ) = \operatorname{Morton}^{-1} (i)% \oplus 2^{3k})
@@ -189,7 +202,8 @@ k_\lambda = \min ( k_\varphi + z, k )
 
 
 \subsection{Runtime Comparison}
-
+Compare runtime of direct vs hierarchical.
+Compare for different modified grids as well.
 
 \begin{figure}[htp!]
 	\centering
@@ -223,21 +237,25 @@ k_\lambda = \min ( k_\varphi + z, k )
 \end{figure}
 
 
-\subsection{Indexing Operations}
-Indexing stuff here I guess?
+Discussion of the results will go here.
+
+
+\subsection{Other Indexing Operations}
+Parent trivial.
+Children trivial if have cell type. SG if $r_i = 2^k - 1$. LG if $\varphi_i = 2^{k - k_\varphi} - 1$.
 Neighbours are tricky...
 
 
 \section{Extension Method}
 
 
-\subsection{Encoding Algorithm}
+\subsection{Encoding}
 
 
-\subsection{Decoding Algorithm}
+\subsection{Decoding}
 
 
-\subsection{Indexing Operations}
+\subsection{Other Indexing Operations}
 An important component of a conventional DGGS is the indexing scheme for cells.
 Indices in a DGGS are used to not only identify and linearize cells but also as a means of navigating the grid for various spatial queries~\cite{alderson2020digital}.
 To this end, it is important to be able to perform certain operations on said indices efficiently.
@@ -252,6 +270,14 @@ Referring back to Figures~\ref{fig:indexing} and \ref{fig:3d-coding}, we let $i_
 For each of these components, we assume there is a corresponding parent, child, and neighbour operation.
 For the surface index, this comes directly from the input DGGS indexing, whereas for the layer index, these would need to be defined.
 Using the component operations, we define the corresponding 3D operations as follows.
+
+
+\subsubsection{Layer Algorithms}
+Parent, child, and neighbours for layers.
+
+
+\subsubsection{Combined Algorithms}
+Combine operations of layers and input to make full 3D operations.
 
 
 \paragraph{Parents}
@@ -279,3 +305,4 @@ Likewise, if $i_\ell^-$ has the same value of $k_s$ as $i_\ell$, there is one ne
 In the case that the value of $k_s$ for $i_\ell^-$ is some number $m$ less than that of $i_\ell$, the neighbours are given by $\operatorname{parents}^m(i_s) \times i_\ell^-$
 
 \section{Summary}
+A summary of everything will go here.
