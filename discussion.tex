@@ -1,0 +1,22 @@
+\chapter{Discussion} \label{chap:discussion}
+An important question to ask is what 3D DGGS to use for which application.
+More specifically, of the grids we propose, when do we recommend which method?
+This thesis looks at two approaches for creating 3D DGGS: modified SDOG grids and the grid extension technique.
+While mostly presented as separate method, with similarities shown in the radial mapping functions, these two techniques are more similar than let on.
+In fact, SDOG itself is a special case of the grid extension, where the input DGGS is DQG.
+Modified SDOG also a special case, where input DGGS is DQG with the latitude modifications of SDOG, and using the appropriate radial mappings.
+As a special case though, we are able to provide more detailed and efficient operations for SDOG than the general extension method.
+
+
+Many of properties of 3D DGGS come from input DGGS.
+Area preservation -> volume preservation. Refinement factor -> complexity of radial refinement.
+Thus, choosing right 2D DGGS still most important step.
+For DQG and thus SDOG, main benefit is the efficient coding and use of spherical coordinate (no conversion to cartesian needed).
+However, degenerate connectivity on surface (as opposed to just with changing depth) and polar singularities make this grid less ideal in situation where uniform coverage of whole Earth needed.
+For grid extension in general, while we made sure method is general and works for any input DGGS, it works better for some than others.
+Non-1:4 refinement factors introduce extra complexity in radial refinement.
+Likewise, accommodating other aspect ratios also introduces complexity, but less so.
+Non-congruent refinement has even more degenerate connectivity at radial splits than normal.
+
+
+

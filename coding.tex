@@ -14,38 +14,53 @@ Thus, queries that give these relationships for a given cell are another essenti
 This chapter completes the 3D DGGS's described in the preceding chapters by providing encoding, decoding, and indexing operations for the SDOG modifications and grid extension method.
 Different types of geometry typically require their own encoding algorithms.
 In this thesis, we focus on point encoding as it is the most fundamental, with the encoding of more complex geometries built off this operation.
-While SDOG already has hierarchical encoding and decoding algorithms~\cite{yu2009sdog, yu2009coding} that are trivially adapted to work with the modified grids, we derive constant time alternatives that work for both the conventional grid and our modifications.
+While SDOG already has hierarchical coding algorithms~\cite{yu2009sdog, yu2009coding} that are trivially adapted to work with the modified grids, we derive constant time alternatives that work for both the conventional grid and our modifications.
 For completeness, we also describe algorithms for performing neighbour, parent, and child queries.
 For the grid extension method, we derive these operations in such a way as to ensure interoperability and consistency between the 3D and input DGGS.
 
 
 \section{SDOG}
-When first proposed, indexing scheme for cells based on modified morton code.
-Proposed a single resolution and hierarchy version.
-Since working with systems, we focus on hierarchy version.
-
-High level idea:
-Morton code done as normal as if all cells in fully regular are there.
-Codes that are actually in same cell use lower one for both.
+When first introduced by Yu and Wu, the authors proposed two indexing schemes for use with SDOG~\cite{yu2009coding}.
+These schemes are both based on a modified Morton code (also known as a Z-order curve)~\cite{morton}; however, one is intended for indexing a single resolution whereas the other for the full cell hierarchy.
+We focus on the hierarchical scheme, as grid \textit{systems} are the main focus of this thesis.
 
 
-Conventional algorithms are hierarchical (linear on k).
-We derive direct index versions (constant on k).
+Figure~X demonstrates Morton coding for a conventional Euclidean quadtree.
+The four child cells of quadtree refinement are each given a unique index.
+The index of an arbitrary cell is this index of each of its ancestors appended, in order, ending with the cell index itself.
+This type of coding is fully generalizable to any dimension.
+A leading bit set to one allows the width of the index to be determined.
+
+Due to the semiregular degenerate nature of SDOG, Morton coding must be slightly modified for use with the grid system.
+First, Morton coding for a cell's children is done as if refinement is fully regular.
+For SG and LG cells, some of these codes will refer to the same cell.
+In this case, the codes are merged with the lower value kept.
+Call this degenerate Morton code (DMC).
+Figure~X shows the children codes of cells for each SDOG cell type.
+To distinguish between the eight octants in an SDOG grid, a 3-bit octant code at the beginning of the index is used.
+This is placed between the leading one the the cell index.
 
 
-All algorithms provided operate on a standard octant. For full SDOG implementations, pre and post operations needed.
-Encoding. Pre: convert coordinates to standard octant. Post: prepend leading bit and octant code
-Decoding. Pre: get k and convert coordinates to standard octant. Post: convert output to coordinates of actual octant
+One benefit of Morton codes over more local space-filling curves---such as the Hilbert curve---is the ease at which a multi-dimensional index is coded.
+As demonstrated in Figure~X, the Morton code is obtained simply by interleaving the bits of the coordinate indices; likewise, unweaving the bits of a Morton code gives the coordinate indices.
+While these are not constant-time operation in general, magic numbers and lookup tables allow them to be done efficiently and in constant time for a fixed bit width~\cite{bit twiddle, libmorton}.
+These operations also work for DMC.
+
+
+From this definition, we know the number of bits needed to represent a cell at refinement level $k$ is $3k + 4$.
+Likewise, given an index with width $\omega$, the refinement level of that cell is $(\omega - 4) / 3$.
 
 
 \subsection{Hierarchical Algorithms}
-Hierarchical operations work one resolution at a time using refinement rules for current cells.
-Linear on k.
-Trivially modified to work with modified grids by modifying refinement rules used in algorithm.
+We first give a brief overview of the hierarchical coding algorithms for SDOG, as these will be the baseline for evaluating our proposed ones.
+Hierarchical coding works by traversing the grid system one resolution at a time, using the refinement rules for the relevant cell at each iteration.
+As a result, these types of algorithms are linear on the level of refinement.
+However, because they use refinement rules directly, they are trivially modified to work for our SDOG modifications by simply changing the refinement used in the algorithms accordingly.
 
 
 \subsubsection{Encoding}
-Provide pseudo code here. Algorithm~\ref{alg:encode}. Input is a point $p$ after going through pre and refinement level $k$. Output is index $i$ to feed into post.
+The algorithm for hierarchical point encoding with SDOG is given in Algorithm~\ref{alg:encode}.
+The input is a point $p$ and resolution $k$; the output is the index $i$ of the cell that contains $p$ at $k$.
 
 
 \begin{algorithm}
@@ -53,9 +68,10 @@ Provide pseudo code here. Algorithm~\ref{alg:encode}. Input is a point $p$ after
 	
 	\begin{algorithmic}
 		
+		\STATE determine which octant contains $p$
 		\STATE cellBoundaries $\leftarrow$ boundaries of octant
 		\STATE currCellType $\leftarrow$ SG
-		\STATE $i \leftarrow 0$
+		\STATE $i \leftarrow \operatorname{append}(1, \mathrm{octantCode})$
 		
 		\FOR{$k$ iterations}
 		\STATE use refinement rules for currCellType with cellBoundaries to find child cells
@@ -72,8 +88,8 @@ Provide pseudo code here. Algorithm~\ref{alg:encode}. Input is a point $p$ after
 
 
 \subsubsection{Decoding}
-Provide pseudo code here.
-Algorithm~\ref{alg:decode}. Input is an index $i$ after going through pre-operations (so also $k$). Output is index cell boundaries to go into post.
+The algorithm for hierarchical decoding with SDOG is given in Algorithm~\ref{alg:decode}.
+The input is an index $i$ (and resolution $k$, which is obtained directly from $i$ for SDOG); the output is the cell boundaries of $i$.
 
 
 \begin{algorithm}
@@ -81,8 +97,10 @@ Algorithm~\ref{alg:decode}. Input is an index $i$ after going through pre-operat
 	
 	\begin{algorithmic}
 		
+		\STATE determine octant from $i$
 		\STATE cellBoundaries $\leftarrow$ boundaries of octant
 		\STATE currCellType $\leftarrow$ SG
+		\STATE remove highest four bits of $i$
 		
 		\FOR{$k$ iterations}
 		\STATE use refinement rules for currCellType with cellBoundaries to find child cells
@@ -100,9 +118,11 @@ Algorithm~\ref{alg:decode}. Input is an index $i$ after going through pre-operat
 
 
 \subsection{Direct Algorithms}
-One benefit of morton codes over other space filling curves for linearizing 2D index is ease at which conversion is done.
-Use simple bit interleaving.
-In general not constant time, but bit operations and magic numbers allow very efficient for fixed integer width.
+For a uniform grid, coordinate indices are trivially obtained in constant time.
+Key pieces are to know the number of cells and range of values.
+Semiregular regions of SDOG are uniform grids.
+Thus, if we know which semiregular region is relevant for the operation being done, we can operate in constant time.
+Coordinate indices are then used with bit interleaving and unweaving described earlier to get full DMC.
 
 
 \subsubsection{Encoding}

@@ -1,4 +1,37 @@
 \chapter{Conclusion} \label{chap:conclusion}
+This thesis explores how semiregular degenerate refinement can be used to make 3D DGGS's.
+First show how modifying splitting surfaces can improve volume preservation by looking at SDOG.
+Then derive general method for extending a 2D DGGS to the third dimension.
+To define coding algorithms, we first derive radial mappings that allow volume preservation for grid extensions and map between conventional SDOG and modifications.
+Similarly, provided latitude mappings for SDOG that do the same thing.
+Use these mapping to define the coding operations that operate in more uniform grid space while still having volume preservation in physical space.
+For SDOG, also give direct coding algorithms that have not been previously explored in literature.
+Also give neighbour, child, and parent operations for SDOG and in general for grid extension.
+The grid extension is fully implemented and used to demonstrate three potential use cases of 3D DGGS using three different grid systems.
+Given input DGGS, creating 3D DGGS is instant and only requires three parameters clearly defined and explored in the thesis.
+
 
 \section{Limitations and Future Work}
-\section{Closing Remarks}
+Field of 3D DGGS relatively young and unexplored.
+Despite generalness of method, only creates on general type of 3D DGGS.
+Also has limitations.
+No general way to linearize layer index and surface index (or even layer index itself).
+This important for DGGS, and further research would not only solve this, but could also be extended to time for 4D DGGS.
+Only discussed sphere based DGGS in this thesis.
+Earth more accurately approximated with oblate spheroid.
+Believe our method works for ellipsoid based DGGS, but more careful exploration, generalization, and justification is needed.
+
+
+Need better encoding for more complex geometry.
+Encoding polylines, polygons, 3D models and meshes very important operations.
+Version used in use cases were naive and simple as proof of concept.
+These type of algorithms typically quite specific to grid type.
+Generalization/classification for creating efficient versions for arbitrary grid would further support quick iteration on creating and testing different DGGS, both 2D and 3D.
+
+
+Occlusion big issue with volumetric DE.
+3D DGGS may be able to aid in this.
+Slice views and select layers could aid in occlusion.
+
+
+%\section{Closing Remarks}

@@ -109,7 +109,7 @@ Now, we derive the forward mapping by inverting the inverse.
 Inverting the interpolation functions gives the corresponding parameterization function, and vice versa.
 Solving Equation~\ref{eq:radialInv} for $d$ gives us
 %
-\begin{equation} \label{radialForwD}
+\begin{equation} \label{eq:radialForwD}
 d = \frac{ \hat{r}^{\,t} - \ell_p^{\,t} }{ u_p^{\,t} - \ell_p^{\,t} }
 \end{equation}
 %
@@ -120,6 +120,7 @@ M_r (\hat{r}) = d u_g + \left( 1 - d \right) \ell_g.
 \end{equation}
 %
 The values of $\ell$ and $u$ are calculated the same as the inverse, but the shell is now $s = \lfloor \log_{c} \hat{r} \rfloor$.
+Note that the output of both Equations~(\ref{eq:radialInv}) and (\ref{eq:radialForw}) are also normalized and must be multiplied by $R_\mathrm{max}$ for the true radii.
 
 
 \begin{figure}[ht!]
@@ -145,7 +146,7 @@ We accomplish this by setting the value of $\nu$ in Equations~\ref{eq:extraSplit
 
 
 \subsection{Latitude Mappings for SDOG} \label{chap:6:latitude}
-Just as with the radial mappings, our goal is to define a function $M_\varphi(\varphi)$ that maps a physical latitude to one in the grid domain. Likewise, we consider latitude to be normalized with $\hat{\varphi} = (2\varphi) / \pi$.
+Just as with the radial mappings, our goal is to define a function $M_\varphi(\varphi)$ that maps a physical latitude to one in the grid domain. Likewise, we consider latitude to be normalized with $\hat{\varphi} = \pm (2\varphi) / \pi$, where the sign is set according to the sign of the latitude.
 
 
 The derivation follows the same steps as the radial mappings.
@@ -206,6 +207,7 @@ M_\varphi (\hat{\varphi}) = d u_g + \left( 1 - d \right) \ell_g
 \end{equation}
 %
 The values of $\ell$ and $u$ are the calculated the same as the inverse, but the zone is now $z = \lfloor \log_{0.25} ( 1 - \sin \hat{\varphi} ) \rfloor$.
+Just as with the radial mappings, the output of Equations~(\ref{eq:latInv}) and (\ref{eq:latForw}) are normalized and must be multiplied by $\pm \pi / 2$ for the true latitudes.
 
 
 Equation~\ref{latForwD} simplifies to
