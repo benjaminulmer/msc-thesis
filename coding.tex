@@ -25,32 +25,34 @@ These schemes are both based on a modified Morton code (also known as a Z-order 
 We focus on the hierarchical scheme, as grid \textit{systems} are the main focus of this thesis.
 
 
-\begin{figure}[htp!]
+\begin{figure}[ht!]
 	\centering
 	\includegraphics[width=0.6\textwidth]{morton-multiple.pdf}
-	\caption[Title]{
-		Caption go here
-		Original image courtesy of David Eppstein~\cite{morton-multiple} -- CC BY-SA 3.0
+	\caption[Four resolutions of Morton codes]{
+		The first four resolutions of Morton codes for a quadtree.
+		(a)--(d) show resolutions 1--4, respectively.
+		Modified from~~\cite{morton-multiple}; original image courtesy of David Eppstein -- CC BY-SA 3.0
 	}
 	\label{fig:morton-multiple}
 \end{figure}
 
 
-Figure~\ref{fig:morton-multiple} demonstrates Morton coding for three resolutions of a conventional Euclidean quadtree.
+Figure~\ref{fig:morton-multiple} demonstrates Morton coding for four resolutions of a conventional Euclidean quadtree.
 Indices are assigned consecutively, starting at zero, to cells in the order the curve passes through them.
 The resulting indices are hierarchical, where the index of a cell is that of its parent with its local index---obtained relative to its parent---appended.
 While shown for a quadtree (2D), Morton codes generalize to any integer dimension $n$.
 In this case, each cell has $2^n$ children, which means $n$ bits are needed to represent each uniquely.
 Thus, from a given cell index, the resolution of the grid that cell appears at is the bit width of the index divided by $n$.
 For a fixed-width representation of indices, a leaded bit set to one marks the start of the actual index.
-\\
-`
+
 
 \begin{figure}[htp!]
 	\centering
 	\includegraphics[width=\textwidth]{morton-interleave.pdf}
-	\caption[Title]{
-		Caption go here.
+	\caption[Morton codes by bit-interleaving]{
+		Third resolution Morton codes and their respective coordinate indices.
+		Note how the Morton codes are obtained by interleaving the bits of the coordinate indices.
+		In this figure, the $x$ coordinate is traversed first by the curve, so it is the lowest order bit in the Morton code.
 		Image courtesy of David Eppstein~\cite{morton-interleave} -- CC BY-SA 3.0
 	}
 	\label{fig:morton-interleave}
@@ -62,11 +64,11 @@ As demonstrated in Figure~\ref{fig:morton-interleave}, the Morton code is obtain
 While these are not constant-time operation in general, magic numbers and lookup tables allow them to be done efficiently and in constant time for a fixed bit width~\cite{bit twiddle, libmorton}.
 
 
-\begin{figure}[htp!]
+\begin{figure}[ht!]
 	\centering
 	\includegraphics[width=\textwidth]{sdog-dmc.pdf}
-	\caption[Title]{
-		Caption go here
+	\caption[Degenerate Morton codes for the different SDOG cell types]{
+		Degenerate Morton codes for (a) SG cells, (b) LG cells, and (c) NG cells.
 	}
 	\label{fig:sdog-dmc}
 \end{figure}
@@ -79,7 +81,8 @@ However, for SG and LG cells, some of these codes will refer to the same cell.
 In these cases, we merge duplicate codes with the lower value kept.
 We call this the degenerate Morton code (DMC).
 Figure~\ref{fig:sdog-dmc} shows the child codes of cells for each SDOG cell type.
-Finally, to distinguish between the eight octants, each is given a unique identifier---the octant code.
+In this scheme, the different spherical coordinates are traversed in the order (1) longitude---small to large (2) latitude---small to large (3) radius---large to small.
+Finally, to distinguish between the eight octants, each is given a unique identifier: the octant code.
 The full index of an SDOG cell consists of the octant code and DMC, concatenated, along with a leading one for fixed-width representations.
 For the remainder of this chapter, we assume the use of a fixed-width integer for representing SDOG indices.
 
@@ -127,7 +130,7 @@ The input is a point $p$ and resolution $k$; the output is the index $i$ of the 
 
 \subsubsection{Decoding}
 The algorithm for hierarchical decoding with SDOG is given in Algorithm~\ref{alg:decode}.
-The input is an index $i$ (and resolution $k$, which is obtained directly from $i$ for SDOG); the output is the cell boundaries of $i$.
+The input is an index $i$; the output is the cell boundaries of $i$.
 
 
 \begin{algorithm}
