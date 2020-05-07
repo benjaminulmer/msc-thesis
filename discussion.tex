@@ -1,6 +1,4 @@
 \chapter{Discussion} \label{chap:discussion}
-An important question to ask is what 3D DGGS to use for which application.
-More specifically, of the grids we propose, when do we recommend which method?
 This thesis looks at two approaches for creating 3D DGGS: modified SDOG grids and the grid extension technique.
 While mostly presented as separate method, with similarities shown in the radial mapping functions, these two techniques are more similar than let on.
 In fact, SDOG itself is a special case of the grid extension, where the input DGGS is DQG.
@@ -8,7 +6,16 @@ Modified SDOG also a special case, where input DGGS is DQG with the latitude mod
 As a special case though, we are able to provide more detailed and efficient operations for SDOG than the general extension method.
 
 
-Many of properties of 3D DGGS come from input DGGS.
+An important question to ask is what 3D DGGS to use for which application.
+More specifically, of the grids we propose, how do they compare and when do we recommend which method?
+For modified SDOG grids, volume method is good choice is volume preservation is needed in 3D DGGS.
+Encoding and decoding still quite efficient compared to conventional.
+Balanced method can create grid with good trade offs between volume and compactness, but algorithms are not very efficient.
+Other 3D DGGS not based on SDOG may give better results here.
+Latitude method unlikely to be worth using over conventional SDOG due to marginal volume preservation gains compared to significant efficiency losses.
+
+
+More generally for grid extension, many of properties of 3D DGGS come from input DGGS.
 Area preservation -> volume preservation. Refinement factor -> complexity of radial refinement.
 Thus, choosing right 2D DGGS still most important step.
 For DQG and thus SDOG, main benefit is the efficient coding and use of spherical coordinate (no conversion to cartesian needed).

@@ -21,34 +21,72 @@ For the grid extension method, we derive these operations in such a way as to en
 
 \section{SDOG}
 When first introduced by Yu and Wu, the authors proposed two indexing schemes for use with SDOG~\cite{yu2009coding}.
-These schemes are both based on a modified Morton code (also known as a Z-order curve)~\cite{morton}; however, one is intended for indexing a single resolution whereas the other for the full cell hierarchy.
+These schemes are both based on a modified Morton code (also known as a Z-order curve)~\cite{morton1966computer}; however, one is intended for indexing a single resolution whereas the other for the full cell hierarchy.
 We focus on the hierarchical scheme, as grid \textit{systems} are the main focus of this thesis.
 
 
-Figure~X demonstrates Morton coding for a conventional Euclidean quadtree.
-The four child cells of quadtree refinement are each given a unique index.
-The index of an arbitrary cell is this index of each of its ancestors appended, in order, ending with the cell index itself.
-This type of coding is fully generalizable to any dimension.
-A leading bit set to one allows the width of the index to be determined.
-
-Due to the semiregular degenerate nature of SDOG, Morton coding must be slightly modified for use with the grid system.
-First, Morton coding for a cell's children is done as if refinement is fully regular.
-For SG and LG cells, some of these codes will refer to the same cell.
-In this case, the codes are merged with the lower value kept.
-Call this degenerate Morton code (DMC).
-Figure~X shows the children codes of cells for each SDOG cell type.
-To distinguish between the eight octants in an SDOG grid, a 3-bit octant code at the beginning of the index is used.
-This is placed between the leading one the the cell index.
+\begin{figure}[htp!]
+	\centering
+	\includegraphics[width=0.6\textwidth]{morton-multiple.pdf}
+	\caption[Title]{
+		Caption go here
+		Original image courtesy of David Eppstein~\cite{morton-multiple} -- CC BY-SA 3.0
+	}
+	\label{fig:morton-multiple}
+\end{figure}
 
 
-One benefit of Morton codes over more local space-filling curves---such as the Hilbert curve---is the ease at which a multi-dimensional index is coded.
-As demonstrated in Figure~X, the Morton code is obtained simply by interleaving the bits of the coordinate indices; likewise, unweaving the bits of a Morton code gives the coordinate indices.
+Figure~\ref{fig:morton-multiple} demonstrates Morton coding for three resolutions of a conventional Euclidean quadtree.
+Indices are assigned consecutively, starting at zero, to cells in the order the curve passes through them.
+The resulting indices are hierarchical, where the index of a cell is that of its parent with its local index---obtained relative to its parent---appended.
+While shown for a quadtree (2D), Morton codes generalize to any integer dimension $n$.
+In this case, each cell has $2^n$ children, which means $n$ bits are needed to represent each uniquely.
+Thus, from a given cell index, the resolution of the grid that cell appears at is the bit width of the index divided by $n$.
+For a fixed-width representation of indices, a leaded bit set to one marks the start of the actual index.
+\\
+`
+
+\begin{figure}[htp!]
+	\centering
+	\includegraphics[width=\textwidth]{morton-interleave.pdf}
+	\caption[Title]{
+		Caption go here.
+		Image courtesy of David Eppstein~\cite{morton-interleave} -- CC BY-SA 3.0
+	}
+	\label{fig:morton-interleave}
+\end{figure}
+
+
+One benefit of Morton codes over more local space-filling curves---such as the Hilbert curve---is the ease at which a multi-dimensional index is encoded and vice versa.
+As demonstrated in Figure~\ref{fig:morton-interleave}, the Morton code is obtained simply by interleaving the bits of the coordinate indices; likewise, unweaving the bits of a Morton code gives the coordinate indices.
 While these are not constant-time operation in general, magic numbers and lookup tables allow them to be done efficiently and in constant time for a fixed bit width~\cite{bit twiddle, libmorton}.
-These operations also work for DMC.
 
 
-From this definition, we know the number of bits needed to represent a cell at refinement level $k$ is $3k + 4$.
+\begin{figure}[htp!]
+	\centering
+	\includegraphics[width=\textwidth]{sdog-dmc.pdf}
+	\caption[Title]{
+		Caption go here
+	}
+	\label{fig:sdog-dmc}
+\end{figure}
+
+
+Due to the semiregular degenerate nature of SDOG, Morton coding must be modified for use with the grid system.
+First, Morton coding for a cell's children is done as if refinement is entirely regular.
+For NG cells, refinement \textit{is} regular, and no modifications are needed.
+However, for SG and LG cells, some of these codes will refer to the same cell.
+In these cases, we merge duplicate codes with the lower value kept.
+We call this the degenerate Morton code (DMC).
+Figure~\ref{fig:sdog-dmc} shows the child codes of cells for each SDOG cell type.
+Finally, to distinguish between the eight octants, each is given a unique identifier---the octant code.
+The full index of an SDOG cell consists of the octant code and DMC, concatenated, along with a leading one for fixed-width representations.
+For the remainder of this chapter, we assume the use of a fixed-width integer for representing SDOG indices.
+
+
+From the above definition, we know the number of bits needed to represent an SDOG index at refinement level $k$ is $3k + 4$.
 Likewise, given an index with width $\omega$, the refinement level of that cell is $(\omega - 4) / 3$.
+We use this property below to obtain $k$ for the decoding algorithms, implicitly.
 
 
 \subsection{Hierarchical Algorithms}
