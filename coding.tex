@@ -159,107 +159,103 @@ The input is an index $i$; the output is the cell boundaries of $i$.
 
 
 \subsection{Direct Algorithms}
-For a uniform grid, coordinate indices are trivially obtained in constant time.
-Key pieces are to know the number of cells and range of values.
-Semiregular regions of SDOG are uniform grids.
-Thus, if we know which semiregular region is relevant for the operation being done, we can operate in constant time.
-Coordinate indices are then used with bit interleaving and unweaving described earlier to get full DMC.
+For a uniform grid, the coordinate indices of the cell that contain a point are obtained trivially in constant time.
+Likewise, the maximum and minimum coordinates of a cell are also easily computed from a coordinate index.
+For these operations, the necessary variables are the number of cells and the range of values in each coordinate dimension.
+We also know that the semiregular regions of SDOG are uniform when using conventional refinement rules.
+Thus, if we determine the relevant semiregular region and the needed properties of said region, we can apply direct coding algorithms for SDOG, with bit interleaving and unweaving giving the full DMC.
+
+
+Under regular octree-based refinement, the number of cells in each coordinate direction is $2^k$.
+Each increasing shell in SDOG halves the number of cells in the latitude and longitude coordinates.
+Furthermore, each increasing zone further halves the number of cells in the longitude coordinate.
+Since a DMC is relative to an octant, the range of coordinate values for direct coding are the ranges of the octant itself.
+Therefore, all that we need for direct coding is the shell and zone that contain the point or cell being considered.
 
 
 \subsubsection{Encoding}
-Explanation goes here.
+The inputs and outputs of direct encoding are the same as their hierarchical counterpart.
+First, we find the octant that contains $p$.
+The three coordinates of $p$ are then normalized within the range of the octant with $\hat{r} = r / R_\mathrm{max}$, $\hat{\varphi} = \pm (2\varphi) / \pi$, and $\hat{\lambda} = 2 (\lambda - \lambda_0) / \pi$ where $\lambda_0$ is the minimum longitude of the octant.
+We then calculate the shell and zone that contain $p$ the same as in Chapter~\ref{chap:mapping}: $s = \lfloor \log_{0.5} \hat{r} \rfloor$ and $z = \lfloor \log_{0.5} ( 1 - \hat{\varphi} ) \rfloor$.
 
-\begin{equation*}
-\hat{r} = \frac{r}{R_\mathrm{max}}
-\end{equation*}
 
-\begin{equation*}
-\hat{\varphi} = \frac{2 \varphi}{\pi}
-\end{equation*}
+The number of latitude division will be $2^k$ divided by $2^s$; however, the number of divisions will always be at least one.
+Thus, we introduce variable $k_\varphi = \min ( s, k )$.
+Similarly, the number of longitude division will $2^k$ divided by $2^{s+z}$, but again, will always be at least one.
+We introduce a second variable $k_\lambda = \min ( s + z, k )$.
 
-\begin{equation*}
-\hat{\lambda} = \frac{2 \lambda}{\pi}
-\end{equation*}
 
+Finally, we calculate coordinate indices, making sure to account for the direction of each coordinate in the DMC for SDOG.
+Let the subscript $i$ refer to the index the coordinate, then
+%
 \begin{equation*}
-s = \lfloor \log_{0.5} \hat{r} \rfloor
+r_i = 2^k \cdot ( 1 - \hat{r} ),
 \end{equation*}
-
+%
 \begin{equation*}
-z = \lfloor \log_{0.5} ( 1 - \hat{\varphi} ) \rfloor
+\varphi_i = 2^{k - k_\varphi} \cdot \hat{\varphi}, \quad \text{and}
 \end{equation*}
-
+%
 \begin{equation*}
-k_\varphi = \min ( s, k )
+\lambda_i = 2^{k - k_\lambda} \cdot \hat{\lambda}.
 \end{equation*}
-
-\begin{equation*}
-k_\lambda = \min ( k_\varphi + z, k )
-\end{equation*}
-
-\begin{equation*}
-r_i = 2^k \cdot ( 1 - \hat{r} )
-\end{equation*}
-
-\begin{equation*}
-\varphi_i = 2^{k - k_\varphi} \cdot \hat{\varphi}
-\end{equation*}
-
-\begin{equation*}
-\lambda_i = 2^{k - k_\lambda} \cdot \hat{\lambda}
-\end{equation*}
-
-\begin{equation*}
-i = \operatorname{Morton}( \lambda_i, \varphi_i, r_i ) + 2^{3k}
-\end{equation*}
+%
+The DMC, then, is the Morton interleaving of $\lambda_i$, $\varphi_i$, and $r_i$ (in that order); the full index is the octant code and DMC concatenated with the preceding bit set.
 
 
 \subsubsection{Decoding}
-Explanation goes here.
+The inputs and outputs of the direct decoding are the same as its hierarchical counterpart.
+First, we get the octant code and DMC from $i$.
+The DMC is then unwoven to get the coordinate indices $\lambda_i$, $\varphi_i$, and $r_i$.
 
+
+We now decode the coordinate indices one at a time.
+As the number of radial division is never modified, we start by decoding the radial index: 
+%
 \begin{equation*}
-( \lambda_i, \varphi_i, r_i ) = \operatorname{Morton}^{-1} (i)% \oplus 2^{3k})
+\hat{r}_\mathrm{max} = 1 - \frac{r_i}{2^k}, \quad \text{and}
 \end{equation*}
-
-\begin{equation*}
-\hat{r}_\mathrm{max} = 1 - \frac{r_i}{2^k}
-\end{equation*}
-
+%
 \begin{equation*}
 \hat{r}_\mathrm{min} = 1 - \frac{r_i + 1}{2^k}
 \end{equation*}
-
+%
+With this, we can now determine the shell that contains the cell being decoded.
+We use $\hat{r}_\mathrm{max}$ as opposed to $\hat{r}_\mathrm{min}$, as the latter gives the inner shell if on the boundary. Thus, $s = \lfloor \log_{0.5} \hat{r}_\mathrm{max} \rfloor$.
+Just as with encoding, we define $k_\varphi = \min ( s, k )$.
+We now have the needed information to decode latitude:
+%
 \begin{equation*}
-s = \lfloor \log_{0.5} \hat{r}_\mathrm{max} \rfloor
+\hat{\varphi}_\mathrm{max} = \frac{\varphi_i + 1}{2^{k - k_\varphi}}, \quad \text{and}
 \end{equation*}
-
+%
 \begin{equation*}
-k_\varphi = \min ( s, k )
+\hat{\varphi}_\mathrm{min} = \frac{\varphi_i}{2^{k - k_\varphi}}.
 \end{equation*}
-
+%
+Likewise, we can now determine the zone that contains the cell.
+Opposite of radius, $\hat{\varphi}_\mathrm{max}$ now gives the higher zone if on the boundary, so we use $\hat{\varphi}_\mathrm{min}$ and get $z = \lfloor \log_{0.5} ( 1 - \hat{\varphi}_\mathrm{min} ) \rfloor$.
+Again, the same as encoding, we define $k_\lambda = \min ( s + z, k )$.
+Finally, we decode longitude:
+%
 \begin{equation*}
-\hat{\varphi}_\mathrm{max} = \frac{\varphi_i + 1}{2^{k - k_\varphi}}
+\hat{\lambda}_\mathrm{max} = \frac{\lambda_i + 1}{2^{k - k_\lambda}}, \quad \text{and}
 \end{equation*}
-
+%
 \begin{equation*}
-\hat{\varphi}_\mathrm{min} = \frac{\varphi_i}{2^{k - k_\varphi}}
+\hat{\lambda}_\mathrm{min} = \frac{\lambda_i}{2^{k - k_\lambda}}.
 \end{equation*}
+%
+The last step is get the bounds of the octant from the octant code and convert the normalized values to actual ones.
 
-\begin{equation*}
-z = \lfloor \log_{0.5} ( 1 - \hat{\varphi}_\mathrm{min} ) \rfloor
-\end{equation*}
 
-\begin{equation*}
-k_\lambda = \min ( k_\varphi + z, k )
-\end{equation*}
-
-\begin{equation*}
-\hat{\lambda}_\mathrm{max} = \frac{\lambda_i + 1}{2^{k - k_\lambda}}
-\end{equation*}
-
-\begin{equation*}
-\hat{\lambda}_\mathrm{min} = \frac{\lambda_i}{2^{k - k_\lambda}}
-\end{equation*}
+\subsubsection{For Modified SDOG}
+These direct algorithms only work for conventional SDOG due to the requirement of uniform spacing of grid divisions.
+As described in Chapter~\ref{chap:mapping}, however, the mapping functions allow these algorithms to be used with the modified grids by mapping them to conventional SDOG.
+For encoding, the point $p$ must be forward mapped before encoding.
+For decoding, the output ranges must be inverse mapped after decoding.
+In both cases, there is overlap in the computations done by the coding algorithm and associated mapping functions, so care should be taken during implementation to avoid redundant computation.
 
 
 \subsection{Runtime Comparison}
