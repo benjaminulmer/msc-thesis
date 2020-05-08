@@ -252,15 +252,26 @@ The last step is get the bounds of the octant from the octant code and convert t
 
 \subsubsection{For Modified SDOG}
 These direct algorithms only work for conventional SDOG due to the requirement of uniform spacing of grid divisions.
-As described in Chapter~\ref{chap:mapping}, however, the mapping functions allow these algorithms to be used with the modified grids by mapping them to conventional SDOG.
+As described in Chapter~\ref{mapping}, however, the mapping functions allow these algorithms to be used with the modified grids by mapping them to conventional SDOG.
 For encoding, the point $p$ must be forward mapped before encoding.
 For decoding, the output ranges must be inverse mapped after decoding.
 In both cases, there is overlap in the computations done by the coding algorithm and associated mapping functions, so care should be taken during implementation to avoid redundant computation.
 
 
 \subsection{Runtime Comparison}
-Compare runtime of direct vs hierarchical.
-Compare for different modified grids as well.
+To evaluate the usefulness of our direct coding algorithms, we should compare their runtime against the hierarchical counterparts.
+To do so, we have implemented the four algorithms and the mapping functions presented in Chapter~\ref{chap:mapping} in C++.
+We also used these implementations to experimentally verify the correctness of the direct algorithms by comparing their output to the hierarchical ones.
+
+
+The combination of two algorithmic approaches (hierarchical vs. direct) and four grids (SDOG and the three modifications in Chapter~\ref{chap:sdog}) result in eight total algorithms to compare for both encoding and decoding.
+For simplicity, we only benchmark the DMC portion of coding.
+We first generate one million points randomly distributed within an SDOG octant.
+For each resolution being benchmarked, we then time each of the encoding algorithms using the generated points.
+The resulting indices are then used to time each of the decoding algorithms in the same manner.
+We time resolutions $1 \le k \le 21$, as 21 is the highest resolution \textit{without} an octant code that can be represented by a 64-bit integer.
+We use the libmorton library~\cite{libmorton} to perform efficient bit-interleaving and unweaving.
+
 
 \begin{figure}[htp!]
 	\centering
@@ -294,7 +305,50 @@ Compare for different modified grids as well.
 \end{figure}
 
 
-Discussion of the results will go here.
+Figures~\ref{fig:point-to-index} and \ref{fig:index-to-range} show the benchmarking results for encoding and decoding, respectively.
+In order to reduce noise, these charts show the average of two evaluations of the benchmarking.
+As is expected, the hierarchical algorithms are linear on $k$ and the direct algorithms (mostly) constant on $k$.
+
+
+For the hierarchical algorithms, the difference in runtime between the different grids is determined by the complexity of calculating splitting surfaces for cells.
+For hierarchical encoding and decoding, SDOG is the most efficient closely followed by the latitude method; the volume method is significantly slower than these two, and the balanced method significantly slower than the volume one.
+For the direct algorithms, this difference is determined by the complexity of evaluating the mapping functions.
+For direct encoding, SDOG is most efficient, then volume closely followed by latitude, and then balanced.
+Decoding is slightly different, with latitude and volume swapping places in the ordering.
+
+
+In general, the hierarchical decoding algorithms are slightly quicker than their encoding counterparts.
+The reasons for this are not entirely clear; however, it seems to imply that determining which child cell contains a point is slightly more expensive than setting the child cell dimensions based on a given code.
+For the direct algorithms, the opposite holds, and the encoding algorithm is the quicker of the two.
+The reason for this is the encoding algorithm only computes three values (an index for each coordinate), whereas the decoding must compute twice as many (a maximum \textit{and} minimum for each coordinate).
+Furthermore, for the modified grids using the mapping functions, this means that decoding also requires twice as many uses of these functions.
+
+
+Overall, the direct algorithms are all more efficient than their hierarchical counterpart for a large enough value of $k$.
+Thus, a sophisticated implementation could determine which approach to use (hierarchical or direct) for a given input, depending on $k$.
+However, benchmarking on a variety of platforms in different conditions would be needed to determine the best values to use for the switch.
+Table~\ref{tab:hierarch-vs-direct} summarizes the lowest value of $k$ such that the direct algorithm is more efficient than the hierarchical for each pair of algorithms in \textit{our} benchmarking.
+
+
+\begin{table}[htp!]
+	\centering
+	\caption[Resolution at which direct coding becomes more efficient than hierarchical]{
+		The resolution ($k$) at which our direct coding algorithms become more efficient than their hierarchical counterparts
+	}
+	\begin{tabular}{@{} c c c c c @{}}
+		\toprule
+		& SDOG & Latitude & Balanced & Volume \\ \midrule
+		Encoding & 6    & 7        & 4        & 3      \\
+		Decoding & 11   & 13       & 5        & 5      \\ \bottomrule
+	\end{tabular}
+	\label{tab:hierarch-vs-direct}
+\end{table}
+
+
+A final interesting note is that runtime for direct decoding of the modified grids grows until about resolution four, where it then levels off to a constant.
+We are not entirely sure why this is, though we suspect it relates to the number of cells on the border of the octant.
+Lower resolutions have more cells on the border, and we suspect the inverse mapping functions may evaluate more quickly for certain values of $\hat{\varphi}$ and $\hat{r}$---specifically $\hat{\varphi} = 0,1$ and $\hat{r} = 0$.
+However, this is only a conjecture; more rigorous benchmarking and evaluation would be needed to justify this claim.
 
 
 \subsection{Other Indexing Operations}
