@@ -345,10 +345,13 @@ Table~\ref{tab:hierarch-vs-direct} summarizes the lowest value of $k$ such that 
 \end{table}
 
 
-A final interesting note is that runtime for direct decoding of the modified grids grows until about resolution four, where it then levels off to a constant.
-We are not entirely sure why this is, though we suspect it relates to the number of cells on the border of the octant.
-Lower resolutions have more cells on the border, and we suspect the inverse mapping functions may evaluate more quickly for certain values of $\hat{\varphi}$ and $\hat{r}$---specifically $\hat{\varphi} = 0,1$ and $\hat{r} = 0$.
-However, this is only a conjecture; more rigorous benchmarking and evaluation would be needed to justify this claim.
+A final note is that runtime for direct decoding of the modified grids grows until about resolution four, where it then levels off to constant.
+The reason for this is subtle.
+In the decoding algorithm, values of $s$ and $z$ are calculated from the bounds of the cell being decoded.
+Therefore, their values are bounded by $k$.
+However, $s$ and $z$ are used as exponents when calculating $\ell$ and $u$ values, which is faster for lower exponents.
+Thus, low values of $k$ have lower maximum (and average) exponents and, therefore, slightly lower runtime.
+This same effect does not appear in the encoding algorithms since $s$ and $z$ are calculated directly from $p$ with no respect to $k$.
 
 
 \subsection{Other Indexing Operations}
