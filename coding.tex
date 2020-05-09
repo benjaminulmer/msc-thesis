@@ -462,7 +462,24 @@ Describe how to calculate new values of $s'$, $j'$, and $k'$ from values given f
 Trivially, the parent layer is in the previous resolution of the 3D DGGS, so $k' = k - 1$.
 For calculating $s$ and $j$ there are two cases, which correspond with the parent layer being central or normal, respectively.
 If $s = k-1$ or $s = -1$, then the parent layer is a central layer. In this case, $s' = -1$ and $j' = 0$.
-Otherwise, the parent layer is normal and $s' = s$ and $j' = \lfloor j / \ell_k \rfloor$.
+Otherwise, the parent layer is normal with $s' = s$ and $j' = \lfloor j / \ell_k \rfloor$.
+
+
+\paragraph{Children}
+The children layers depend on if the layer in question is central or normal.
+Regardless, in both cases all children will have $k' = k + 1$.
+Recall that $s = -1$ denotes that a given layer is central.
+In this case, one child is the child central layer with $s' = -1$ and $j = 0$.
+There are also a number of child normal layers equal to one plus the number of extra radial splits ($x$), given by $s' = s = k$ and $j' = \{ o \in \mathbb{Z} \ | \ o \in [0, x] \}$.
+For normal layers, the children are found with $s' = s$ and $j' = \{ j \cdot \ell_k + o \ | \  o \in \mathbb{Z}, \ o \in [0, \ell_k - 1] \}$.
+
+
+\paragraph{Neighbours}
+Neighbour layers are the layers above and below a given layer; they are at the same resolution so $k' = k$.
+In most cases, the two neighbours are simply $s' = s$ and $j' = j \pm 1$; however, there are three edge cases that need to be handled.
+If $j = n_\ell - 1$, then the layer above is $s = s - 1$ and $j = 0$; if $s - 1$ is negative then the layer is on the boundary of the grid and there is no layer above it.
+If $j = 0$ then the layer below is $s' = s + 1$ and $j = n_\ell$, where $n_\ell$ is calculated with respect to the new shell (i.e. $s'$).
+Finally, the central layer ($s = -1$) has no layer below it and the layer above it is $s' = k - 1$ and $j = 0$.
 
 
 \subsubsection{Combined Operations}
@@ -476,7 +493,8 @@ In most cases, the value of $k_s$ for $i_\ell'$ is some number $m$ (often one, b
 In this case, the parent(s) are given by $\operatorname{parents}^m(i_s) \times i_\ell$.
 
 
-\paragraph{Children} The children of a cell depend on if the cell belongs to a central or normal layer.
+\paragraph{Children}
+The children of a cell depend on if the cell belongs to a central or normal layer.
 For normal layers, the set of children is simply $\operatorname{children}(i_s) \times \operatorname{children}(i_\ell)$.
 For central layers, the child who belongs to the new central layer must be distinguished from the other child layer(s).
 Call the index of the new central layer $c_\ell$; then, this child is given by $(i_s, c_\ell)$.
@@ -484,7 +502,8 @@ Let $ N_\ell$ give the set of the other children layer indices (normal layers).
 These layers have the surface refinement applied $w$ times, so the resulting children are $\operatorname{children}^w(i_s) \times N_\ell$
 
 
-\paragraph{Neighbours} We split neighbours into three categories: neighbours in the same layers as the cell, neighbours in the layer above the cell, and neighbours in the layer below the cell.
+\paragraph{Neighbours}
+We split neighbours into three categories: neighbours in the same layers as the cell, neighbours in the layer above the cell, and neighbours in the layer below the cell.
 If a cell belongs to the outermost or innermost (central) layer, then it will not have neighbours in the layer above or below, respectively.
 Neighbours in the same layer are simply $\operatorname{neighbours}(i_s) \times i_\ell$.
 Let $i_\ell^+$ be the layer above $i_\ell$ and $i_\ell^-$ be the layer below.
