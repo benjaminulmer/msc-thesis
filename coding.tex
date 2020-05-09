@@ -349,7 +349,7 @@ A final note is that runtime for direct decoding of the modified grids grows unt
 The reason for this is subtle.
 In the decoding algorithm, values of $s$ and $z$ are calculated from the bounds of the cell being decoded.
 Therefore, their values are bounded by $k$.
-However, $s$ and $z$ are used as exponents when calculating $\ell$ and $u$ values, which is faster for lower exponents.
+However, $s$ and $z$ are used as exponents when calculating $\ell$ and $u$ values, and in many implementations, calculating powers is faster for lower exponents.
 Thus, low values of $k$ have lower maximum (and average) exponents and, therefore, slightly lower runtime.
 This same effect does not appear in the encoding algorithms since $s$ and $z$ are calculated directly from $p$ with no respect to $k$.
 
@@ -361,29 +361,59 @@ Neighbours are tricky...
 
 
 \section{Extension Method}
+For our grid extension method, encoding and decoding operations are defined for the input DGGS and should be leveraged when defining the 3D version of these operations.
+Doing so not only simplifies the definition of these operations (by deferring work to the input DGGS) but also facilitates the simple transference of data between the input DGGS and its 3D counterpart.
+To accomplish this, we split encoding and decoding into a surface and radial component.
+Referring to Figure~X, we justify such a split by noting that two components define each cell in a 3D DGGS: the cell of the input DGGS that defines its base(s) and the layer of the grid that contains it.
+Uniquely identifying each of these components is sufficient to identify every cell in the grid uniquely; furthermore, each of these components is determined almost entirely independently.
+
+
+Figure~X illustrates the pipeline for our proposed split of these operations.
+The surface component of coding is handled entirely by the input DGGS and, therefore, is not discussed here.
+For the radial component, encoding and decoding make use of the forward and inverse radial mapping functions provided in Chapter~\ref{chap:6}, respectively.
+We also provide a parameterization for identifying the layers of a 3D DGGS, and operations for encoding and decoding this parameterization.
+We do \textit{not} discuss methods for converting this parameterization into a single index or for combining surface and layer indices into a single index (nor do we provide the inverse for either of these operations).
+For the former, the varying complexity of the layer structure in a 3D DGGS---combined with the competing goals of an indexing scheme---makes defining a general method for doing so challenging.
+For the latter, this operation depends heavily on the input DGGS and layer indexing and cannot be easily defined in general.
+
+
+Layers of our 3D DGGS's can be parameterized by the shell they reside in ($s$), the integer index of the layer relative to the shell ($j$), and the level of refinement ($k$).
+Thus, layer encoding will calculate these values from $\hat{r}$ and layer decoding will calculate $\hat{r}_\mathrm{max}$ and $\hat{r}_\mathrm{min}$ from these values.
 
 
 \subsection{Encoding}
+The level of refinement $k$ is an input into encoding; therefore, only $s$ and $j$ need to be computed.
+The value of $s$ can be carried forward from the radial mapping function evaluation.
+In order to calculate $j$, the number of layers in the shell is first needed.
+The number of layers in a shell depends on the refinement level, the layering sequence, and the number of extra radial splits (see Chapter~\ref{sec:grid:ar}).
+Once again, the level of refinement is an input, and the other variables are constant for any given 3D DGGS.
+Therefore, the number of layers is
+%
+\begin{equation*}
+n_\ell = \left( x+1 \right) \prod_{i = s}^{k - 1} \ell_i.
+\end{equation*}
+%
+In the case where $s$ is greater than or equal to $k-1$, the shell is in the central layer.
+In this case, we set $s = -1$ and note that there is only one layer in the shell.
+The integer index of the layer is then $j = \lfloor d \cdot n_\ell \rfloor$, where $d$ is carried forward from the radial mapping function.
+Finally, as input into the surface encoding, the value of $k_s$ is needed for the shell.
+For central layers, this is always zero; otherwise, it is $k - s - 1 + w$.
+
+
+Note that the final mapped value of $\hat{r}$ is not used in the above calculations: $s$ and $d$.
+Therefore, the full evaluation of the radial mapping is unnecessary, and only Equation~(XX) is evaluated for encoding.
 
 
 \subsection{Decoding}
-
+For decoding, we calculate $d_\mathrm{min}$ and $d_\mathrm{max}$ as $j/n_\ell$ and $(j+1)/n_\ell$, respectively.
+These values are then fed directly into the inverse radial mapping as values of $d$ in Equation~(XX).
 
 \subsection{Other Indexing Operations}
-An important component of a conventional DGGS is the indexing scheme for cells.
-Indices in a DGGS are used to not only identify and linearize cells but also as a means of navigating the grid for various spatial queries~\cite{alderson2020digital}.
-To this end, it is important to be able to perform certain operations on said indices efficiently.
-The most fundamental of these operations are parent queries, which return the parent (or with non-congruent refinement, \textit{parents}) of a given cell; child queries, which return the children of the cell; and neighbour queries, which return cells that share an edge (or in 3D a face) with the cell.
-These operations serve as the building blocks for more complex geospatial queries done with the grid system, such as region growing, data convolution and correlation, feature rasterization, and buffering.
-Because of this, creating suitable indexing for a 3D DGGS is an essential task.
-
-
 With our method---similar to encoding and decoding---we define these operations in terms of surface and radial components.
 This split not only simplifies the problem of indexing but also ensures the 3D indexing is consistent with that of the input DGGS.
 Referring back to Figures~\ref{fig:indexing} and \ref{fig:3d-coding}, we let $i_s$ be the surface index of a cell and $i_\ell$ be the layer index.
 For each of these components, we assume there is a corresponding parent, child, and neighbour operation.
-For the surface index, this comes directly from the input DGGS indexing, whereas for the layer index, these would need to be defined.
-Using the component operations, we define the corresponding 3D operations as follows.
+For the surface index, this comes directly from the input DGGS indexing, whereas for the layer index, we define these in terms of the layer parameterization provided above.
 
 
 \subsubsection{Layer Algorithms}
