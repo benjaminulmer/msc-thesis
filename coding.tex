@@ -74,7 +74,7 @@ While these are not constant-time operation in general, magic numbers and lookup
 \end{figure}
 
 
-Due to the semiregular degenerate nature of SDOG, Morton coding must be modified for use with the grid system.
+While Morton codes have many desirable properties, due to the semiregular degenerate nature of SDOG, they must be modified for use with the grid system.
 First, Morton coding for a cell's children is done as if refinement is entirely regular.
 For NG cells, refinement \textit{is} regular, and no modifications are needed.
 However, for SG and LG cells, some of these codes will refer to the same cell.
@@ -85,11 +85,9 @@ In this scheme, the different spherical coordinates are traversed in the order (
 Finally, to distinguish between the eight octants, each is given a unique identifier: the octant code.
 The full index of an SDOG cell consists of the octant code and DMC, concatenated, along with a leading one for fixed-width representations.
 For the remainder of this chapter, we assume the use of a fixed-width integer for representing SDOG indices.
-
-
-From the above definition, we know the number of bits needed to represent an SDOG index at refinement level $k$ is $3k + 4$.
+From this definition, we know the number of bits needed to represent an SDOG index at refinement level $k$ is $3k + 4$.
 Likewise, given an index with width $\omega$, the refinement level of that cell is $(\omega - 4) / 3$.
-We use this property below to obtain $k$ for the decoding algorithms, implicitly.
+We use this property to implicitly obtain $k$ in any case where it is not provided.
 
 
 \subsection{Hierarchical Algorithms}
@@ -277,13 +275,8 @@ We use the libmorton library~\cite{libmorton} to perform efficient bit-interleav
 	\centering
 	\includegraphics[width=0.8\textwidth]{point-to-index.pdf}
 	\caption[Runtime comparison of SDOG point encoding algorithms]{
-		A caption will go here.
-		The caption may be long.
-		This is text that is filling space so that this placeholder caption is longer than if the text was not here.
-		Caption caption caption.
-		Now the text will repeat...
-		A caption will go here.
-		The caption may be long.
+		Runtime of the hierarchical (H) and direct (D) encoding algorithms for SDOG and our proposed modifications (Lat = Latitude, Bal = Balanced, and Vol = Volume).
+		The bottom chart is the same as the top but with a smaller vertical scale to better compare values.
 	}
 	\label{fig:point-to-index}
 \end{figure}
@@ -293,13 +286,8 @@ We use the libmorton library~\cite{libmorton} to perform efficient bit-interleav
 	\centering
 	\includegraphics[width=0.8\textwidth]{index-to-range.pdf}
 	\caption[Runtime comparison of SDOG decoding algorithms]{
-		A caption will go here.
-		The caption may be long.
-		This is text that is filling space so that this placeholder caption is longer than if the text was not here.
-		Caption caption caption.
-		Now the text will repeat...
-		A caption will go here.
-		The caption may be long.
+		Runtime of the hierarchical (H) and direct (D) decoding algorithms for SDOG and our proposed modifications (Lat = Latitude, Bal = Balanced, and Vol = Volume).
+		The bottom chart is the same as the top but with a smaller vertical scale to better compare values.
 	}
 	\label{fig:index-to-range}
 \end{figure}
@@ -401,17 +389,41 @@ Below we list how to detect these edge cases and how to modify the neighbour cal
 For our grid extension method, encoding and decoding operations are defined for the input DGGS and should be leveraged when defining the 3D version of these operations.
 Doing so not only simplifies the definition of these operations (by deferring work to the input DGGS) but also facilitates the simple transference of data between the input DGGS and its 3D counterpart.
 To accomplish this, we split encoding and decoding into a surface and radial component.
-Referring to Figure~X, we justify such a split by noting that two components define each cell in a 3D DGGS: the cell of the input DGGS that defines its base(s) and the layer of the grid that contains it.
+Referring to Figure~\ref{fig:prismatoid-indexing}, we justify such a split by noting that two components define each cell in a 3D DGGS: the cell of the input DGGS that defines its base(s) and the layer of the grid that contains it.
 Uniquely identifying each of these components is sufficient to identify every cell in the grid uniquely; furthermore, each of these components is determined almost entirely independently.
 
 
-Figure~X illustrates the pipeline for our proposed split of these operations.
+\begin{figure}[htp!]
+	\centering
+	\includegraphics[width=0.55\textwidth]{prismatoid-indexing.pdf}
+	\caption[Separation of surface and layer indices for the grid extension method]{
+		Indices from the input DGGS identify cells in the 3D DGGS with the same bases but different radii.
+		Likewise, each layer of the 3D DGGS contains contains all cells with the same radii but different bases.
+		Thus, these two pieces of information combined are sufficient to uniquely identify any cell in the 3D DGGS.
+		Here we show a single cell---highlighted in purple---along with all the cells that share a surface index (red) and a layer index (blue) 
+	}
+	\label{fig:prismatoid-indexing}
+\end{figure}
+
+
+Figure~\ref{fig:prismatoid-coding} illustrates the pipeline for our proposed split of these operations.
 The surface component of coding is handled entirely by the input DGGS and, therefore, is not discussed here.
-For the radial component, encoding and decoding make use of the forward and inverse radial mapping functions provided in Chapter~\ref{chap:6}, respectively.
+For the radial component, encoding and decoding make use of the forward and inverse radial mapping functions provided in Chapter~\ref{chap:6:radial}, respectively.
 We also provide a parameterization for identifying the layers of a 3D DGGS, and operations for encoding and decoding this parameterization.
 We do \textit{not} discuss methods for converting this parameterization into a single index or for combining surface and layer indices into a single index (nor do we provide the inverse for either of these operations).
 For the former, the varying complexity of the layer structure in a 3D DGGS---combined with the competing goals of an indexing scheme---makes defining a general method for doing so challenging.
 For the latter, this operation depends heavily on the input DGGS and layer indexing and cannot be easily defined in general.
+
+
+\begin{figure}[htp!]
+	\centering
+	\includegraphics[width=\textwidth]{3d-coding.pdf}
+	\caption[Pipeline for encoding and decoding with the grid extension method]{
+		Pipeline for splitting encoding and decoding into surface (top) and radial (bottom) components.
+		These two components are entirely independent except for the surface resolution ($k_s$) of the layer being provided to the surface component during encoding
+	}
+	\label{fig:prismatoid-coding}
+\end{figure}
 
 
 Layers of our 3D DGGS's can be parameterized by the shell they reside in ($s$), the integer index of the layer relative to the shell ($j$), and the level of refinement ($k$); we denote the central layer with $s = -1$.
@@ -422,7 +434,7 @@ Thus, layer encoding will calculate these values from $\hat{r}$ and layer decodi
 The level of refinement $k$ is an input into encoding; therefore, only $s$ and $j$ need to be computed.
 The value of $s$ can be carried forward from the radial mapping function evaluation.
 In order to calculate $j$, the number of layers in the shell is first needed.
-The number of layers in a shell depends on the refinement level, the layering sequence, and the number of extra radial splits (see Chapter~\ref{sec:grid:ar}).
+The number of layers in a shell depends on the refinement level, the layering sequence, and the number of extra radial splits (see Chapter~\ref{chap:extension}).
 Once again, the level of refinement is an input, and the other variables are constant for any given 3D DGGS.
 Therefore, the number of layers is
 %
@@ -439,34 +451,34 @@ For central layers, this is always zero; otherwise, it is $k - s - 1 + w$.
 
 
 Note that only the values of $s$ and $d$ are used in the above calculation and \textit{not} $\hat{r}$.
-Therefore, the full evaluation of the radial mapping is unnecessary, and only Equation~(XX) is evaluated for encoding.
+Therefore, the full evaluation of the radial mapping is unnecessary, and only Equation~(\ref{eq:radialForwD}) is evaluated for encoding.
 
 
 \subsection{Decoding}
 For decoding, we calculate $d_\mathrm{min}$ and $d_\mathrm{max}$ as $j/n_\ell$ and $(j+1)/n_\ell$, respectively.
-These values are then fed directly into the inverse radial mapping as values of $d$ in Equation~(XX).
+These values are then fed directly into the inverse radial mapping as values of $d$ in Equation~(\ref{eq:radialInv}).
 
 
 \subsection{Other Indexing Operations}
 Similar to encoding and decoding, we define grid traversal operations in terms of surface and radial components.
-Referring back to Figures~\ref{fig:indexing} and \ref{fig:3d-coding}, we let $i_s$ be the surface index of a cell and $i_\ell$ be the layer index.
+Referring back to Figures~\ref{fig:prismatoid-indexing} and \ref{fig:prismatoid-coding}, we let $i_s$ be the surface index of a cell and $i_\ell$ be the layer index.
 For each of these components, we assume there is a corresponding parent(s), child, and neighbour operation.
 For the surface index, this comes directly from the input DGGS indexing, whereas for the layer index, we define these in terms of the layer parameterization provided above.
 
 
 \subsubsection{Layer Operations}
-Describe how to calculate new values of $s'$, $j'$, and $k'$ from values given for the input layer.
+For each of the operations, we describe how to calculate the output layer parameterization(s) $(s',j',k')$ from that of the input layer $(s,j,k)$.
 
 
 \paragraph{Parent}
 Trivially, the parent layer is in the previous resolution of the 3D DGGS, so $k' = k - 1$.
-For calculating $s$ and $j$ there are two cases, which correspond with the parent layer being central or normal, respectively.
+For calculating $s$ and $j$, there are two cases, which correspond with the parent layer being central or normal, respectively.
 If $s = k-1$ or $s = -1$, then the parent layer is a central layer. In this case, $s' = -1$ and $j' = 0$.
 Otherwise, the parent layer is normal with $s' = s$ and $j' = \lfloor j / \ell_k \rfloor$.
 
 
 \paragraph{Children}
-The children layers depend on if the layer in question is central or normal.
+The child layers depend on if the layer in question is central or normal.
 Regardless, in both cases all children will have $k' = k + 1$.
 Recall that $s = -1$ denotes that a given layer is central.
 In this case, one child is the child central layer with $s' = -1$ and $j = 0$.
@@ -475,7 +487,7 @@ For normal layers, the children are found with $s' = s$ and $j' = \{ j \cdot \el
 
 
 \paragraph{Neighbours}
-Neighbour layers are the layers above and below a given layer; they are at the same resolution so $k' = k$.
+Neighbour layers are the layers above and below a given layer; they are at the same resolution, so $k' = k$.
 In most cases, the two neighbours are simply $s' = s$ and $j' = j \pm 1$; however, there are three edge cases that need to be handled.
 If $j = n_\ell - 1$, then the layer above is $s = s - 1$ and $j = 0$; if $s - 1$ is negative then the layer is on the boundary of the grid and there is no layer above it.
 If $j = 0$ then the layer below is $s' = s + 1$ and $j = n_\ell$, where $n_\ell$ is calculated with respect to the new shell (i.e. $s'$).
@@ -487,7 +499,7 @@ With the surface and layer operations defined, we now give the full 3D ones.
 
 
 \paragraph{Parents}
-The parent(s) of a cell depend on if the layer of the cell and its parent layer have the same, or different, values of $k_s$.
+The parent(s) of a cell depends on if its layer and its parent layer have the same or different values of $k_s$.
 Let $i_\ell' = \operatorname{parent}(i_\ell)$; if the value of $k_s$ is the same, then the single parent is simply $(i_s, i_\ell')$.
 In most cases, the value of $k_s$ for $i_\ell'$ is some number $m$ (often one, but not always) less than that of $i_\ell$.
 In this case, the parent(s) are given by $\operatorname{parents}^m(i_s) \times i_\ell$.
@@ -499,7 +511,7 @@ For normal layers, the set of children is simply $\operatorname{children}(i_s) \
 For central layers, the child who belongs to the new central layer must be distinguished from the other child layer(s).
 Call the index of the new central layer $c_\ell$; then, this child is given by $(i_s, c_\ell)$.
 Let $ N_\ell$ give the set of the other children layer indices (normal layers).
-These layers have the surface refinement applied $w$ times, so the resulting children are $\operatorname{children}^w(i_s) \times N_\ell$
+These layers have the surface refinement applied $w$ times, so the resulting children are $\operatorname{children}^w(i_s) \times N_\ell$.
 
 
 \paragraph{Neighbours}
@@ -511,6 +523,7 @@ If $i_\ell^+$ has the same value of $k_s$ as $i_\ell$, then the single neighbour
 In the other case, where the value of $k_s$ for $i_\ell^+$ is some number $m$ greater than that of $i_\ell$, the neighbours are given by $\operatorname{children}^m(i_s) \times i_\ell^+$.
 Likewise, if $i_\ell^-$ has the same value of $k_s$ as $i_\ell$, there is one neighbour below given by $(i_s, i_\ell^-)$.
 In the case that the value of $k_s$ for $i_\ell^-$ is some number $m$ less than that of $i_\ell$, the neighbours are given by $\operatorname{parents}^m(i_s) \times i_\ell^-$
+
 
 \section{Summary}
 A summary of everything will go here.
