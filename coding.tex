@@ -355,9 +355,46 @@ This same effect does not appear in the encoding algorithms since $s$ and $z$ ar
 
 
 \subsection{Other Indexing Operations}
-Parent trivial.
-Children trivial if have cell type. SG if $r_i = 2^k - 1$. LG if $\varphi_i = 2^{k - k_\varphi} - 1$.
-Neighbours are tricky...
+Since the SDOG indexing described above is based on coordinate indices, grid traversal queries are mostly straightforward.
+However, the nature of semiregular degenerate refinement introduces a few complications that make parent, child, and neighbour operations more complex than the respective operations in a perfectly regular grid.
+We briefly describe how to perform each of these for a given SDOG index, $i$, below.
+
+
+\paragraph{Parent}
+The use of Morton interleaving makes parent queries trivial. The parent of $i$ is simply $i$ with the lowest three bits removed.
+
+
+\paragraph{Children}
+The children of an SDOG cell depend on the cell type.
+A cell is SG if $r_i = 2^k - 1$, LG if $\varphi_i = 2^{k - k_\varphi} - 1$, and otherwise it is NG.
+Let $C$ be the set of child codes for the cell type of $i$ (refer to Figure~X), then the children of $i$ are $\{ \operatorname{append}(i, c) \ | \ c \in C \}$
+
+
+\paragraph{Neighbours}
+Neighbours are by far the most complicated of the three operations due to the number of edge cases that need be handled.
+First, we obtain the coordinate indices of $i$ just as with decoding.
+In general, the coordinate indices of the neighbours of an SDOG cell are $\{ (\lambda_i', \varphi_i', r_i') \ | \ x' \in x \pm 1 \}$, which are then interleaved and combined with the octant code for the full index.
+However, specific cells in SDOG require a modified formulation for certain neighbours.
+Below we list how to detect these edge cases and how to modify the neighbour calculation accordingly.
+%
+\begin{enumerate}
+	\item If $\lambda_i = 2^{k - k_\lambda} - 1$, then $\lambda_i + 1$ is in a neighbouring octant.
+	For this neighbour, set $\lambda_i' = 0$ and use the octant code for the neighbouring octant.
+	\item If $\lambda_i = 0$, then $\lambda_i - 1$ is in a neighbouring octant.
+	For this neighbour, set $\lambda_i' = 2^{k - k_\lambda} - 1$ and use the octant code for the neighbouring octant.
+	\item If $\varphi_i = 0$, then $\varphi_i - 1$ is in a neighbouring octant.
+	For this neighbour, set $\lambda_i' = 0$ and use the octant code for the neighbouring octant.
+	\item If $\varphi_i = 2^{k - k_\varphi} - 1 - 1$, $r_i = 2^k - 1$, or $r_i = 0$, then the cell is on the boundary of the octant with no neighbours in the corresponding direction (increasing, increasing, and decreasing, respectively).
+	\item If $\varphi_i = 2^n - 1$ for some $n \in \mathbb{Z}$, then $\varphi_i + 1$ is in the next spherical zone, which has half as many longitude divisions.
+	For this neighbour, set $\lambda_i' = \lfloor \lambda_i / 2 \rfloor$.
+	\item If $\varphi_i = 2^n$ for some $n \in \mathbb{Z}$, then $\varphi_i - 1$ is in the previous spherical zone, which has twice as many longitude divisions.
+	In this case, there are two neighbours in this direction; set $\lambda_i' = 2 \lambda_i, \  2 \lambda_i + 1$.
+	\item If $r_i = 2^n - 1$ for some $n \in \mathbb{Z}$, then $r_i + 1$ is in the next spherical shell, which has half as many longitude and laitude divisions.
+	For this neighbour, set $\lambda_i' = \lfloor \lambda_i / 2 \rfloor$ and $\varphi_i' = \lfloor \varphi_i / 2 \rfloor$.
+	\item If $r_i = 2^n$ for some $n \in \mathbb{Z}$, then $r_i - 1$ is in the previous spherical shell, which has twice as many longitude and latitude divisions.
+	In this case, there are four neighbours in this direction; set $\lambda_i' = 2 \lambda_i, \  2 \lambda_i + 1$ and $\varphi_i' = 2 \varphi_i, \  2 \varphi_i + 1$.
+\end{enumerate}
+%
 
 
 \section{Extension Method}
@@ -377,7 +414,7 @@ For the former, the varying complexity of the layer structure in a 3D DGGS---com
 For the latter, this operation depends heavily on the input DGGS and layer indexing and cannot be easily defined in general.
 
 
-Layers of our 3D DGGS's can be parameterized by the shell they reside in ($s$), the integer index of the layer relative to the shell ($j$), and the level of refinement ($k$).
+Layers of our 3D DGGS's can be parameterized by the shell they reside in ($s$), the integer index of the layer relative to the shell ($j$), and the level of refinement ($k$); we denote the central layer with $s = -1$.
 Thus, layer encoding will calculate these values from $\hat{r}$ and layer decoding will calculate $\hat{r}_\mathrm{max}$ and $\hat{r}_\mathrm{min}$ from these values.
 
 
@@ -393,14 +430,15 @@ Therefore, the number of layers is
 n_\ell = \left( x+1 \right) \prod_{i = s}^{k - 1} \ell_i.
 \end{equation*}
 %
-In the case where $s$ is greater than or equal to $k-1$, the shell is in the central layer.
-In this case, we set $s = -1$ and note that there is only one layer in the shell.
+Recall that $\ell_i$ refers to the number of layer produced when refining normal layers at refinement level $i$, which is unrelated to the values $\ell_g$ and $\ell_p$.
+In the case where $s$ is greater than $k-1$, the shell is in the central layer.
+In this case, we set $s = -1$ and $j = 0$.
 The integer index of the layer is then $j = \lfloor d \cdot n_\ell \rfloor$, where $d$ is carried forward from the radial mapping function.
 Finally, as input into the surface encoding, the value of $k_s$ is needed for the shell.
 For central layers, this is always zero; otherwise, it is $k - s - 1 + w$.
 
 
-Note that the final mapped value of $\hat{r}$ is not used in the above calculations: $s$ and $d$.
+Note that only the values of $s$ and $d$ are used in the above calculation and \textit{not} $\hat{r}$.
 Therefore, the full evaluation of the radial mapping is unnecessary, and only Equation~(XX) is evaluated for encoding.
 
 
@@ -408,20 +446,27 @@ Therefore, the full evaluation of the radial mapping is unnecessary, and only Eq
 For decoding, we calculate $d_\mathrm{min}$ and $d_\mathrm{max}$ as $j/n_\ell$ and $(j+1)/n_\ell$, respectively.
 These values are then fed directly into the inverse radial mapping as values of $d$ in Equation~(XX).
 
+
 \subsection{Other Indexing Operations}
-With our method---similar to encoding and decoding---we define these operations in terms of surface and radial components.
-This split not only simplifies the problem of indexing but also ensures the 3D indexing is consistent with that of the input DGGS.
+Similar to encoding and decoding, we define grid traversal operations in terms of surface and radial components.
 Referring back to Figures~\ref{fig:indexing} and \ref{fig:3d-coding}, we let $i_s$ be the surface index of a cell and $i_\ell$ be the layer index.
-For each of these components, we assume there is a corresponding parent, child, and neighbour operation.
+For each of these components, we assume there is a corresponding parent(s), child, and neighbour operation.
 For the surface index, this comes directly from the input DGGS indexing, whereas for the layer index, we define these in terms of the layer parameterization provided above.
 
 
-\subsubsection{Layer Algorithms}
-Parent, child, and neighbours for layers.
+\subsubsection{Layer Operations}
+Describe how to calculate new values of $s'$, $j'$, and $k'$ from values given for the input layer.
 
 
-\subsubsection{Combined Algorithms}
-Combine operations of layers and input to make full 3D operations.
+\paragraph{Parent}
+Trivially, the parent layer is in the previous resolution of the 3D DGGS, so $k' = k - 1$.
+For calculating $s$ and $j$ there are two cases, which correspond with the parent layer being central or normal, respectively.
+If $s = k-1$ or $s = -1$, then the parent layer is a central layer. In this case, $s' = -1$ and $j' = 0$.
+Otherwise, the parent layer is normal and $s' = s$ and $j' = \lfloor j / \ell_k \rfloor$.
+
+
+\subsubsection{Combined Operations}
+With the surface and layer operations defined, we now give the full 3D ones.
 
 
 \paragraph{Parents}
