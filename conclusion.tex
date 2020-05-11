@@ -1,37 +1,54 @@
 \chapter{Conclusion} \label{chap:conclusion}
-This thesis explores how semiregular degenerate refinement can be used to make 3D DGGS's.
-First show how modifying splitting surfaces can improve volume preservation by looking at SDOG.
-Then derive general method for extending a 2D DGGS to the third dimension.
-To define coding algorithms, we first derive radial mappings that allow volume preservation for grid extensions and map between conventional SDOG and modifications.
-Similarly, provided latitude mappings for SDOG that do the same thing.
-Use these mapping to define the coding operations that operate in more uniform grid space while still having volume preservation in physical space.
-For SDOG, also give direct coding algorithms that have not been previously explored in literature.
-Also give neighbour, child, and parent operations for SDOG and in general for grid extension.
-The grid extension is fully implemented and used to demonstrate three potential use cases of 3D DGGS using three different grid systems.
-Given input DGGS, creating 3D DGGS is instant and only requires three parameters clearly defined and explored in the thesis.
+With the amounts of 3D geospatial data becoming available, techniques for integrating and managing such data are becoming increasingly important.
+A recent approach for aiding in this is the 3D DGGS.
+A 3D DGGS provides an indexed multiresolution hierarchy of cells where geospatial data is associated with cells that correspond to the appropriate regions of the Earth.
+The two main classes of 3D DGGS are embedded and Earth-centric, with the latter typically preferred as they provide a more natural representation of the planet.
+However, a common challenge with Earth-centric 3D DGGS's is the reduction in cell compactness and volume approaching the singularity at the centre of the Earth.
+One potential solution to this problem is semiregular degenerate refinement.
+
+
+This thesis explores the application of semiregular degenerate refinement techniques for the purpose of creating Earth-centric 3D DGGS's.
+First, we show how modifying the location of splitting surfaces can improve volume preservation, specifically looking at the case of SDOG.
+Building on this, we derive a general method for extending an arbitrary 2D DGGS to the third dimension.
+To define coding operations for these two methods, we first derive a set of radial and latitude mapping functions.
+These mappings allow us to define coding algorithms that operate in a more uniform grid space while still having volume preservation in physical space.
+For SDOG, we also derive direct coding algorithms that run in constant time in comparison to the linear time of their hierarchical counterparts.
+Additionally, we provide neighbour, child, and parent operations for SDOG and the grid extension method in general.
+The grid extension method is fully implemented and used to demonstrate three potential use cases of 3D DGGS using three different grid systems.
+Given an input DGGS, creating the 3D DGGS is instant and only requires three parameters clearly defined and explored in this thesis.
+
+
+Looking back at Chapter~\ref{chap:introduction}, our goals were for our 3D DGGS's to support unbounded ranges of altitude, equal (or near-equal) volume cells, efficient operations, and interoperability with 2D DGGS's.
+Support for unbounded ranges of altitudes is achieved as a direct result of using semiregular degenerate refinement, and is also clearly demonstrated in Chapter~\ref{chap:8:sats}.
+We achieve equal volume cells (excluding degenerate cells) for SDOG in the volume method.
+Furthermore, volume preservation is also possible for the grid extension method if the input DGGS is area-preserving by using the appropriate radial mapping function.
+Finally, the algorithms provided in Chapter~\ref{chap:coding} are efficient, and the use of surface indices from the input DGGS ensures consistency and interoperability between the 2D and 3D systems.
 
 
 \section{Limitations and Future Work}
-Field of 3D DGGS relatively young and unexplored.
-Despite generalness of method, only creates on general type of 3D DGGS.
-Also has limitations.
-No general way to linearize layer index and surface index (or even layer index itself).
-This important for DGGS, and further research would not only solve this, but could also be extended to time for 4D DGGS.
-Only discussed sphere based DGGS in this thesis.
-Earth more accurately approximated with oblate spheroid.
-Believe our method works for ellipsoid based DGGS, but more careful exploration, generalization, and justification is needed.
+The field of 3D DGGS is relatively young and unexplored, especially compared to the rich body of research that exists for their 2D counterparts.
+While this thesis provides important contributions to this developing field, there are still many significant future works to be done.
+Despite the generality of our grid extension method, it can only create one particular type of 3D DGGS.
+While we believe this type of 3D DGGS is useful in many applications, it is certainly not the ideal type for all.
+The method also has its limitations.
 
 
-Need better encoding for more complex geometry.
-Encoding polylines, polygons, 3D models and meshes very important operations.
-Version used in use cases were naive and simple as proof of concept.
-These type of algorithms typically quite specific to grid type.
-Generalization/classification for creating efficient versions for arbitrary grid would further support quick iteration on creating and testing different DGGS, both 2D and 3D.
+First, we do not provide a general method for linearizing the layer parameterization ($s$, $j$, and $k$) or for combining this with the surface index of the input DGGS.
+Indices with good locality properties are essential for a DGGS, as this helps minimize the number of cache misses and disc seeks when retrieving data.
+General methods for linearizing indices that represent different dimensions (i.e. surface vs. radial) could also be extended to time for a 4D DGGS.
 
 
-Occlusion big issue with volumetric DE.
-3D DGGS may be able to aid in this.
-Slice views and select layers could aid in occlusion.
+Second, we only explore our grid extension method in the context of a sphere-based input DGGS.
+However, the Earth is more accurately approximated with an oblate spheroid; correspondingly, there exist ellipsoid-based DGGS's.
+While we believe our method would also work for ellipsoid based DGGS's, more careful exploration is needed to justify this claim.
 
 
-%\section{Closing Remarks}
+Finally, geospatial data represented as polylines, polygons, point clouds, 3D meshes, and other complex geometry require their own encoding algorithms beyond those for points.
+We implemented encoding algorithms for polylines and polygonal prisms in Chapter~\ref{chap:usecases}; however, they were only meant to serve as a proof of concept.
+General and efficient versions of these algorithms are key for creating a more robust 3D DGGS.
+
+
+Another challenge with volumetric Digital Earth applications, in general, is that of occlusion in visualizations.
+Data at higher altitudes blocks the view of lower altitudes.
+This issue is especially present when trying to visualize subterranean data while maintaining a view of the planet's surface for reference.
+The structure of a 3D DGGS may be able to aid in such occlusion issues by allowing slices and layers of cells to be viewed independently of other cells in the grid.

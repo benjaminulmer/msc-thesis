@@ -13,7 +13,7 @@ With applications in urban planning, agriculture, education, natural disaster pr
 These tools are needed to efficiently integrate, process, analyze, and visualize geospatial data in order to use it to make informed decisions.
 Such a need has led to the vision of Digital Earth, where all data regarding the Earth is available in a common reference used by the public to inform their decisions.
 The use of such a system would range from world governments informing policy by analyzing climate trends to homeowners referencing local utility line locations when building a fence.
-In reality, such an expansive and holistic system is yet to be achieved; however, many approaches for smaller scope Digital Earths exist.
+In reality, such an expansive and holistic system is yet to be achieved; however, many approaches for smaller-scope Digital Earths exist.
 
 
 Geographic information systems (GIS) are one of the conventional approaches used for creating a Digital Earth.
@@ -87,8 +87,8 @@ Cells should be aligned with the surface of the Earth and have a consistent orie
 	\centering
 	\includegraphics[width=\textwidth]{3dllg.pdf}
 	\caption[Different views of a 3D latitude-longitude grid]{
-		Placeholder figure.
-		Caption describing degeneration in cells toward centre and poles
+		One octant of a 3D latitude-longitude grid viewed (a) at an angle, (b) from the front, and (c) from the side.
+		Note how cells near the pole and equator degenerate in size and compactness and are much smaller than those near the surface and equator.
 	}
 	\label{fig:3dllg}
 \end{figure}
@@ -178,12 +178,12 @@ This main contributions of this thesis fall into three groups:
 \begin{enumerate}
 	\item Modifications of SDOG refinement.
 	These modifications are able to achieve perfect volume preservation between all non-degenerate cells.
-	Additionally, we provide blending functions that allow a balanced trade-off between volume preservation and cell compactness.
+	Additionally, we provide blending functions that allow a balanced tradeoff between volume preservation and cell compactness.
 	An analysis of volume preservation and compactness for the different modifications is also provided.
 	
 	\item Method for extending 2D DGGS to 3D.
 	This method is fully general and supports any valid DGGS, including any refinement factor and non-congruent refinement.
-	Furthermore, clearly defined parameters allow for a target aspect ratio for cells and---like the SDOG modifications---a balanced trade-off between volume preservation and cell compactness.
+	Furthermore, clearly defined parameters allow for a target aspect ratio for cells and---like the SDOG modifications---a balanced tradeoff between volume preservation and cell compactness.
 	We use a set of sample use cases to evaluate the method.
 	
 	\item Mapping functions (for modified SDOG \textit{and} extended grids).

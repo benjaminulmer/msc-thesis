@@ -13,7 +13,7 @@ The 3D DGGS class takes an input DGGS as well as values for the target aspect ra
 Further implementation details are provided in Chapter~\ref{chap:8:impl}.
 
 
-\subsection{Aircraft and Satellite Paths}
+\subsection{Aircraft and Satellite Paths} \label{chap:8:sats}
 The first use case we examine is tracking the trajectories of aircraft and spacecraft, such as commercial and private flights, drones, satellites, and rockets.
 Such a system could be used to increase the efficiency of collision queries using the hierarchy of the grid system, similar to the approaches of~~\cite{miao2019low, zhai2019collision}.
 The main benefit our 3D DGGS would offer over existing grids for such a system is the ability to have cells located at low and high altitudes in the same resolution have close to equal shape and size.
@@ -89,9 +89,9 @@ Figure~\ref{fig:uml} shows a class diagram for the C++ implementation of the gri
 
 \begin{figure}[ht!]
 	\centering
-	\includegraphics[width=\textwidth]{3ddggs-uml.pdf}
-	\caption[Title]{
-		Class diagram for the implementation of our method. The classes shown in blue have their implementation and/or functionality described in the main body of the paper
+	\includegraphics[width=0.95\textwidth]{3ddggs-uml.pdf}
+	\caption[Class diagram of the grid extension implementation]{
+		Class diagram for the implementation of our method. The classes shown in blue have their functionality described in the thesis; other classes are a part of the research toolset or otherwise support the implementation
 	}
 	\label{fig:uml}
 \end{figure}

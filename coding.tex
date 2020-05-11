@@ -268,7 +268,7 @@ We first generate one million points randomly distributed within an SDOG octant.
 For each resolution being benchmarked, we then time each of the encoding algorithms using the generated points.
 The resulting indices are then used to time each of the decoding algorithms in the same manner.
 We time resolutions $1 \le k \le 21$, as 21 is the highest resolution \textit{without} an octant code that can be represented by a 64-bit integer.
-We use the libmorton library~\cite{libmorton} to perform efficient bit-interleaving and unweaving.
+We use the Libmorton library\footnote{\url{https://github.com/Forceflow/libmorton}} to perform efficient bit-interleaving and unweaving.
 
 
 \begin{figure}[htp!]
@@ -385,7 +385,7 @@ Below we list how to detect these edge cases and how to modify the neighbour cal
 %
 
 
-\section{Extension Method}
+\section{Extension Method} \label{chap:7:extension}
 For our grid extension method, encoding and decoding operations are defined for the input DGGS and should be leveraged when defining the 3D version of these operations.
 Doing so not only simplifies the definition of these operations (by deferring work to the input DGGS) but also facilitates the simple transference of data between the input DGGS and its 3D counterpart.
 To accomplish this, we split encoding and decoding into a surface and radial component.
@@ -400,7 +400,7 @@ Uniquely identifying each of these components is sufficient to identify every ce
 		Indices from the input DGGS identify cells in the 3D DGGS with the same bases but different radii.
 		Likewise, each layer of the 3D DGGS contains contains all cells with the same radii but different bases.
 		Thus, these two pieces of information combined are sufficient to uniquely identify any cell in the 3D DGGS.
-		Here we show a single cell---highlighted in purple---along with all the cells that share a surface index (red) and a layer index (blue) 
+		Here we show a single cell---highlighted in purple---along with all the cells that share a surface index (red) and a layer index (blue)
 	}
 	\label{fig:prismatoid-indexing}
 \end{figure}
@@ -522,8 +522,15 @@ Let $i_\ell^+$ be the layer above $i_\ell$ and $i_\ell^-$ be the layer below.
 If $i_\ell^+$ has the same value of $k_s$ as $i_\ell$, then the single neighbour above is $(i_s, i_\ell^+)$.
 In the other case, where the value of $k_s$ for $i_\ell^+$ is some number $m$ greater than that of $i_\ell$, the neighbours are given by $\operatorname{children}^m(i_s) \times i_\ell^+$.
 Likewise, if $i_\ell^-$ has the same value of $k_s$ as $i_\ell$, there is one neighbour below given by $(i_s, i_\ell^-)$.
-In the case that the value of $k_s$ for $i_\ell^-$ is some number $m$ less than that of $i_\ell$, the neighbours are given by $\operatorname{parents}^m(i_s) \times i_\ell^-$
+In the case that the value of $k_s$ for $i_\ell^-$ is some number $m$ less than that of $i_\ell$, the neighbours are given by $\operatorname{parents}^m(i_s) \times i_\ell^-$.
 
 
 \section{Summary}
-A summary of everything will go here.
+There exist several critical operations that enable the integration, analysis, and visualization of data in a DGGS.
+By providing point encoding, cell decoding, and grid traversal queries for the 3D DGGS's presented earlier in the thesis, we allow them to serve as fully functioning grid systems.
+While there exist more advanced DGGS operations, the ones discussed in this chapter are the most fundamental and operate as a key component in defining more complex queries and analysis.
+For our modifications to SDOG, the combination of the mapping functions derived in Chapter~\ref{chap:mapping} and our direct encoding and decoding algorithms allow for efficient constant-time performance of these operations.
+This improved efficiency is especially noticeable at high refinement levels for the balanced and volume methods, where the direct approaches are an order of magnitude faster than their hierarchical counterparts.
+For the grid extension method, the operations we provide are completely general and work for any valid 3D DGGS resulting from the method.
+For a specific 3D DGGS, such generality may not be necessary.
+In this case, more specific versions of these algorithms---with unnecessary calculations removed---should be derived and used instead.
