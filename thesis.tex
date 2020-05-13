@@ -1,6 +1,21 @@
 % Based on the University of Calgary thesis template by
 % N. Mancell (1998,2006), D. Teale (1992), and T. Zhang (2012)
+
+
+% Werid fix needed to get colour working with graphicx
+\makeatletter
+\let\my@xfloat\@xfloat
+\makeatother
 \documentclass[12pt]{ucalgthes1}
+\makeatletter
+\def\@xfloat#1[#2]{
+	\my@xfloat#1[#2]%
+	\def\baselinestretch{1}%
+	\@normalsize \normalsize}
+\makeatother
+% end of fix
+
+
 \usepackage[utf8]{inputenc} % unicode input
 \usepackage[canadian]{babel} % hyphenation rules
 \usepackage[hidelinks]{hyperref} % urls
@@ -13,32 +28,18 @@
   bottom=1in,
 }
 
-%
-%    Define any commands you like in `lib/misc.tex`
-%
 
-% Defines a command for multi-line comments.
-\newcommand{\comment}[1]{}
-\comment{
-	For example, this is a comment.
-}
+% Commands to fix math spacing
 \let\originalleft\left
 \let\originalright\right
 \renewcommand{\left}{\mathopen{}\mathclose\bgroup\originalleft}
 \renewcommand{\right}{\aftergroup\egroup\originalright}
 
+
+%
 % Packages
+%
 \usepackage{amsmath}
-
-\usepackage{mathspec}
-\defaultfontfeatures{Ligatures=Common, Numbers=Uppercase}
-\setallmainfonts{Cambria}
-\setsansfont{Calibri}
-\setmonofont{Consolas}
-\setmathsfont(Digits,Latin,Greek)[Numbers={Lining,Proportional}]{Cambria}
-
-\urlstyle{sf}
-
 \usepackage{algorithmic}
 \usepackage{algorithm}
 \usepackage{graphicx}
@@ -47,8 +48,20 @@
 \usepackage{tabularx}
 \usepackage{booktabs}
 \usepackage{subcaption}
+\usepackage{mathspec}
 
+% Font stuff
+\defaultfontfeatures{Ligatures=Common, Numbers=Uppercase}
+\setallmainfonts{Cambria}
+\setsansfont{Calibri}
+\setmonofont{Consolas}
+\setmathsfont(Digits,Latin,Greek)[Numbers={Lining,Proportional}]{Cambria}
+\urlstyle{sf}
+
+% Path for figures
 \graphicspath{{./images/}}
+
+
 %
 %    Enter your own information in these fields
 %
@@ -63,6 +76,23 @@
 %
 %    End of supplied information
 %
+
+
+%DIF PREAMBLE EXTENSION ADDED BY LATEXDIFF
+%DIF UNDERLINE PREAMBLE %DIF PREAMBLE
+\RequirePackage[normalem]{ulem} %DIF PREAMBLE
+\RequirePackage{xcolor}
+\providecommand{\DIFadd}[1]{{\protect\color{blue}\uwave{#1}}} %DIF PREAMBLE
+\providecommand{\DIFdel}[1]{{\protect\color{red}\sout{#1}}}                      %DIF PREAMBLE
+%DIF SAFE PREAMBLE %DIF PREAMBLE
+\providecommand{\DIFaddbegin}{} %DIF PREAMBLE
+\providecommand{\DIFaddend}{} %DIF PREAMBLE
+\providecommand{\DIFdelbegin}{} %DIF PREAMBLE
+\providecommand{\DIFdelend}{} %DIF PREAMBLE
+%DIF FLOATSAFE PREAMBLE %DIF PREAMBLE
+
+%DIF END PREAMBLE EXTENSION ADDED BY LATEXDIFF
+
 
 \begin{document}
 \input{front-matter}

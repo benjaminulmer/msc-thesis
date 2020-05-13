@@ -6,38 +6,40 @@ The Earth is also home to many complex physical and chemical processes that, alo
 Given its significance and complexity, we need to understand the Earth to the best extent possible so that we can make informed decisions regarding it, and make sure the effects of our activities are for the better.
 
 
-One of the ways humanity works toward better understanding the Earth is by gathering data about it.
+One of the ways humanity works toward a better understanding of the Earth is by gathering data about it.
 Remote sensing satellites and aircraft, along with various smart technologies, have created a significant increase in the amount of geospatial data available and continually being collected.
 These developments have led to the challenge of \textit{geospatial big data}, meaning that the volume and complexity of data exceed the capacity of current computing systems~\cite{lee2015geospatial}.
 With applications in urban planning, agriculture, education, natural disaster prediction and management, and many other fields, the development of technologies for managing geospatial data is more crucial than ever.
 These tools are needed to efficiently integrate, process, analyze, and visualize geospatial data in order to use it to make informed decisions.
-Such a need has led to the vision of Digital Earth, where all data regarding the Earth is available in a common reference used by the public to inform their decisions.
+Such a need has led to the vision of a Digital Earth system, where all data regarding the Earth is available in a common reference used by the public to inform their decisions.
 The use of such a system would range from world governments informing policy by analyzing climate trends to homeowners referencing local utility line locations when building a fence.
-In reality, such an expansive and holistic system is yet to be achieved; however, many approaches for smaller-scope Digital Earths exist.
+In reality, such an expansive and holistic system is yet to be realized; however, many approaches for smaller-scope Digital Earths exist.
 
 
 Geographic information systems (GIS) are one of the conventional approaches used for creating a Digital Earth.
-With a GIS, different datasets are represented and stored as individual map layers in a planar coordinate system, which acts as a proxy for the Earth.
+With a GIS, different datasets are represented and stored as individual map layers in a shared coordinate system, which acts as a proxy for the Earth.
 These individual layers are overlayed to create a complete model of the Earth (or region of the Earth) and combined with different operations to perform various analyses.
-However, being created and gathered by diverse organizations, geospatial data exists in many different formats and resolutions.
-The conventional GIS pipeline---which requires experts to clean, process, integrate, and distribute data---is unsustainable in the face of geospatial big data.
+However, being created and gathered by diverse organizations, geospatial data exists in many different formats, coordinate systems, and resolutions.
+The conventional GIS pipeline---which requires experts to clean, remap, process, integrate, and distribute data---is unsustainable in the face of geospatial big data.
 Furthermore, even after integrating data with a GIS, overlay operations such as intersections and data extraction are computationally expensive when many data layers are present~\cite{wang2015improving}.
 Coordinate-based representations of geospatial data also do not provide proper facilities to represent the uncertainty or error of the data they are used to represent~\cite{goodchild2018reimagining}.
 
 
-Another challenge with GIS is the use of a flat map as the underlying representation.
+Another challenge with GIS is the frequent use of planar maps as the underlying representation.
 Flattening the Earth produces inevitable map edges and distortion that impact the analysis and visualization of geospatial data.
 Map edges can cause serious misunderstanding of the continuity between different sides of the map---especially with young children~\cite{hennerdal2015beyond}---and also affect the estimation of distance even when the continuity is correctly understood~\cite{hruby2016journey}.
 Distortion causes inaccuracies in calculations such as geodesics and buffering if using planar geometry~\cite{flaterbuffering}, which is especially problematic when working with large distances and areas.
 These distortions also affect the visual analysis of data by misrepresenting the size and shape of different regions.
 
 
-Model globes avoid many of the shortcomings of planar maps by providing a more accurate reference model for the Earth.
-Despite this, the ability for physical maps to be easily made and stored, display the entire Earth at once, and accommodate any scale has made them the preferred option in many situations.
-With the advent of a Digital Earth, however, many the drawbacks of physical globes are lessened or negated.
+Compared to a planar map, a globe provides a more accurate reference model for the Earth and avoids many of the above issues present with maps.
+Despite this, \textit{physical} globes have many practical challenges, the most notable being expensive manufacturing, difficult storage, and the inability to accommodate any scale conveniently.
+Many of these drawbacks of physical globes, however, are lessened or negated in a digital setting.
 Computer graphics algorithms and hardware allow rendering of globes in real-time, storage is no different than for a digital map, and interactive systems allow zooming and panning to show any part of the Earth at any scale.
-The only challenge unsolved is displaying the entire Earth at once; however, even this is partially addressed with multi-view focus plus context rendering techniques~\cite{sherlock2017visualizations}
-Because of this, there has been a recent push toward globe-based Digital Earth systems, one of the most well-known examples of which being Google Earth\footnote{\url{https://www.google.com/earth/}}.
+Digital globes still cannot display the entire Earth at once; however, this is partially addressed with multi-view focus plus context rendering techniques~\cite{sherlock2017visualizations}.
+
+
+Because of the advantages of globes, there has been a recent push toward globe-based Digital Earth systems, one of the most well-known examples of which being Google Earth\footnote{\url{https://www.google.com/earth/}}.
 In these systems, data is visualized on a 3D model of the Earth---approximated as a sphere or ellipsoid---as opposed to a traditional planar map.
 While globe-based Digital Earths are becoming more popular, many of these systems still use a flat map as the underlying representation for geospatial data.
 Thus, these systems still suffer errors introduced by distortion resulting from any planar operations done with the underlying coordinate system.
@@ -48,7 +50,8 @@ A partition of the Earth into a set of non-overlapping cells allows information 
 Such partitionings are termed discrete global grids (DGG).
 To accommodate different resolutions of data, a hierarchy of these DGG's at successively finer resolutions, referred to as a discrete global grid system (DGGS), is used.
 Not only does this cell hierarchy allow multiple resolutions of data to be supported, but it also provides an inbuilt mechanism for representing data uncertainty by using a cell (or set of cells) to represents the range of possible locations for a datum.
-However, in order for DGGS cells to serve as a suitable representation for geospatial data, these cells should be compact and near-uniform in size.
+Additionally, a hierarchical data structure facilitates efficient algorithms by first calculating results with a coarse representation, and only refining further if necessary.
+Nevertheless, in order for DGGS cells to serve as a suitable representation for geospatial data, their cells should be compact and near-uniform in size.
 Compact cells ensure that data from geographically distant (relative to the size of the cell) locations are not represented in the same cell.
 Uniformity of size ensures that each resolution of the DGGS represents the entire Earth at a particular spatial resolution and that cells of the same size do not appear at different resolutions of the grid system.
 
@@ -56,6 +59,7 @@ Uniformity of size ensures that each resolution of the DGGS represents the entir
 While DGGS's are an effective tool for integrating and managing geospatial data on the surface of the Earth, they have no inbuilt mechanism for supporting 3D data.
 Many of today's geospatial sensors, along with other technologies such a numerical weather prediction, generate data with an associated altitude in addition to other dimensions.
 With a DGGS, 3D data is flattened with altitude stored only as an attribute.
+Since attributes do not index data, such flattening is problematic in applications where data must be accessed or otherwise filtered by altitude.
 This shortcoming has motivated the development of volumetric (3D) discrete global grids and grid systems to allow native support for 3D data.
 Going forward, we use the term 3D DGGS to refer to these technologies collectively.
 
@@ -68,7 +72,7 @@ Therefore, to support the full range of human activity and interest, 3D DGGS's t
 
 
 \section{Problem Statement} \label{chap:1:problem}
-Despite the necessity for 3D DGGS's, the area of research is still relatively unexplored compared to that of traditional DGGS and GIS technologies.
+Despite the necessity for 3D DGGS's, the area of research is still relatively unexplored compared to those of traditional DGGS and GIS.
 Additionally, of the proposed methods, many are only appropriate for data with small altitude ranges, or data near the surface of the Earth.
 Thus, for data with more extensive altitude ranges, there are even fewer methods that are appropriate. 
 From this, we arrive at the primary goal of this thesis: to develop 3D DGGS's that have adequate support for unbounded ranges of altitude. 
@@ -93,20 +97,19 @@ Cells should be aligned with the surface of the Earth and have a consistent orie
 	\label{fig:3dllg}
 \end{figure}
 
-
-The main challenge associated with such Earth-centric grids is the inevitable degeneration of cells toward the singularity at the centre of the Earth.
-This effect is demonstrated in Figure~\ref{fig:3dllg}---cells more near the centre of the grid become increasingly small and skinny and eventually degenerate to pyramids.
-For grids with a small radial extent, the effect of this is negligible; however, for the range of altitudes we wish to support in this thesis, it cannot be ignored.
-The problem with this type of cell degeneration is two-fold, as it reduces both the compactness and volume of cells.
-Furthermore, the resulting difference in the volumes of cells is unbounded.
+The main challenges associated with Earth-centric grids are caused by cells converging toward the singularity at the centre of the Earth.
+That is, cells more near the centre of the grid become increasingly small and skinny and eventually degenerate to pyramids
+(see Figure~\ref{fig:3dllg}).
+The problem with this is two-fold, as it reduces both the compactness and volume of cells; furthermore, the resulting difference in the volumes of cells is unbounded.
+For grids with a small radial extent, these effects are negligible; however, for the range of altitudes we wish to support in this thesis, they cannot be ignored.
 It is worth noting that this same issue presents itself in traditional latitude-longitude grids at the poles, also demonstrated in Figure~\ref{fig:3dllg}.
-Addressing such cell degeneration is one of the main challenges of this thesis.
+Addressing these issues is one of the main challenges of this thesis.
 
 
 \section{Goals and Scope} \label{chap:1:goals}
 In addition to the initial goal of supporting an unbounded range of altitudes, there are several other aims for a 3D DGGS we wish to explore in this thesis.
-While we discuss these below in the context of a 3D DGGS, they are equally applicable to their conventional 2D counterparts.
-We choose to explore these goals only for Earth-centric 3D DGGS's using semiregular degenerate refinement strategies (see Chapter~\ref{chap:3:semiregDegen}); limiting the scope in this manner allows a more thorough exploration of the goals in the 3D DGGS's we propose.
+While we discuss these in the context of a 3D DGGS, they are equally applicable to their conventional 2D counterparts.
+
 
 
 As discussed previously, the cells of a 3D DGGS need to be compact while also maintaining near-uniform volume.
@@ -128,11 +131,18 @@ Ensuring all these operations are efficient allows quick integration, processing
 Finally, our 3D DGGS should leverage the accomplishments already made with conventional DGGS to facilitate the efficient and straightforward transference of data between 2D and 3D DGGS's. This interoperability allows smooth migration from 2D to 3D systems while also providing backwards compatibility from 3D to 2D systems.
 
 
-Given these goals and scope, we refine the goal of this thesis: develop methods for Earth-centric 3D DGGS's using semiregular degenerate refinement to support unbounded ranges of altitude, equal (or near-equal) volume cells, efficient operations, and interoperability with 2D DGGS's.
+Given these aims, we refine the primary goal of this thesis: develop methods for Earth-centric 3D DGGS's to support unbounded ranges of altitude, equal (or near-equal) volume cells, efficient operations, and interoperability with 2D DGGS's.
+To limit the scope, we mostly focus on the techniques used for creating the 3D DGGS's as opposed to sophisticated implementations of full systems.
+Doing so allows a broader exploration of different methods that we aggregate into more general findings.
 
 
 \section{Methodology} \label{chap:1:method}
-In this thesis, we use two different approaches to create 3D DGGS's with the desired properties.
+To achieve the goals of this thesis, we apply a specific class of refinement techniques---which we refer to as semiregular degenerate---for creating 3D DGGS's.
+The main idea of this type of refinement is to refine degenerate cells differently than non-degenerate ones in order to combat the reduction of cell size and compactness in these regions.
+Refer to Chapter~\ref{chap:3:semiregDegen} for further details.
+Using semiregular degenerate refinement, we explore two main approaches for creating 3D DGGS's with the desired properties.
+
+
 The first approach modifies the refinement rules of an existing 3D DGGS, the Spheroid Degenerated-Octree Grid (SDOG)~\cite{yu2009sdog}, to improve its volume-preserving properties.
 With SDOG, a sphere with twice the radius of the Earth is initially divided into eight equal octants via the equatorial plane and two perpendicular meridian planes.
 Cells (including the initial octants) are then refined using splitting surfaces located at the midpoint of the three spherical coordinates: latitude, longitude, and radius.
@@ -159,7 +169,7 @@ We also use a third metric to evaluate the impact these modifications have on th
 For our proposed encoding and decoding algorithms, we compare the runtime performance with the conventional algorithms at different levels of refinement both for conventional SDOG and our modified grids.
 
 
-We evaluation of the second approach through a series of use cases, each employing a different combination of input DGGS and 3D parameters to create a resulting 3D DGGS most appropriate for the application.
+We evaluate the second approach through a series of use cases, each employing a different combination of input DGGS and 3D parameters to create a resulting 3D DGGS most appropriate for the application.
 These use cases illustrate both the versatility and sophistication of the method, being able to quickly create many different 3D DGGS's while achieving the desirable properties outlined above.
 
 
@@ -208,5 +218,5 @@ Chapter~\ref{chap:mapping} derives the mapping functions used for modified SDOG 
 Chapter~\ref{chap:coding} then details how these mappings are used for efficient encoding and decoding operations.
 This chapter is also where we introduce and compare the improved encoding and decoding algorithms for SDOG.
 Chapter~\ref{chap:usecases} showcases three sample use cases for the grid extensions method, as well as the 3D DGGS's used for said use cases.
-Chapter~\ref{chap:implementation} contains implementation details.
+Chapter~\ref{chap:discussion} compares the different 3D DGGS's presented throughout the thesis and briefly discusses in which situations each would be most useful.
 Finally, Chapter~\ref{chap:conclusion} concludes with a summary, along with limitations and directions for future work.
