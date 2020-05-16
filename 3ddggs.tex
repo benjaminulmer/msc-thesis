@@ -1,6 +1,6 @@
 \chapter{3D Discrete Global Grid Systems} \label{chap:3ddggs}
-In the previous chapter, we explored the DGGS as a tool for integrating multiple geospatial datasets at varying resolutions.
-However, a DGGS has no inbuilt mechanism for handling the altitude(s) of geospatial data.
+In the previous chapter, we reviewed the DGGS as a tool for integrating multiple geospatial datasets at varying resolutions.
+However, a conventional DGGS has no inbuilt mechanism for handling the altitude(s) of geospatial data.
 Instead, an extension of the data structure to the third dimension---the 3D DGGS---is needed to accommodate such 3D data natively.
 This chapter argues for the need for 3D DGGS's in certain applications by exploring the downsides of a typical data flattening approach used to integrate 3D data with a 2D DGGS.
 We then compare the two most common approaches used for creating a 3D DGGS: embedding and Earth-centric.
@@ -8,14 +8,14 @@ We argue for the Earth-centric approach, proposing semiregular degenerate refine
 
 
 \section{Data Flattening} \label{chap:3:flatten}
-A DGGS provides a multiresolution partitioning of the surface of the Earth, but no partitioning in the radial dimension.
+A DGGS provides a multiresolution partitioning of the Earth's surface, but no partitioning in the radial dimension.
 Therefore, any geospatial data with associate altitude must be flattened to the surface for integration with a DGGS, with the original altitude stored as an attribute of the data.
 In applications where data \textit{does not} need to be filtered by altitude, and altitude is used no differently than any other attribute, this is an acceptable approach.
 However, if data \textit{does} need to be accessed or otherwise distinguished by altitude, then this approach is problematic.
 In this case, all data of a cell must be queried and searched to find those with the required altitude(s).
 Furthermore, the lack of a hierarchy in the radial dimension means data at different radial resolutions must be integrated manually as opposed to using the structure of the DGGS itself to aid in this task.
 Generally speaking, any benefits gained by using a DGGS are lost in the radial dimension; this is problematic for any application that uses the radial dimension as frequently as surface ones.
-For example, with aircraft collision detection and avoidance, the altitude of aircrafts is just as important as their geographic coordinates.
+For example, with aircraft collision detection and avoidance, the altitude of aircraft is just as important as their geographic coordinates.
 In these types of applications, instead of managing altitude separately, the DGGS should be responsible for hierarchically partitioning altitude in addition to the surface of the Earth.
 We call this a 3D DGGS.
 
@@ -32,12 +32,13 @@ Due to the multi-sphere structure of the Earth, these challenges also manifest w
 
 \begin{figure}[ht!]
 	\centering
-	\includegraphics[width=0.5\textwidth]{embedded.pdf}
-	\caption[A circle embedded in a regular Cartesian grid]{
-		A circle embedded in a regular 2D Cartesian grid.
-		Cells do not align with the circle, which means the cells that represent the surface of the circle (blue) contain varying amounts of said circle.
-		Regardless of how finely refined such a grid is, it will only ever approximate the surface.
-		The same applies to a sphere or ellipsoid embedded in a 3D grid
+	\includegraphics[width=0.85\textwidth]{embed-vs-ec.pdf}
+	\caption[Comparison of embedded and Earth-centric approaches for a 3D DGGS]{
+		Comparison of a (left) embedded and (right) Earth-centric 3D DGGS.
+		Red arrows show directions of increasing altitude.
+		Note how with the Earth-centric grid, these arrows are always orthogonal to the upper and lower boundaries of cells.
+		This is not the case in the embedded grid, with arrows intersecting cells boundaries at different angles depending on where the cell is located in the grid.
+		Image adapted from~\cite{yu2012large-scale}
 	}
 	\label{fig:embedded}
 \end{figure}
