@@ -64,7 +64,7 @@ This shortcoming has motivated the development of volumetric (3D) discrete globa
 Going forward, we use the term 3D DGGS to refer to these technologies collectively.
 
 
-Most human activity and interest, and correspondingly geospatial data, is located in a relatively small region above and below the surface of the Earth ($\pm$10 -- 500 km).
+Most human activity and interest, and correspondingly geospatial data, is located in a relatively small region above and below the surface of the Earth ($\pm$10--500 km).
 Likewise, most existing approaches for 3D DGGS's have focused on this region.
 However, there are select processes such as seismic wave propagation and the magnetosphere that span much beyond this region.
 Furthermore, the range of altitudes satellites orbit at is extensive, with satellites in high Earth orbit exceeding 36,000 km.
@@ -186,16 +186,16 @@ This expanded toolset created the different 3D DGGS's employed in the use case e
 This main contributions of this thesis fall into three groups:
 
 \begin{enumerate}
+	\item Method for extending 2D DGGS to 3D.
+	This method is fully general and supports any valid DGGS, including any refinement factor and non-congruent refinement.
+	Furthermore, clearly defined parameters allow for a target aspect ratio for cells and a balanced tradeoff between volume preservation and cell compactness.
+	We use a set of sample use cases to evaluate the method.
+
 	\item Modifications of SDOG refinement.
 	These modifications are able to achieve perfect volume preservation between all non-degenerate cells.
 	Additionally, we provide blending functions that allow a balanced tradeoff between volume preservation and cell compactness.
 	An analysis of volume preservation and compactness for the different modifications is also provided.
-	
-	\item Method for extending 2D DGGS to 3D.
-	This method is fully general and supports any valid DGGS, including any refinement factor and non-congruent refinement.
-	Furthermore, clearly defined parameters allow for a target aspect ratio for cells and---like the SDOG modifications---a balanced tradeoff between volume preservation and cell compactness.
-	We use a set of sample use cases to evaluate the method.
-	
+		
 	\item Mapping functions (for modified SDOG \textit{and} extended grids).
 	These mappings enable the volume preservation of the above methods while still allowing efficient encoding and decoding.
 	For SDOG, we also propose new constant time encoding and decoding algorithms and benchmark their performance against the standard versions.

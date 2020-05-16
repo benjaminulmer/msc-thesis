@@ -61,7 +61,7 @@ For a fixed-width representation of indices, a leaded bit set to one marks the s
 
 One benefit of Morton codes over more local space-filling curves---such as the Hilbert curve---is the ease at which a multi-dimensional index is encoded and vice versa.
 As demonstrated in Figure~\ref{fig:morton-interleave}, the Morton code is obtained simply by interleaving the bits of the coordinate indices; likewise, unweaving the bits of a Morton code gives the coordinate indices.
-While these are not constant-time operation in general, magic numbers and lookup tables allow them to be done efficiently and in constant time for a fixed bit width~\cite{bit twiddle, libmorton}.
+While these are not constant-time operation in general, magic numbers and lookup tables allow them to be done efficiently and in constant time for a fixed bit width~\cite{libmorton18}.
 
 
 \begin{figure}[ht!]
@@ -250,7 +250,7 @@ The last step is get the bounds of the octant from the octant code and convert t
 
 \subsubsection{For Modified SDOG}
 These direct algorithms only work for conventional SDOG due to the requirement of uniform spacing of grid divisions.
-As described in Chapter~\ref{mapping}, however, the mapping functions allow these algorithms to be used with the modified grids by mapping them to conventional SDOG.
+As described in Chapter~\ref{chap:mapping}, however, the mapping functions allow these algorithms to be used with the modified grids by mapping them to conventional SDOG.
 For encoding, the point $p$ must be forward mapped before encoding.
 For decoding, the output ranges must be inverse mapped after decoding.
 In both cases, there is overlap in the computations done by the coding algorithm and associated mapping functions, so care should be taken during implementation to avoid redundant computation.
@@ -268,7 +268,7 @@ We first generate one million points randomly distributed within an SDOG octant.
 For each resolution being benchmarked, we then time each of the encoding algorithms using the generated points.
 The resulting indices are then used to time each of the decoding algorithms in the same manner.
 We time resolutions $1 \le k \le 21$, as 21 is the highest resolution \textit{without} an octant code that can be represented by a 64-bit integer.
-We use the Libmorton library\footnote{\url{https://github.com/Forceflow/libmorton}} to perform efficient bit-interleaving and unweaving.
+We use the Libmorton library~\cite{libmorton18} to perform efficient bit-interleaving and unweaving.
 
 
 \begin{figure}[htp!]
@@ -395,7 +395,7 @@ Uniquely identifying each of these components is sufficient to identify every ce
 
 \begin{figure}[htp!]
 	\centering
-	\includegraphics[width=0.55\textwidth]{prismatoid-indexing.pdf}
+	\includegraphics[width=0.6\textwidth]{prismatoid-indexing.pdf}
 	\caption[Separation of surface and layer indices for the grid extension method]{
 		Indices from the input DGGS identify cells in the 3D DGGS with the same bases but different radii.
 		Likewise, each layer of the 3D DGGS contains contains all cells with the same radii but different bases.

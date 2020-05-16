@@ -248,9 +248,8 @@ For consistency and to avoid confusion, this thesis exclusively uses the term re
 With the Earth commonly approximated as a sphere, many DGG's and DGGS's are defined directly in this space.
 One of the most straightforward approaches for doing so is with a regular discretization based on latitude and longitude coordinates, or a latitude-longitude grid (LLG), shown in Figure~\ref{fig:llg}.
 Similar to a regular grid in Euclidean space defined by equal steps in Cartesian coordinates, an LLG divides the sphere into equal steps of latitude and longitude.
-Unlike Cartesian coordinates, however, spherical coordinates have singularities at both poles causing quadrilateral LLG cells to degenerate into triangle cells at the poles.
-These singularities reduce the size and compactness of cells near the poles, resulting in significant area differences between cells in the grid.
-They also produce a high valence vertex at each pole.
+Unlike Cartesian coordinates, however, spherical coordinates have singularities at both poles causing quadrilateral LLG cells to degenerate into triangles.
+These singularities reduce the size and compactness of cells near the poles, resulting in significant area differences between cells in the grid; they also produce a high valence vertex at each pole.
 Thus, an LLG is neither a compact nor uniform DGG.
 
 
@@ -275,7 +274,7 @@ The use of a refinement method---along with the provided encoding, decoding, and
 
 
 Another approach that solves some of the issues with a simple LLG is the Yin-Yang grid proposed by Kageyama and Sato~\cite{kageyama2004yin-yang}.
-This grid is composed of two congruent component grids---the Yin and Yang grids---which are LLG's 270\textdegree \ in longitude and 90\textdegree \ in latitude centred at the equator
+This grid is composed of two congruent component grids---the Yin and Yang grids---which are LLG's 270\textdegree \ in longitude and 90\textdegree \ in latitude centred at the equator.
 These component grids are then rotated and placed atop each other to cover the sphere fully.
 As the component grids have a limited latitude, they do not have the same compactness and area issues seen in an LLG.
 However, cells near the boundaries of the component grids overlap in the composite grid creating either ambiguity or redundancy when associating geospatial data with cells and complicating grid connectivity in these regions.
