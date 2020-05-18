@@ -16,17 +16,18 @@ In this case, all data of a cell must be queried and searched to find those with
 Furthermore, the lack of a hierarchy in the radial dimension means data at different radial resolutions must be integrated manually as opposed to using the structure of the DGGS itself to aid in this task.
 Generally speaking, any benefits gained by using a DGGS are lost in the radial dimension; this is problematic for any application that uses the radial dimension as frequently as surface ones.
 For example, with aircraft collision detection and avoidance, the altitude of aircraft is just as important as their geographic coordinates.
-In these types of applications, instead of managing altitude separately, the DGGS should be responsible for hierarchically partitioning altitude in addition to the surface of the Earth.
+Instead of managing altitude separately, we need an extension of the 2D DGGS that hierarchically partitions altitude in addition to the surface of the Earth.
 We call this a 3D DGGS.
 
 
 \section{Embedded Grids} \label{chap:3:embedded}
-Now treating the Earth as a fully 3D entity, it seems natural to use a conventional Euclidean space partitioning data structure such as a voxel grid or octree to manage geospatial data.
+Treating the Earth as a fully 3D entity, it seems natural to use a conventional Euclidean space partitioning data structure such as a voxel grid or octree to manage geospatial data.
 We refer to this approach as an embedding one, creating an embedded 3D DGGS.
 While an embedding approach is straightforward and leverages existing data structures and algorithms, it disregards the actual shape of the Earth.
 Regardless of how finely refined cells are, they can only approximate the underlying representation of the Earth: a sphere or ellipsoid (Figure~\ref{fig:embedded}).
-Furthermore, cells do not align with the surface of the Earth, which means cells have no consistent orientation of what direction represents an increasing or decreasing altitude, or up and down.
-Because of this, traversing along the surface of the Earth becomes a non-straightforward operation that requires a ``zig-zagging'' path.
+Furthermore, cells do not align with the Earth's surface, which means cells have no consistent orientation of what direction represents an increasing or decreasing altitude (up and down).
+Because of this, traversing along the surface of the Earth (or any other constant altitude) becomes a non-straightforward operation that requires a ``zig-zagging'' path.
+An example application where this is problematic goes here.
 Due to the multi-sphere structure of the Earth, these challenges also manifest when dealing with different subterranean and atmospheric layers.
 
 
@@ -37,7 +38,7 @@ Due to the multi-sphere structure of the Earth, these challenges also manifest w
 		Comparison of a (left) embedded and (right) Earth-centric 3D DGGS.
 		Red arrows show directions of increasing altitude.
 		Note how with the Earth-centric grid, these arrows are always orthogonal to the upper and lower boundaries of cells.
-		This is not the case in the embedded grid, with arrows intersecting cells boundaries at different angles depending on where the cell is located in the grid.
+		This property does not hold in the embedded grid, with arrows intersecting the boundaries of cells at different angles depending on where the cell is located in the grid.
 		Image adapted from~\cite{yu2012large-scale}
 	}
 	\label{fig:embedded}
@@ -49,14 +50,14 @@ Because of this, embedded grids are frequently used for small-scale objects and 
 However, the challenges presented by an embedding approach outweigh their benefits in the context of a 3D DGGS, which needs to have global coverage.
 
 
-The inherent issues with an embedded 3D DGGS stem from the fact that they are based on Cartesian coordinates as opposed to spherical ones.
+The inherent issues with an embedded 3D DGGS stem from the fact that their cells do not align with the Earth's surface and other layers.
 Thus far, we have described 3D geospatial data as data with an associated altitude in addition to its surface coordinates, which is a spherical representation of its location.
-Due to the mostly spherical shape of Earth, a spherical coordinate system is a natural choice, and a 3D DGGS should respect this coordinate system.
-We call a 3D DGGS based on, or sharing similar properties to, a spherical coordinate system Earth-centric.
+Therefore, due to the mostly spherical shape of Earth, a 3D DGGS aligned with a sphere (or more accurately, an oblate spheroid) will also be closely aligned with the Earth.
+We call this type of 3D DGGS Earth-centric.
 
 
 \section{Earth-Centric Grids} \label{chap:3:earthCentric}
-The most fundamental Earth-centric 3D grid is a direct extension of an LLG to the third dimension.
+The most fundamental Earth-centric 3D grid is a direct extension of an LLG to the third dimension (refer back to Figure~\ref{fig:3dllg}).
 In addition to diving space by latitude and longitude, a 3D LLG also divides space by equal steps in the radial dimension.
 Due to the simplicity of its construction, this type of grid has seen use in global crust modelling~\cite{bassin2000current} and exploring P-wave velocity~\cite{zhao2004global}, among other applications.
 The GeoSOT3D grid, proposed by Sun and Cheng, is a variation of the standard 3D LLG where latitude and longitude have been extended to larger virtual spaces to improve the efficiency of grid coding~\cite{sun20153d} and has been used to increase the efficiency of aircraft and UAV collision detection~\cite{miao2019low, zhai2019collision}.
@@ -69,29 +70,32 @@ Extensions of polyhedron-based DGGS's to 3D have also been done.
 An approach by Xie et al. stacks duplicates of a DGGS at increasing radii to create a 3D global grid for interactive volumetric ray tracing of 3D Earth data~\cite{xie2013interactive}.
 While this approach is appropriate for the intended use, it is not technically a 3D DGGS, as the radial component of the grid is separate from the cell hierarchy.
 In order to incorporate the radial component of the grid with the cell hierarchy, Sirdeshmukh et al. create a 3D (or 4D) DGGS by placing 3D (or 4D) hypercubes on the faces of the DGGS polyhedron~\cite{sirdeshmukh2019utilizing}.
-These hypercubes are then refined and traversed with a space-filling curve to create the 3D (or 4D) DGGS, which is used by the authors to encode point cloud data.
+These hypercubes are then refined and traversed with a space-filling curve to create the 3D (or 4D) DGGS, which the authors use to encode point cloud data.
 
 
-Beyond the singularities at the poles, spherical coordinates also have a singularity at the centre of the sphere.
+While using a radial extension to create a 3D DGGS is simple and effective, it results in a singularity at the centre of the Earth.
 This central singularity causes the same issues near the centre of the grid as seen near the poles of an LLG---namely reduced compactness, a high valence vertex, and an unbounded difference in cell \textit{volume}.
 None of the above methods address this central singularity, as these issues are mostly negligible for applications with small ranges of altitudes.
-However, in order to accommodate large altitude ranges (as is the goal of this thesis), these issues are significant and should be addressed.
+However, in accommodating large altitude ranges (as is the goal of this thesis), these issues become significant and should be addressed.
 
 
-Similar to how the DQG addresses polar singularities in an LLG, a similar approach can be used for the central singularity in a 3D grid.
-A direct extension of the DQG to 3D, known as SDOG, was proposed by Yu and Wu~\cite{yu2009sdog}.
+Similar to how the DQG (Chapter~\ref{}) addresses polar singularities in an LLG, a similar approach can be used for the central singularity in a 3D grid.
+A direct extension of the DQG to 3D, known as the spheroid-degenerated octree grid (SDOG), was proposed by Yu and Wu~\cite{yu2009sdog}.
 Just as the DQG utilizes a modified quadtree refinement, SDOG extends this refinement to 3D, creating a modified octree refinement.
 The resulting cells are relatively uniform in both size and shape, having a bounded maximum difference in volume.
 Because of these properties, SDOG has been used for the modelling of large-scale geospatial objects~\cite{yu2012large-scale} and multi-scale visualization of the lithosphere~\cite{yu2012lithosphere}.
 We provide a more detailed explanation of SDOG and its specific refinement method in Chapter~\ref{chap:sdog}.
-Another method similar to SDOG is the Sphere Shell Space 3D Grid, which uses a similarly modified octree refinement of cells but is based on multiple sphere shells as opposed to a single sphere~\cite{gang2013sphere}.
+Another approach similar to SDOG is the Sphere Shell Space 3D Grid, which uses a similarly modified octree refinement of cells but is constructed from multiple spherical shells as opposed to a single sphere~\cite{gang2013sphere}.
 Likewise, Wang et al. also apply a similar process to a great circle arc quaternary triangular mesh (QTM) to create a 3D DGGS~\cite{wang2013global}.
-These methods all use a similar refinement strategy to handle radial degeneration in the grid; however, the terminology used to describe this type of refinement is inconsistent between works.
-In this thesis, we propose the term \textit{semiregular degenerate refinement} to refer to this class of methods.
+These methods all use a similar refinement strategy to handle cell degeneration toward the centre of the grid; however, the terminology used to describe this type of refinement is inconsistent between works.
+In this thesis, we propose the term \textit{semiregular degenerate refinement} to describe this class of methods.
 
+\section{3D DGGS Refinement Strategies} \label{chap:3:refinement}
+
+\subsection{Regular Refinement} \label{chap:3:regular}
 
 \subsection{Semiregular Degenerate Refinement} \label{chap:3:semiregDegen}
-A regular grid refinement is one that results in regular connectivity in the output domain.
+A regular grid refinement is one that results in regular connectivity in the output domain, henceforth referred to as a regular grid.
 For triangular grids, this means each vertex has a valence of exactly six; for quadrilateral grids, a valence of four; and for hexagonal grids, a valence of three.
 
 
