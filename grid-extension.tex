@@ -12,14 +12,14 @@ In this chapter, we aim to address these shortcomings.
 We present a general method for extending \textit{any} existing DGGS, referred to as the input DGGS, to the third dimension using a semiregular degenerate refinement strategy.
 This extension is done with care to allow the efficient and straightforward transference of data between 2D and 3D while preserving---as best as possible---desirable properties of the input DGGS in the 3D one.
 Figure~\ref{fig:extension} shows an overview of the method.
-This chapter discusses only the creation of grid geometry; mapping and coding are discussed in Chapters~\ref{chap:mapping} and \ref{chap:coding}, respectively.
+This chapter discusses only the creation of grid geometry; we discuss mapping and coding in Chapters~\ref{chap:mapping} and \ref{chap:coding}, respectively.
 
 
 \begin{figure}[ht!]
 	\centering
 	\includegraphics[width=\textwidth]{grid-extension-overview.pdf}
 	\caption[Overview of the grid extension method]{
-		Overview of how the input DGGS is used to define the geometry of the 3D DGGS.
+		An overview of how the input DGGS is used to define the geometry of the 3D DGGS.
 		The faces of the initial polyhedron of the input DGGS are first extruded to create the prismatoid base cells of the 3D DGGS.
 		For refinement, the bases of these prismatoid cells are refined using the same refinement scheme as the input DGGS and combined with a radial refinement.
 		A semiregular degenerate refinement is suggested; however, regular refinement is also possible
@@ -65,7 +65,7 @@ With this discretization, each cell represents the full radial domain of the gri
 
 
 \subsection{Regular Prismatoid Refinement} \label{chap:5:regular}
-With an initial 3D discretization for the space of the grid system, we now need a method for refining cells to create more fine discretizations.
+With an initial 3D discretization for the space of the grid system, we need a method for refining cells to create more fine discretizations.
 We also want to ensure that the 3D DGGS will make use of the same refinement scheme used by the input DGGS, referred to as the surface refinement.
 For simplicity, we initially assume the surface refinement factor is 1:4; a generalization to other refinement factors is given later in Chapter~\ref{chap:5:factors}.
 
@@ -113,7 +113,7 @@ We continue our assumption of a 1:4 surface refinement factor from before.
 Just as with regular refinement, the bases of the pyramid cells are refined using the surface scheme with a radial split made in the middle of the layer.
 However, to make this refinement semiregular degenerate, the new edges do not extend beyond the radial split in the direction toward the centre (Figure \ref{fig:semiregular}).
 This refinement results in two new layers: an inner central layer, which is similar to the initial central layer, and an outer normal layer.
-As demonstrated in Figure~\ref{fig:semiregular}b, the resolution---or refinement level---a layer appears in at the 3D grid does not necessarily correspond to how many times the surface refinement scheme has been applied.
+As demonstrated in Figure~\ref{fig:semiregular}b, the resolution---or refinement level---a layer appears at does not necessarily correspond to how many times the surface refinement scheme has been applied.
 We define the number of applications of the surface refinement to a given layer as the surface resolution, given by $k_s$.
 Thus, if we say the initial discretization has $k_s = 0$, after one level of refinement the inner central layer also has $k_s = 0$, whereas the normal layer has $k_s = 1$.
 We require this surface resolution in Chapter~\ref{chap:coding} for grid encoding, decoding, and various indexing queries. As will be seen, however, it can be computed and does not need to be explicitly stored.
@@ -157,11 +157,11 @@ The 1D refinement factor is no longer an integer, and since we can only perform 
 Therefore, we propose performing a different number of radial splits at different levels of refinement to make the \textit{average} radial refinement factor equal to the 1D one.
 
 
-There are a few different methods that can be used to determine the number of radial splits to perform at a given refinement level.
+A few different methods can be used to determine the number of radial splits to perform at a given refinement level.
 The most straightforward method is to alternate between producing one layer (i.e.
 no splits) and producing a number of layers equal to the surface refinement factor.
 When the surface refinement factor is not a prime number, a better method is to alternate between the two members of a factor pair, such as two and three for a 1:6 surface factor.
-In general, the product of the number of layers at each level of refinement should be equal (or as close as possible) to the 1D refinement factor to the power of the number of refinement levels.
+In general, the product of the number of layers at each level of refinement should be equal to (or as close as possible to) the 1D refinement factor to the power of the number of refinement levels.
 Formally,
 %
 \begin{equation*}
@@ -222,14 +222,13 @@ While the refinement methods described thus far produce cells with a similar asp
 To address this issue, we introduce two modifications that can be made to prismatoid refinement to decrease and increase this aspect ratio.
 
 
-In order to decrease the aspect ratio of cells in the grid, we must increase the number of applications of the surface refinement relative to the number of radial splits.
+To decrease the aspect ratio of cells in the grid, we must increase the number of applications of the surface refinement relative to the number of radial splits.
 Since further applications of the prismatoid refinement will maintain the expected cell aspect ratio---a result of the surface and expected radial refinement factors being equal---this only needs to be done the first time a layer would have the bases of its cells refined with the surface scheme.
 Thus, for semiregular prismatoid refinement, this is done while refining the outer normal layer that results from refining central layers.
-%In the case where only regular prismatoid refinement is used, this is then only done during the first level of refinement.
 
 
 Likewise, to increase the aspect ratio of cells, we need to decrease the number of times the surface refinement scheme is applied relative to the number of radial splits.
-We accomplish this by \textit{not} applying the surface refinement to a layer the first time it would usually be done, and if needed applying additional radial splits at the same time.
+We accomplish this by \textit{not} applying the surface refinement to a layer the first time it would usually be done, and if needed, applying additional radial splits at the same time.
 These modifications would be done at the same time as the method for decreasing the aspect ratio for the same reasons.
 
 
@@ -248,7 +247,7 @@ Let $\upsilon$ be the percentage of $r_\mathrm{max}$ occupied by this region and
 \frac{\upsilon r_\mathrm{max}}{x+1}.
 \end{equation*}
 %
-We provide more detail on how $\upsilon$ is calculated in Chapter~\ref{chap:6:radial} 
+We provide more detail on how $\upsilon$ is calculated in Chapter~\ref{chap:6:radial}.
 Likewise, the average cell width in this region is the surface area of the sphere divided by the number of cells (assuming no extra radial splits).
 Let $n$ be the number of faces on the input polyhedron and $w$ be the number of times the surface refinement is applied, then the number of cells is $n f^{2w}$, and the average cell width is
 %
