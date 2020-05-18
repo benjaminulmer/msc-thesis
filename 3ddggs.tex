@@ -26,9 +26,9 @@ We refer to this approach as an embedding one, creating an embedded 3D DGGS.
 While an embedding approach is straightforward and leverages existing data structures and algorithms, it disregards the actual shape of the Earth.
 Regardless of how finely refined cells are, they can only approximate the underlying representation of the Earth: a sphere or ellipsoid (\cref{fig:embedded}).
 Furthermore, cells do not align with the Earth's surface, which means cells have no consistent orientation of what direction represents an increasing or decreasing altitude (up and down).
-Because of this, traversing along the surface of the Earth (or any other constant altitude) becomes a non-straightforward operation that requires a ``zig-zagging'' path.
-An example application where this is problematic goes here.
-Due to the multi-sphere structure of the Earth, these challenges also manifest when dealing with different subterranean and atmospheric layers.
+Because of this, traversing along the surface of the Earth---or any other constant altitude---becomes a non-straightforward operation that requires a ``zig-zagging'' path.
+This property makes integrating geospatial data on the Earth's surface, which represents a significant portion of the data used in most applications, significantly more complicated.
+It also introduces additional error, as the cells representing the data all have slightly different altitudes compared to the constant altitude of the data itself.
 
 
 \begin{figure}[ht!]
