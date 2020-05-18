@@ -264,7 +264,7 @@ We then propose other possible splitting surface combinations to balance the tra
 
 
 \subsection{Ideal Splitting Surfaces for Volume Preservation} \label{chap:4:ideal}
-Ideal splitting surfaces to maximize volume preservation are achieved using \cref{eq:radVol, eq:latVol}; all that is required is to determine the ideal value of $p$ for the different splitting surfaces and cell types.
+Ideal splitting surfaces to maximize volume preservation are achieved using \cref{eq:radVol,eq:latVol}; all that is required is to determine the ideal value of $p$ for the different splitting surfaces and cell types.
 We start with the radial splitting surfaces for LG and NG cells and the latitudinal one for NG cells, as these surfaces behave the same as regular refinement.
 Specifically, these splitting surfaces result in the same number and type of cells on both sides, a property that also holds for their children.
 We call these the regular splitting surfaces.
@@ -346,7 +346,7 @@ Thus, this method offers only a slight improvement with regards to volume preser
 
 
 In order to achieve different tradeoffs between compactness and volume preservation, modifying the regular splitting surfaces is necessary.
-\Cref{eq:radVol, eq:latVol} give ideal placements for volume preservation as compared to the conventional midpoint functions which result in better compactness.
+\Cref{eq:radVol,eq:latVol} give ideal placements for volume preservation as compared to the conventional midpoint functions which result in better compactness.
 Therefore, using different functions that blend between these two extremes allows for a more balanced tradeoff.
 There are endless possibilities for these functions; however, as will be required for coding in \cref{chap:mapping}, they should be easily invertible.
 That is, given a splitting surface, we need to be able to determine the corresponding value of $p$.
@@ -435,7 +435,7 @@ We use the mean and SD of sphericity for all cells in the grid to evaluate compa
 
 As a baseline, we have calculated the value of these measures at each refinement level from one to fifteen for conventional SDOG.
 We then repeated this for the three modifications discussed in this chapter: the volume method, the latitude method, and the balanced method.
-The results for each grid are displayed in \cref{fig:vr, fig:cv, fig:sph, fig:sd-sph} showing the volume ratio, CV of volume, mean sphericity, and SD of sphericity, respectively.
+The results for each grid are displayed in \cref{fig:vr,fig:cv,fig:sph,fig:sd-sph} showing the volume ratio, CV of volume, mean sphericity, and SD of sphericity, respectively.
 \Cref{tab:results} summarizes these charts with the convergence value of each property for the four different grids.
 We also give convergence values for the maximum and minimum sphericity---and their difference---for each grid in \cref{tab:results-sph}.
 It is important to note that for volume ratio and CV of volume, lower values are better, but for sphericity, a higher value is better.

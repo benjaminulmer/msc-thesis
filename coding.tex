@@ -293,7 +293,7 @@ We use the Libmorton library~\cite{libmorton18} to perform efficient bit-interle
 \end{figure}
 
 
-\Cref{fig:point-to-index, fig:index-to-range} show the benchmarking results for encoding and decoding, respectively.
+\Cref{fig:point-to-index,fig:index-to-range} show the benchmarking results for encoding and decoding, respectively.
 In order to reduce noise, these charts show the average of two evaluations of the benchmarking.
 As is expected, the hierarchical algorithms are linear on $k$ and the direct algorithms (mostly) constant on $k$.
 
@@ -461,7 +461,7 @@ These values are then fed directly into the inverse radial mapping as values of 
 
 \subsection{Other Indexing Operations}
 Similar to encoding and decoding, we define grid traversal operations in terms of surface and radial components.
-Referring back to \cref{fig:prismatoid-indexing, fig:prismatoid-coding}, we let $i_s$ be the surface index of a cell and $i_\ell$ be the layer index.
+Referring back to \cref{fig:prismatoid-indexing,fig:prismatoid-coding}, we let $i_s$ be the surface index of a cell and $i_\ell$ be the layer index.
 For each of these components, we assume there is a corresponding parent(s), child, and neighbour operation.
 For the surface index, this comes directly from the input DGGS indexing, whereas for the layer index, we define these in terms of the layer parameterization provided above.
 

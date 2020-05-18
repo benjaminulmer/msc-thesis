@@ -120,7 +120,7 @@ M_r (\hat{r}) = d u_g + \left( 1 - d \right) \ell_g.
 \end{equation}
 %
 The values of $\ell$ and $u$ are calculated the same as the inverse, but the shell is now $s = \lfloor \log_{c} \hat{r} \rfloor$.
-Note that the output of both \cref{eq:radialInv, eq:radialForw} are also normalized and must be multiplied by $R_\mathrm{max}$ for the true radii.
+Note that the output of both \cref{eq:radialInv,eq:radialForw} are also normalized and must be multiplied by $R_\mathrm{max}$ for the true radii.
 
 
 \begin{figure}[ht!]
@@ -142,7 +142,7 @@ Additionally, just as with SG and LG cells in SDOG, the central layer will never
 
 For the grid extension method, these mappings also have the side effect of changing the aspect ratio of cells in grid space as compared to in physical space.
 Therefore, when determining the refinement parameters needed to achieve the desired aspect ratio, we should consider the cells in physical space as opposed to grid space.
-We accomplish this by setting the value of $\nu$ in \cref{eq:extraSplits, eq:extraSurface} to be $(1 - \alpha)$.
+We accomplish this by setting the value of $\nu$ in \cref{eq:extraSplits,eq:extraSurface} to be $(1 - \alpha)$.
 
 
 \subsection{Latitude Mappings for SDOG} \label{chap:6:latitude}
@@ -167,7 +167,7 @@ Since latitude splits are also spaced uniformly in the grid domain, we once agai
 \begin{equation} \label{eq:latInvD}
 d = \frac{ \hat{\varphi} - \ell_g }{ u_g - \ell_g }.
 \end{equation}
-%
+%qgi
 
 Similarly, for the interpolation function, how $d$ is interpolated between $\ell_p$ and $u_p$ affects volume preservation.
 A linear interpolation gives the latitude method, sine gives the volume method, and a scaled sine by $h$ gives the balanced method.
@@ -207,7 +207,7 @@ M_\varphi (\hat{\varphi}) = d u_g + \left( 1 - d \right) \ell_g
 \end{equation}
 %
 The values of $\ell$ and $u$ are the calculated the same as the inverse, but the zone is now $z = \lfloor \log_{0.25} ( 1 - \sin \hat{\varphi} ) \rfloor$.
-Just as with the radial mappings, the output of \cref{eq:latInv, eq:latForw} are normalized and must be multiplied by $\pm \pi / 2$ for the true latitudes.
+Just as with the radial mappings, the output of \cref{eq:latInv,eq:latForw} are normalized and must be multiplied by $\pm \pi / 2$ for the true latitudes.
 
 
 \Cref{latForwD} simplifies to
