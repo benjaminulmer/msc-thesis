@@ -24,7 +24,7 @@ We call this a 3D DGGS.
 Treating the Earth as a fully 3D entity, it seems natural to use a conventional Euclidean space partitioning data structure such as a voxel grid or octree to manage geospatial data.
 We refer to this approach as an embedding one, creating an embedded 3D DGGS.
 While an embedding approach is straightforward and leverages existing data structures and algorithms, it disregards the actual shape of the Earth.
-Regardless of how finely refined cells are, they can only approximate the underlying representation of the Earth: a sphere or ellipsoid (Figure~\ref{fig:embedded}).
+Regardless of how finely refined cells are, they can only approximate the underlying representation of the Earth: a sphere or ellipsoid (\cref{fig:embedded}).
 Furthermore, cells do not align with the Earth's surface, which means cells have no consistent orientation of what direction represents an increasing or decreasing altitude (up and down).
 Because of this, traversing along the surface of the Earth (or any other constant altitude) becomes a non-straightforward operation that requires a ``zig-zagging'' path.
 An example application where this is problematic goes here.
@@ -57,13 +57,13 @@ We call this type of 3D DGGS Earth-centric.
 
 
 \section{Earth-Centric Grids} \label{chap:3:earthCentric}
-The most fundamental Earth-centric 3D grid is a direct extension of an LLG to the third dimension (refer back to Figure~\ref{fig:3dllg}).
+The most fundamental Earth-centric 3D grid is a direct extension of an LLG to the third dimension (refer back to \cref{fig:3dllg}).
 In addition to diving space by latitude and longitude, a 3D LLG also divides space by equal steps in the radial dimension.
 Due to the simplicity of its construction, this type of grid has seen use in global crust modelling~\cite{bassin2000current} and exploring P-wave velocity~\cite{zhao2004global}, among other applications.
 The GeoSOT3D grid, proposed by Sun and Cheng, is a variation of the standard 3D LLG where latitude and longitude have been extended to larger virtual spaces to improve the efficiency of grid coding~\cite{sun20153d} and has been used to increase the efficiency of aircraft and UAV collision detection~\cite{miao2019low, zhai2019collision}.
 
 
-Similar radial extensions are also possible for many of the DGG's and DGGS's explored in Chapter~\ref{chap:2:DGG}.
+Similar radial extensions are also possible for many of the DGG's and DGGS's explored in \cref{chap:2:DGG}.
 Being composed of two component LLG's, an extension of the Yin-Yang grid to 3D can be done in the same manner as above.
 These 3D Yin-Yang grids have been used extensively for geodynamo and mantle convection simulation~\cite{yoshida2004application, kageyama2005geodynamo, tackley2008modelling}.
 Extensions of polyhedron-based DGGS's to 3D have also been done.
@@ -79,12 +79,12 @@ None of the above methods address this central singularity, as these issues are 
 However, in accommodating large altitude ranges (as is the goal of this thesis), these issues become significant and should be addressed.
 
 
-Similar to how the DQG (Chapter~\ref{}) addresses polar singularities in an LLG, a similar approach can be used for the central singularity in a 3D grid.
+Similar to how the DQG (\cref{chap:2:spherical}) addresses polar singularities in an LLG, a similar approach can be used for the central singularity in a 3D grid.
 A direct extension of the DQG to 3D, known as the spheroid-degenerated octree grid (SDOG), was proposed by Yu and Wu~\cite{yu2009sdog}.
 Just as the DQG utilizes a modified quadtree refinement, SDOG extends this refinement to 3D, creating a modified octree refinement.
 The resulting cells are relatively uniform in both size and shape, having a bounded maximum difference in volume.
 Because of these properties, SDOG has been used for the modelling of large-scale geospatial objects~\cite{yu2012large-scale} and multi-scale visualization of the lithosphere~\cite{yu2012lithosphere}.
-We provide a more detailed explanation of SDOG and its specific refinement method in Chapter~\ref{chap:sdog}.
+We provide a more detailed explanation of SDOG and its specific refinement method in \cref{chap:sdog}.
 Another approach similar to SDOG is the Sphere Shell Space 3D Grid, which uses a similarly modified octree refinement of cells but is constructed from multiple spherical shells as opposed to a single sphere~\cite{gang2013sphere}.
 Likewise, Wang et al. also apply a similar process to a great circle arc quaternary triangular mesh (QTM) to create a 3D DGGS~\cite{wang2013global}.
 These methods all use a similar refinement strategy to handle cell degeneration toward the centre of the grid; however, the terminology used to describe this type of refinement is inconsistent between works.
@@ -113,15 +113,15 @@ For triangular grids, this means each vertex has a valence of exactly six; for q
 \end{figure}
 
 
-Looking specifically at regular quadrilateral refinement, one way to achieve this is by splitting each input cell into four output ones with two intersecting straight lines, as shown in Figure~\ref{fig:semireg-degen}~left.
-As we have seen, applying such a regular refinement to a degenerate (triangular) starting cell---such as spherical octant or a slice going from the surface of a sphere to the centre---still results in a regular grid, but the compactness and size of cells are affected (Figure~\ref{fig:semireg-degen}~centre).
-To lessen this effect, the splitting edge that would normally intersect the singularity can be stopped at the other edge, as demonstrated in Figure~\ref{fig:semireg-degen}~right.
+Looking specifically at regular quadrilateral refinement, one way to achieve this is by splitting each input cell into four output ones with two intersecting straight lines, as shown in \cref{fig:semireg-degen}~left.
+As we have seen, applying such a regular refinement to a degenerate (triangular) starting cell---such as spherical octant or a slice going from the surface of a sphere to the centre---still results in a regular grid, but the compactness and size of cells are affected (\cref{fig:semireg-degen}~centre).
+To lessen this effect, the splitting edge that would normally intersect the singularity can be stopped at the other edge, as demonstrated in \cref{fig:semireg-degen}~right.
 When applying this scheme recursively, only the degenerate (triangular) cells use the special refinement, and non-degenerate (quadrilateral) cells use regular refinement.
-As illustrated in Figure~\ref{fig:semireg-degen}~bottom, this refinement method results in a grid with regular regions, but the grid as a whole is not itself regular.
+As illustrated in \cref{fig:semireg-degen}~bottom, this refinement method results in a grid with regular regions, but the grid as a whole is not itself regular.
 Hence, we call this semiregular degenerate refinement.
 The same principles apply in 3D for hexahedral grids; however, there are instead three intersecting \textit{faces} used in refinement.
 In general, we define a semiregular degenerate refinement to be one in which one or more splitting geometries (curves in 2D and surfaces in 3D) are stopped by another splitting geometry in the direction toward a singularity where, if not stopped, would otherwise intersect said singularity.
-Such a definition describes the methods used in DQG, SDOG, Sphere Shell Space 3D Grid, the great circle arc QTM extension, and those used in Chapter~\ref{chap:extension} of this thesis.
+Such a definition describes the methods used in DQG, SDOG, Sphere Shell Space 3D Grid, the great circle arc QTM extension, and those used in \cref{chap:extension} of this thesis.
 
 
 A semiregular degenerate refinement allows for more uniformly sized and compact cells as compared to a regular refinement applied to the same domain.
@@ -132,4 +132,4 @@ Grids resulting from semiregular degenerate refinement violate this property, wi
 Such degenerate connectivity introduces challenges when propagating values across boundaries of cells and calculating values at vertices, as is needed for finite element methods.
 There has been work to address this challenge for conventional octrees~\cite{braun2008douar}, which have a similar issue between regions of the grid at different levels of refinement; similar methods could likely be applied to semiregular degenerate grids as well.
 Considering the tradeoffs of this approach, we believe the benefits outweigh the disadvantages in the context of a 3D DGGS.
-As such, semiregular degenerate refinement is the primary tool used in the remainder of this thesis to achieve the goals set out in Chapter~\ref{chap:1:goals}.
+As such, semiregular degenerate refinement is the primary tool used in the remainder of this thesis to achieve the goals set out in \cref{chap:1:goals}.

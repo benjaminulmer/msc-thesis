@@ -37,7 +37,7 @@ We focus on the hierarchical scheme, as grid \textit{systems} are the main focus
 \end{figure}
 
 
-Figure~\ref{fig:morton-multiple} demonstrates Morton coding for four resolutions of a conventional Euclidean quadtree.
+\Cref{fig:morton-multiple} demonstrates Morton coding for four resolutions of a conventional Euclidean quadtree.
 Indices are assigned consecutively, starting at zero, to cells in the order the curve passes through them.
 The resulting indices are hierarchical, where the index of a cell is that of its parent with its local index---obtained relative to its parent---appended.
 While shown for a quadtree (2D), Morton codes generalize to any integer dimension $n$.
@@ -60,7 +60,7 @@ For a fixed-width representation of indices, a leaded bit set to one marks the s
 
 
 One benefit of Morton codes over more local space-filling curves---such as the Hilbert curve---is the ease at which a multi-dimensional index is encoded and vice versa.
-As demonstrated in Figure~\ref{fig:morton-interleave}, the Morton code is obtained simply by interleaving the bits of the coordinate indices; likewise, unweaving the bits of a Morton code gives the coordinate indices.
+As demonstrated in \cref{fig:morton-interleave}, the Morton code is obtained simply by interleaving the bits of the coordinate indices; likewise, unweaving the bits of a Morton code gives the coordinate indices.
 While these are not constant-time operation in general, magic numbers and lookup tables allow them to be done efficiently and in constant time for a fixed bit width~\cite{libmorton18}.
 
 
@@ -80,7 +80,7 @@ For NG cells, refinement \textit{is} regular, and no modifications are needed.
 However, for SG and LG cells, some of these codes will refer to the same cell.
 In these cases, we merge duplicate codes with the lower value kept.
 We call this the degenerate Morton code (DMC).
-Figure~\ref{fig:sdog-dmc} shows the child codes of cells for each SDOG cell type.
+\Cref{fig:sdog-dmc} shows the child codes of cells for each SDOG cell type.
 In this scheme, the different spherical coordinates are traversed in the order (1) longitude---small to large (2) latitude---small to large (3) radius---large to small.
 Finally, to distinguish between the eight octants, each is given a unique identifier: the octant code.
 The full index of an SDOG cell consists of the octant code and DMC, concatenated, along with a leading one for fixed-width representations.
@@ -98,7 +98,7 @@ However, because they use refinement rules directly, they are trivially modified
 
 
 \subsubsection{Encoding}
-The algorithm for hierarchical point encoding with SDOG is given in Algorithm~\ref{alg:encode}.
+The algorithm for hierarchical point encoding with SDOG is given in \cref{alg:encode}.
 The input is a point $p$ and resolution $k$; the output is the index $i$ of the cell that contains $p$ at $k$.
 
 
@@ -127,7 +127,7 @@ The input is a point $p$ and resolution $k$; the output is the index $i$ of the 
 
 
 \subsubsection{Decoding}
-The algorithm for hierarchical decoding with SDOG is given in Algorithm~\ref{alg:decode}.
+The algorithm for hierarchical decoding with SDOG is given in \cref{alg:decode}.
 The input is an index $i$; the output is the cell boundaries of $i$.
 
 
@@ -175,7 +175,7 @@ Therefore, all that we need for direct coding is the shell and zone that contain
 The inputs and outputs of direct encoding are the same as their hierarchical counterpart.
 First, we find the octant that contains $p$.
 The three coordinates of $p$ are then normalized within the range of the octant with $\hat{r} = r / R_\mathrm{max}$, $\hat{\varphi} = \pm (2\varphi) / \pi$, and $\hat{\lambda} = 2 (\lambda - \lambda_0) / \pi$ where $\lambda_0$ is the minimum longitude of the octant.
-We then calculate the shell and zone that contain $p$ the same as in Chapter~\ref{chap:mapping}: $s = \lfloor \log_{0.5} \hat{r} \rfloor$ and $z = \lfloor \log_{0.5} ( 1 - \hat{\varphi} ) \rfloor$.
+We then calculate the shell and zone that contain $p$ the same as in \cref{chap:mapping}: $s = \lfloor \log_{0.5} \hat{r} \rfloor$ and $z = \lfloor \log_{0.5} ( 1 - \hat{\varphi} ) \rfloor$.
 
 
 The number of latitude division will be $2^k$ divided by $2^s$; however, the number of divisions will always be at least one.
@@ -250,7 +250,7 @@ The last step is get the bounds of the octant from the octant code and convert t
 
 \subsubsection{For Modified SDOG}
 These direct algorithms only work for conventional SDOG due to the requirement of uniform spacing of grid divisions.
-As described in Chapter~\ref{chap:mapping}, however, the mapping functions allow these algorithms to be used with the modified grids by mapping them to conventional SDOG.
+As described in \cref{chap:mapping}, however, the mapping functions allow these algorithms to be used with the modified grids by mapping them to conventional SDOG.
 For encoding, the point $p$ must be forward mapped before encoding.
 For decoding, the output ranges must be inverse mapped after decoding.
 In both cases, there is overlap in the computations done by the coding algorithm and associated mapping functions, so care should be taken during implementation to avoid redundant computation.
@@ -258,11 +258,11 @@ In both cases, there is overlap in the computations done by the coding algorithm
 
 \subsection{Runtime Comparison}
 To evaluate the usefulness of our direct coding algorithms, we should compare their runtime against the hierarchical counterparts.
-To do so, we have implemented the four algorithms and the mapping functions presented in Chapter~\ref{chap:mapping} in C++.
+To do so, we have implemented the four algorithms and the mapping functions presented in \cref{chap:mapping} in C++.
 We also used these implementations to experimentally verify the correctness of the direct algorithms by comparing their output to the hierarchical ones.
 
 
-The combination of two algorithmic approaches (hierarchical vs. direct) and four grids (SDOG and the three modifications in Chapter~\ref{chap:sdog}) result in eight total algorithms to compare for both encoding and decoding.
+The combination of two algorithmic approaches (hierarchical vs. direct) and four grids (SDOG and the three modifications in \cref{chap:sdog}) result in eight total algorithms to compare for both encoding and decoding.
 For simplicity, we only benchmark the DMC portion of coding.
 We first generate one million points randomly distributed within an SDOG octant.
 For each resolution being benchmarked, we then time each of the encoding algorithms using the generated points.
@@ -293,7 +293,7 @@ We use the Libmorton library~\cite{libmorton18} to perform efficient bit-interle
 \end{figure}
 
 
-Figures~\ref{fig:point-to-index} and \ref{fig:index-to-range} show the benchmarking results for encoding and decoding, respectively.
+\Cref{fig:point-to-index, fig:index-to-range} show the benchmarking results for encoding and decoding, respectively.
 In order to reduce noise, these charts show the average of two evaluations of the benchmarking.
 As is expected, the hierarchical algorithms are linear on $k$ and the direct algorithms (mostly) constant on $k$.
 
@@ -315,7 +315,7 @@ Furthermore, for the modified grids using the mapping functions, this means that
 Overall, the direct algorithms are all more efficient than their hierarchical counterpart for a large enough value of $k$.
 Thus, a sophisticated implementation could determine which approach to use (hierarchical or direct) for a given input, depending on $k$.
 However, benchmarking on a variety of platforms in different conditions would be needed to determine the best values to use for the switch.
-Table~\ref{tab:hierarch-vs-direct} summarizes the lowest value of $k$ such that the direct algorithm is more efficient than the hierarchical for each pair of algorithms in \textit{our} benchmarking.
+\Cref{tab:hierarch-vs-direct} summarizes the lowest value of $k$ such that the direct algorithm is more efficient than the hierarchical for each pair of algorithms in \textit{our} benchmarking.
 
 
 \begin{table}[htp!]
@@ -389,7 +389,7 @@ Below we list how to detect these edge cases and how to modify the neighbour cal
 For our grid extension method, encoding and decoding operations are defined for the input DGGS and should be leveraged when defining the 3D version of these operations.
 Doing so not only simplifies the definition of these operations (by deferring work to the input DGGS) but also facilitates the simple transference of data between the input DGGS and its 3D counterpart.
 To accomplish this, we split encoding and decoding into a surface and radial component.
-Referring to Figure~\ref{fig:prismatoid-indexing}, we justify such a split by noting that two components define each cell in a 3D DGGS: the cell of the input DGGS that defines its base(s) and the layer of the grid that contains it.
+Referring to \cref{fig:prismatoid-indexing}, we justify such a split by noting that two components define each cell in a 3D DGGS: the cell of the input DGGS that defines its base(s) and the layer of the grid that contains it.
 Uniquely identifying each of these components is sufficient to identify every cell in the grid uniquely; furthermore, each of these components is determined almost entirely independently.
 
 
@@ -406,9 +406,9 @@ Uniquely identifying each of these components is sufficient to identify every ce
 \end{figure}
 
 
-Figure~\ref{fig:prismatoid-coding} illustrates the pipeline for our proposed split of these operations.
+\Cref{fig:prismatoid-coding} illustrates the pipeline for our proposed split of these operations.
 The surface component of coding is handled entirely by the input DGGS and, therefore, is not discussed here.
-For the radial component, encoding and decoding make use of the forward and inverse radial mapping functions provided in Chapter~\ref{chap:6:radial}, respectively.
+For the radial component, encoding and decoding make use of the forward and inverse radial mapping functions provided in \cref{chap:6:radial}, respectively.
 We also provide a parameterization for identifying the layers of a 3D DGGS, and operations for encoding and decoding this parameterization.
 We do \textit{not} discuss methods for converting this parameterization into a single index or for combining surface and layer indices into a single index (nor do we provide the inverse for either of these operations).
 For the former, the varying complexity of the layer structure in a 3D DGGS---combined with the competing goals of an indexing scheme---makes defining a general method for doing so challenging.
@@ -434,7 +434,7 @@ Thus, layer encoding will calculate these values from $\hat{r}$ and layer decodi
 The level of refinement $k$ is an input into encoding; therefore, only $s$ and $j$ need to be computed.
 The value of $s$ can be carried forward from the radial mapping function evaluation.
 In order to calculate $j$, the number of layers in the shell is first needed.
-The number of layers in a shell depends on the refinement level, the layering sequence, and the number of extra radial splits (see Chapter~\ref{chap:extension}).
+The number of layers in a shell depends on the refinement level, the layering sequence, and the number of extra radial splits (see \cref{chap:extension}).
 Once again, the level of refinement is an input, and the other variables are constant for any given 3D DGGS.
 Therefore, the number of layers is
 %
@@ -451,17 +451,17 @@ For central layers, this is always zero; otherwise, it is $k - s - 1 + w$.
 
 
 Note that only the values of $s$ and $d$ are used in the above calculation and \textit{not} $\hat{r}$.
-Therefore, the full evaluation of the radial mapping is unnecessary, and only Equation~(\ref{eq:radialForwD}) is evaluated for encoding.
+Therefore, the full evaluation of the radial mapping is unnecessary, and only \cref{eq:radialForwD} is evaluated for encoding.
 
 
 \subsection{Decoding}
 For decoding, we calculate $d_\mathrm{min}$ and $d_\mathrm{max}$ as $j/n_\ell$ and $(j+1)/n_\ell$, respectively.
-These values are then fed directly into the inverse radial mapping as values of $d$ in Equation~(\ref{eq:radialInv}).
+These values are then fed directly into the inverse radial mapping as values of $d$ in \cref{eq:radialInv}.
 
 
 \subsection{Other Indexing Operations}
 Similar to encoding and decoding, we define grid traversal operations in terms of surface and radial components.
-Referring back to Figures~\ref{fig:prismatoid-indexing} and \ref{fig:prismatoid-coding}, we let $i_s$ be the surface index of a cell and $i_\ell$ be the layer index.
+Referring back to \cref{fig:prismatoid-indexing, fig:prismatoid-coding}, we let $i_s$ be the surface index of a cell and $i_\ell$ be the layer index.
 For each of these components, we assume there is a corresponding parent(s), child, and neighbour operation.
 For the surface index, this comes directly from the input DGGS indexing, whereas for the layer index, we define these in terms of the layer parameterization provided above.
 
@@ -529,7 +529,7 @@ In the case that the value of $k_s$ for $i_\ell^-$ is some number $m$ less than 
 There exist several critical operations that enable the integration, analysis, and visualization of data in a DGGS.
 By providing point encoding, cell decoding, and grid traversal queries for the 3D DGGS's presented earlier in the thesis, we allow them to serve as fully functioning grid systems.
 While there exist more advanced DGGS operations, the ones discussed in this chapter are the most fundamental and operate as a key component in defining more complex queries and analysis.
-For our modifications to SDOG, the combination of the mapping functions derived in Chapter~\ref{chap:mapping} and our direct encoding and decoding algorithms allow for efficient constant-time performance of these operations.
+For our modifications to SDOG, the combination of the mapping functions derived in \cref{chap:mapping} and our direct encoding and decoding algorithms allow for efficient constant-time performance of these operations.
 This improved efficiency is especially noticeable at high refinement levels for the balanced and volume methods, where the direct approaches are an order of magnitude faster than their hierarchical counterparts.
 For the grid extension method, the operations we provide are completely general and work for any valid 3D DGGS resulting from the method.
 For a specific 3D DGGS, such generality may not be necessary.

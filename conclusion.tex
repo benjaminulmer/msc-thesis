@@ -18,11 +18,11 @@ The grid extension method is fully implemented and used to demonstrate three pot
 Given an input DGGS, creating the 3D DGGS is instant and only requires three parameters clearly defined and explored in this thesis.
 
 
-Looking back at Chapter~\ref{chap:introduction}, our goals were for our 3D DGGS's to support unbounded ranges of altitude, equal (or near-equal) volume cells, efficient operations, and interoperability with 2D DGGS's.
-Support for unbounded ranges of altitudes is achieved as a direct result of using semiregular degenerate refinement, and is also clearly demonstrated in Chapter~\ref{chap:8:sats}.
+Looking back at \cref{chap:introduction}, our goals were for our 3D DGGS's to support unbounded ranges of altitude, equal (or near-equal) volume cells, efficient operations, and interoperability with 2D DGGS's.
+Support for unbounded ranges of altitudes is achieved as a direct result of using semiregular degenerate refinement, and is also clearly demonstrated in \cref{chap:8:sats}.
 We achieve equal volume cells (excluding degenerate cells) for SDOG in the volume method.
 Furthermore, volume preservation is also possible for the grid extension method if the input DGGS is area-preserving by using the appropriate radial mapping function.
-Finally, the algorithms provided in Chapter~\ref{chap:coding} are efficient, and the use of surface indices from the input DGGS ensures consistency and interoperability between the 2D and 3D systems.
+Finally, the algorithms provided in \cref{chap:coding} are efficient, and the use of surface indices from the input DGGS ensures consistency and interoperability between the 2D and 3D systems.
 
 
 \section{Limitations and Future Work}
@@ -44,7 +44,7 @@ While we believe our method would also work for ellipsoid based DGGS's, more car
 
 
 Finally, geospatial data represented as polylines, polygons, point clouds, 3D meshes, and other complex geometry require their own encoding algorithms beyond those for points.
-We implemented encoding algorithms for polylines and polygonal prisms in Chapter~\ref{chap:usecases}; however, they were only meant to serve as a proof of concept.
+We implemented encoding algorithms for polylines and polygonal prisms in \cref{chap:usecases}; however, they were only meant to serve as a proof of concept.
 General and efficient versions of these algorithms are key for creating a more robust 3D DGGS.
 
 

@@ -1,5 +1,5 @@
 \chapter{Use Cases for the Extension Method} \label{chap:usecases}
-We evaluate the grid extension method as described in Chapters~\ref{chap:extension}, \ref{chap:mapping}, and \ref{chap:coding} through a series of use cases for the 3D DGGS's.
+We evaluate the grid extension method as described in \cref{chap:extension, chap:mapping, chap:coding} through a series of use cases for the 3D DGGS's.
 These use cases are not state-of-the-art implementations; however, they demonstrate the robustness and versatility of the approach and its ability to support different target applications, data sets, and input DGGS's.
 For each use case, we chose an input DGGS and parameters for the system that resulted in a 3D DGGS with desirable properties for said application.
 The data encodings in these use cases are all defined using the fundamental operations of the 3D DGGS.
@@ -10,7 +10,7 @@ Three use cases were chosen to evaluate the method: aircraft and satellite paths
 To create the use cases, we have implemented the extension method as a C++ class integrated with a research toolset used for designing and testing different conventional DGGS's.
 In this toolset, the operations provided by a DGGS are specified by an abstract class that each implementation extends.
 The 3D DGGS class takes an input DGGS as well as values for the target aspect ratio ($a$), exponent for the radial mapping ($t$), and the radial range of the grid ($R_\mathrm{max}$) as input during construction.
-Further implementation details are provided in Chapter~\ref{chap:8:impl}.
+Further implementation details are provided in \cref{chap:8:impl}.
 
 
 \subsection{Aircraft and Satellite Paths} \label{chap:8:sats}
@@ -30,7 +30,7 @@ The main benefit our 3D DGGS would offer over existing grids for such a system i
 \end{figure}
 
 
-Figure~\ref{fig:satellites} shows several generated flight paths and satellite orbits represented in a 3D DGGS at increasing resolutions.
+\Cref{fig:satellites} shows several generated flight paths and satellite orbits represented in a 3D DGGS at increasing resolutions.
 The input DGGS for this example uses a rhombic triacontahedron as the initial polyhedron, standard 1:4 quadrilateral refinement, and a simple normalization projection.
 The 3D DGGS has a target aspect ratio of one, a radial mapping exponent of one, and a radial range of 10.66$R$ (67,957~km).
 These parameters were chosen to ensure that cells are as compact as possible without significantly sacrificing the simplicity and efficiency of operations.
@@ -52,8 +52,8 @@ This use case also shows the ability of our 3D DGGS to handle small scale data i
 \end{figure}
 
 
-Figure~\ref{fig:urbanplanning} shows several buildings represented in a 3D DGGS, with the building geometries obtained from Open Street Map~\cite{osm}.
-The input DGGS for this example uses a disdyakis triacontahedron as the initial polyhedron, a non-standard 1:4 triangle refinement, and the vertex oriented great circle slice and dice projection~\cite{van2006slice} to preserve area~\cite{hallDT}.
+\Cref{fig:urbanplanning} shows several buildings represented in a 3D DGGS, with the building geometries obtained from Open Street Map~\cite{osm}.
+The input DGGS for this example uses a disdyakis triacontahedron as the initial polyhedron, a non-standard 1:4 triangle refinement, and the vertex oriented great circle slice and dice projection~\cite{van2006slice} to preserve area~\cite{hall2020disdyakis}.
 The 3D DGGS has a target aspect ratio of one, a radial mapping exponent of three to achieve perfect volume preservation (excluding the central layer), and a maximum radius of 1.33$R$ (8495~km).
 
 
@@ -78,13 +78,13 @@ To accommodate this with our 3D DGGS, we can specify an appropriate aspect ratio
 \end{figure}
 
 
-Figure~\ref{fig:atmosphere} shows vertical wind speed from the ERA5 dataset~\cite{era5} sampled into a 3D DGGS.
+\Cref{fig:atmosphere} shows vertical wind speed from the ERA5 dataset~\cite{era5} sampled into a 3D DGGS.
 The input DGGS for this example is the same as the one used for the aircraft and satellite paths use case.
 However, this 3D DGGS has a target aspect ratio of 31.7, a radial mapping exponent of one, and a maximum radius of 1.33$R$ (8495~km).
 
 
 \section{Implementation} \label{chap:8:impl}
-Figure~\ref{fig:uml} shows a class diagram for the C++ implementation of the grid extension method. \textit{DGGS2D} specifies the operations that must be provided by a conventional DGGS. It is an abstract class templated on a type to use as the index for the grid and specifies operations for encoding (pointToCell), decoding (cellToVerts), and standard indexing operations (neighbours, parents, and children). Additionally, it provides information regarding the number of cells in the grid at a given resolution (numberOfCells) and the factor of the employed refinement (getRefinementFactor). These are used by the 3D DGGS to obtain $n$ and $f$, respectively. QuadDGGS and TriDGGS are provided as two example \textit{DGGS2D} implementations that could exist, which use QuadIndex and TriIndex as their index types, respectively.
+\Cref{fig:uml} shows a class diagram for the C++ implementation of the grid extension method. \textit{DGGS2D} specifies the operations that must be provided by a conventional DGGS. It is an abstract class templated on a type to use as the index for the grid and specifies operations for encoding (pointToCell), decoding (cellToVerts), and standard indexing operations (neighbours, parents, and children). Additionally, it provides information regarding the number of cells in the grid at a given resolution (numberOfCells) and the factor of the employed refinement (getRefinementFactor). These are used by the 3D DGGS to obtain $n$ and $f$, respectively. QuadDGGS and TriDGGS are provided as two example \textit{DGGS2D} implementations that could exist, which use QuadIndex and TriIndex as their index types, respectively.
 
 
 \begin{figure}[ht!]
@@ -98,11 +98,8 @@ Figure~\ref{fig:uml} shows a class diagram for the C++ implementation of the gri
 
 
 During construction, a DGGS3D takes a reference to a \textit{DGGS2D} (the input DGGS) along with values maxRad ($R_\mathrm{max}$), targetAR ($a$), and radialMapExp ($t$). This class is also templated on the type of the index used by the input DGGS. DGGS3D uses the class Index3D as its index type, which is simply a tuple composed of a surface index type and a LayerIndex. LayerIndex is a tuple of shell ($s$), resolution ($k$), and index ($j$).
-Encoding, decoding, and index operations are defined exactly as provided in Chapter~\ref{chap:7:extension}.
+Encoding, decoding, and index operations are defined exactly as provided in \cref{chap:7:extension}.
 
-
-
-%For the implementation of encoding and decoding in the DGGS3D (pointToCell and cellToVerts), the radial mapping and layer parameterization steps described in Chapter~\ref{sec:encoding} are combined into single operations. For encoding, this means that LayerIndex is calculated directly from the radius without computing the actual value of $m(r)$. Likewise for decoding, the maximum and minimum radii ($r_\mathrm{min}$ and $r_\mathrm{max}$) are computed directly from $s$, $k$, and $j$ without first computing the values of $m(r_\mathrm{min})$ and $m(r_\mathrm{max})$. The separation of radial mapping and layer parameterization in Section~\ref{sec:encoding} is only done for conceptual clarity
 
 
 \section{Summary}

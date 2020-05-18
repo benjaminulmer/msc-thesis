@@ -29,10 +29,10 @@ Despite these fundamental challenges, the many benefits of maps have motivated t
 
 Distortions in a map projection (or more generally in any mapping) are measured by their effect on angles, areas, and distances.
 While eliminating all distortion is impossible, specialized projection methods exist that remove certain types of distortion.
-Commonly used conformal (Figure~\ref{fig:mercator}) and area-preserving (Figure~\ref{fig:gall-peters}) projections preserve angles and areas, respectively.
+Commonly used conformal (\cref{fig:mercator}) and area-preserving (\cref{fig:gall-peters}) projections preserve angles and areas, respectively.
 Preserving distance also removes all other distortion, and since the sphere in non-developable, isometric projections between the sphere and the plane are impossible.
-However, projections that preserve only certain distances, such as all those to a certain point, are achievable (Figure~\ref{fig:azi-equidist}).
-Alternatively, some methods aim for a balanced tradeoff between the different types of distortion, as opposed to eliminating a specific type (Figure~\ref{fig:robinson}).
+However, projections that preserve only certain distances, such as all those to a certain point, are achievable (\cref{fig:azi-equidist}).
+Alternatively, some methods aim for a balanced tradeoff between the different types of distortion, as opposed to eliminating a specific type (\cref{fig:robinson}).
 
 
 \begin{figure*}[htp!]
@@ -94,7 +94,7 @@ Therefore, it is essential to use an appropriate map projection for each intende
 Another significant challenge with flat maps is the edges (or boundaries) introduced.
 Such edges can have a significant impact on a person's understanding of a map when phenomena cross these boundaries.
 A study by Hennerdal asked participants to predict the location and direction of an airplane crossing the boundary of different map projections~\cite{hennerdal2015beyond}.
-The study found that participants would often incorrectly place the airplane at the point of \textit{linear} peripheral continuity (the intersection of the straight line tangent to the initial aircraft location and the opposite map edge) as opposed to the correct location (Figure~\ref{fig:edge-continuity}).
+The study found that participants would often incorrectly place the airplane at the point of \textit{linear} peripheral continuity (the intersection of the straight line tangent to the initial aircraft location and the opposite map edge) as opposed to the correct location (\cref{fig:edge-continuity}).
 The occurrence of this mistake was most prominent with children; however, the effect was still present with adult participants. Another study by Hruby et al. measured how such edges impact the estimation of distance~\cite{hruby2016journey}.
 Two groups of participants, given either a Eurocentric or Americentirc map to memorize locations, were asked to estimate the distances between various Asian and American cities.
 While both groups overestimated distances on average, the group with the Eurocentric map (where the shortest distances crossed the map boundary), had larger estimation errors than the other group.
@@ -104,7 +104,7 @@ These studies further show that the projection used for a map must be chosen and
 \subsubsection{Polyhedral Projections} \label{chap:2:polyProj}
 At the cost of introducing additional map edges, cutting a map can reduce the amount of distortion introduced by projection~\cite{soliman2018optimal}.
 Such cuts are analogous to projecting the sphere to an underlying polyhedron, the net of which produces the final flat map.
-Figure~\ref{fig:poly-projection} shows one example of such a projection, the Dymaxion map.
+\Cref{fig:poly-projection} shows one example of such a projection, the Dymaxion map.
 Aside from reducing distortion, these polyhedron-based maps can serve as a pseudo-globe by folding the 2D net into the corresponding 3D polyhedron.
 
 
@@ -246,7 +246,7 @@ For consistency and to avoid confusion, this thesis exclusively uses the term re
 
 \subsection{Spherical Grids} \label{chap:2:spherical}
 With the Earth commonly approximated as a sphere, many DGG's and DGGS's are defined directly in this space.
-One of the most straightforward approaches for doing so is with a regular discretization based on latitude and longitude coordinates, or a latitude-longitude grid (LLG), shown in Figure~\ref{fig:llg}.
+One of the most straightforward approaches for doing so is with a regular discretization based on latitude and longitude coordinates, or a latitude-longitude grid (LLG), shown in \cref{fig:llg}.
 Similar to a regular grid in Euclidean space defined by equal steps in Cartesian coordinates, an LLG divides the sphere into equal steps of latitude and longitude.
 Unlike Cartesian coordinates, however, spherical coordinates have singularities at both poles causing quadrilateral LLG cells to degenerate into triangles.
 These singularities reduce the size and compactness of cells near the poles, resulting in significant area differences between cells in the grid; they also produce a high valence vertex at each pole.
@@ -267,7 +267,7 @@ Thus, an LLG is neither a compact nor uniform DGG.
 As (absolute) latitude increases, the same angular longitude corresponds to decreasing arc lengths on the sphere.
 Because of this, one strategy to lessen the drawbacks of an LLG is to increase the longitude step size as (absolute) latitude increases.
 Modifying an LLG in this way results in more uniform sized and compact grid cells at the cost of introducing irregular and degenerate connectivity to the grid.
-We explore this tradeoff more in Chapter~\ref{chap:3:semiregDegen}.
+We explore this tradeoff more in \cref{chap:3:semiregDegen}.
 Using this strategy, Leopardi provides a formulation for creating an equal area and compact partitioning of the sphere into any number of regions~\cite{leopardi2006partition}.
 Similarly, the Degenerate Quadtree Grid (DQG) proposed by Sun et al. makes use of a modified quadtree refinement to create this type of grid~\cite{sun2008global}.
 The use of a refinement method---along with the provided encoding, decoding, and indexing algorithms---allows the DQG to operate as a full DGGS as opposed to just a single resolution DGG.
@@ -323,7 +323,7 @@ This class of operations is known as grid encoding.
 The most basic type of encoding is for points---finding the cell which contains a given point---however, operations for more complex geometry such as vector polylines and polygons is often also required~\cite{du2018duality}.
 Likewise, the inverse process of mapping a set of cells in the grid domain to the corresponding regions of the Earth is also needed.
 These operations are, correspondingly, known as grid decoding.
-Grid encoding and decoding, as they apply to a polyhedron-based grid, are shown in Figure~\ref{fig:coding}.
+Grid encoding and decoding, as they apply to a polyhedron-based grid, are shown in \cref{fig:coding}.
 In this thesis, we refer to grid encoding and decoding collectively as coding.
 
 

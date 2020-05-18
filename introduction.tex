@@ -99,10 +99,10 @@ Cells should be aligned with the surface of the Earth and have a consistent orie
 
 The main challenges associated with Earth-centric grids are caused by cells converging toward the singularity at the centre of the Earth.
 That is, cells more near the centre of the grid become increasingly small and skinny and eventually degenerate to pyramids
-(see Figure~\ref{fig:3dllg}).
+(see \cref{fig:3dllg}).
 The problem with this is two-fold, as it reduces both the compactness and volume of cells; furthermore, the resulting difference in the volumes of cells is unbounded.
 For grids with a small radial extent, these effects are negligible; however, for the range of altitudes we wish to support in this thesis, they cannot be ignored.
-It is worth noting that this same issue presents itself in traditional latitude-longitude grids at the poles, also demonstrated in Figure~\ref{fig:3dllg}.
+It is worth noting that this same issue presents itself in traditional latitude-longitude grids at the poles, also demonstrated in \cref{fig:3dllg}.
 Addressing these issues is one of the main challenges of this thesis.
 
 
@@ -139,7 +139,7 @@ Doing so allows a broader exploration of different methods that we aggregate int
 \section{Methodology} \label{chap:1:method}
 To achieve the goals of this thesis, we apply a specific class of refinement techniques---which we refer to as semiregular degenerate---for creating 3D DGGS's.
 The main idea of this type of refinement is to refine degenerate cells differently than non-degenerate ones in order to combat the reduction of cell size and compactness in these regions.
-Refer to Chapter~\ref{chap:3:semiregDegen} for further details.
+Refer to \cref{chap:3:semiregDegen} for further details.
 Using semiregular degenerate refinement, we explore two main approaches for creating 3D DGGS's with the desired properties.
 
 
@@ -208,15 +208,15 @@ The grid extension method, along with its mappings and use case results, has bee
 
 \section{Thesis Overview} \label{chap:1:overview}
 The outline for the remaining chapters of this thesis is as follows:
-Chapter~\ref{chap:background} covers background information on map projections, Digital Earth systems, and global grids.
-Chapter~\ref{chap:3ddggs} discusses the benefits and drawbacks of different approaches for creating a 3D DGGS and also provides a detailed explanation of the semiregular degenerate refinement strategy employed throughout the thesis.
-Chapter~\ref{chap:sdog} introduces SDOG and provides an analysis of the number of cells in SDOG at a given resolution.
+\Cref{chap:background} covers background information on map projections, Digital Earth systems, and global grids.
+\Cref{chap:3ddggs} discusses the benefits and drawbacks of different approaches for creating a 3D DGGS and also provides a detailed explanation of the semiregular degenerate refinement strategy employed throughout the thesis.
+\Cref{chap:sdog} introduces SDOG and provides an analysis of the number of cells in SDOG at a given resolution.
 We then provided the modified refinement rules that improve volume preservation and the analysis of said rules.
-Chapter~\ref{chap:extension} covers the grid extension method for creating a 3D DGGS from a 2D one.
+\Cref{chap:extension} covers the grid extension method for creating a 3D DGGS from a 2D one.
 We start with a basic version of the method for 1-to-4 refinement factors, and then introduce extensions for other factors and targeting a specific cell aspect ratio.
-Chapter~\ref{chap:mapping} derives the mapping functions used for modified SDOG and the extended grids.
-Chapter~\ref{chap:coding} then details how these mappings are used for efficient encoding and decoding operations.
+\Cref{chap:mapping} derives the mapping functions used for modified SDOG and the extended grids.
+\Cref{chap:coding} then details how these mappings are used for efficient encoding and decoding operations.
 This chapter is also where we introduce and compare the improved encoding and decoding algorithms for SDOG.
-Chapter~\ref{chap:usecases} showcases three sample use cases for the grid extensions method, as well as the 3D DGGS's used for said use cases.
-Chapter~\ref{chap:discussion} compares the different 3D DGGS's presented throughout the thesis and briefly discusses in which situations each would be most useful.
-Finally, Chapter~\ref{chap:conclusion} concludes with a summary, along with limitations and directions for future work.
+\Cref{chap:usecases} showcases three sample use cases for the grid extensions method, as well as the 3D DGGS's used for said use cases.
+\Cref{chap:discussion} compares the different 3D DGGS's presented throughout the thesis and briefly discusses in which situations each would be most useful.
+Finally, \cref{chap:conclusion} concludes with a summary, along with limitations and directions for future work.
