@@ -65,7 +65,7 @@ This type of analysis is useful in informing decisions about how to modify refin
 
 
 With regular refinement, a simple exponential formulation gives the number of cells in the grid at any resolution.
-Semiregular degenerate refinement makes this formulation more complicated.
+Semiregular degenerate refinement makes this computation more complicated.
 Despite this, we can use the above refinement rules to derive recursive definitions for the number of cells in an SDOG grid (or a single octant) at a given level of refinement.
 Let $S(k)$, $L(k)$, $N(k)$, and $T(k)$ be the number of SG, LG, NG, and total cells of an SDOG octant at refinement level $k$, respectively.
 There is only ever one SG cell in an SDOG octant, so trivially
@@ -187,7 +187,7 @@ Furthermore, the function used can be different for each cell type and spherical
 
 
 A useful function for improving volume preservation is one that results in one of the new ranges having a specific percentage of the volume of the original range.
-Each spherical coordinate has a different effect on volume \cref{eq:volume}; therefore, this function is different for each.
+Each spherical coordinate has a different effect on volume; therefore, this function is different for each.
 We start with the radial splitting surface.
 Referring to \cref{eq:volume}, let $p \in (0,1)$ be the percentage we wish for the lower range to have, then
 %
@@ -290,7 +290,8 @@ Referring to \cref{fig:sdog-zones}, we see that these splitting surfaces further
 Additionally, each zone is comprised entirely of NG cells.
 From this, we conclude that zone $n$ has precisely four times as many cells as zone $n+1$, and thus, should have four times the volume as well.
 Using this information, we find the value for $p$.
-Zone $n$ has a volume equal to $\left( 1 - p \right)^{n} p$ that of the initial octant, so setting the ratio between zone $n+1$ and $n$ to be equal to $1/4$ gives us $p = 3/4$.
+First, we note zone $n$ has a volume equal to $\left( 1 - p \right)^{n} p$ that of the initial octant.
+Then, setting the ratio between zone $n+1$ and $n$ to be equal to $1/4$ gives us $p = 3/4$, which we use directly in \cref{eq:latVol} to find the appropriate splitting surface locations.
 
 
 \begin{figure}[ht!]
@@ -307,7 +308,7 @@ Zone $n$ has a volume equal to $\left( 1 - p \right)^{n} p$ that of the initial 
 
 \Cref{fig:modified-volume} shows the resulting grid from this method of calculating splitting surfaces, which we refer to as the \textit{volume} method.
 In this grid, all NG cells at the same level of refinement have equal volume; this dramatically improves the volume preservation.
-Only cells that extend to one of the singularities (i.e. SG and LG cells) will have a smaller volume than the other cells in the grid---by a factor of approximately 2.6 and x.x, respectively.
+Only cells that extend to one of the singularities---SG and LG cells---will have a smaller volume than the other cells in the grid, by a factor of approximately 2.6 and 1.5, respectively.
 
 
 \subsection{Balanced Splitting Surfaces} \label{chap:4:balanced}
@@ -390,7 +391,23 @@ Formally, given an object $\omega$ and a sphere $s$ such that $\operatorname{vol
 \end{equation*}
 %
 Since the sphere is the most compact shape, lower values of sphericity corespond to lower compactness.
+The sphericity of several common geometric shapes is provided in \cref{tab:sphericity}.
 We use the mean and SD of sphericity for all cells in the grid to evaluate compactness globally.
+
+
+\begin{table}[htp!]
+	\centering
+	\caption[Sphericity of common geometric shapes]{
+		Sphericity of common geometric shapes
+	}
+	\begin{tabular}{@{} c c c c c c @{}}
+		\toprule
+		           & Sphere & Hemisphere & Spherical Octant (SG Cell) & Cube  & Regular Tetrahedron \\ \midrule
+		Sphericity & 1      & 0.840      & 0.8                        & 0.806 & 0.671               \\ \bottomrule
+	\end{tabular}
+	\label{tab:sphericity}
+\end{table}
+
 
 \begin{figure}[p!]
 	\centering
@@ -413,6 +430,23 @@ We use the mean and SD of sphericity for all cells in the grid to evaluate compa
 \end{figure}
 
 
+\begin{table}[htp!]
+	\centering
+	\caption[Convergence values of measures for the different grids]{
+		Convergence value of each measure for the different grids
+	}
+	\begin{tabular}{@{} c c c c c @{}}
+		\toprule
+		                 & SDOG    & Latitude & Balanced & Volume     \\ \midrule
+		Volume Ratio     & 8.88    & 7.99     & 4.470    & 2.63       \\
+		CV of Volume     & 0.412   & 0.399    & 0.201    & $\approx$0 \\
+		Mean Sphericity  & 0.799   & 0.797    & 0.786    & 0.768      \\
+		SD of Sphericity & 0.00639 & 0.00626  & 0.0147   & 0.0271     \\ \bottomrule
+	\end{tabular}
+	\label{tab:results}
+\end{table}
+
+
 \begin{figure}[p!]
 	\centering
 	\includegraphics[width=0.8\textwidth]{mean-sph.pdf}
@@ -433,31 +467,6 @@ We use the mean and SD of sphericity for all cells in the grid to evaluate compa
 \end{figure}
 
 
-As a baseline, we have calculated the value of these measures at each refinement level from one to fifteen for conventional SDOG.
-We then repeated this for the three modifications discussed in this chapter: the volume method, the latitude method, and the balanced method.
-The results for each grid are displayed in \cref{fig:vr,fig:cv,fig:sph,fig:sd-sph} showing the volume ratio, CV of volume, mean sphericity, and SD of sphericity, respectively.
-\Cref{tab:results} summarizes these charts with the convergence value of each property for the four different grids.
-We also give convergence values for the maximum and minimum sphericity---and their difference---for each grid in \cref{tab:results-sph}.
-It is important to note that for volume ratio and CV of volume, lower values are better, but for sphericity, a higher value is better.
-
-
-\begin{table}[htp!]
-	\centering
-	\caption[Convergence values of measures for the different grids]{
-		Convergence value of each measure for the different grids
-	}
-	\begin{tabular}{@{} c c c c c @{}}
-		\toprule
-		                 & SDOG    & Latitude & Balanced & Volume     \\ \midrule
-		Volume Ratio     & 8.88    & 7.99     & 4.470    & 2.63       \\
-		CV of Volume     & 0.412   & 0.399    & 0.201    & $\approx$0 \\
-		Mean Sphericity  & 0.799   & 0.797    & 0.786    & 0.768      \\
-		SD of Sphericity & 0.00639 & 0.00626  & 0.0147   & 0.0271     \\ \bottomrule
-	\end{tabular}
-	\label{tab:results}
-\end{table}
-
-
 \begin{table}[htp!]
 	\centering
 	\caption[Convergence values of max and min sphericity for the different grids]{
@@ -472,6 +481,14 @@ It is important to note that for volume ratio and CV of volume, lower values are
 	\end{tabular}
 	\label{tab:results-sph}
 \end{table}
+
+
+As a baseline, we have calculated the value of these measures at each refinement level from one to fifteen for conventional SDOG.
+We then repeated this for the three modifications discussed in this chapter: the volume method, the latitude method, and the balanced method.
+The results for each grid are displayed in \cref{fig:vr,fig:cv,fig:sph,fig:sd-sph} showing the volume ratio, CV of volume, mean sphericity, and SD of sphericity, respectively.
+\Cref{tab:results} summarizes these charts with the convergence value of each property for the four different grids.
+We also give convergence values for the maximum and minimum sphericity---and their difference---for each grid in \cref{tab:results-sph}.
+It is important to note that for volume ratio and CV of volume, lower values are better, but for sphericity, a higher value is better.
 
 
 The latitude method has a better volume ratio than conventional SDOG for all levels of refinement except the first and fourth, and a lower CV of volume for all levels of refinement after the second.

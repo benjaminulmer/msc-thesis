@@ -83,14 +83,21 @@ Similar to how the DQG (\cref{chap:2:spherical}) addresses polar singularities i
 A direct extension of the DQG to 3D, known as the spheroid-degenerated octree grid (SDOG), was proposed by Yu and Wu~\cite{yu2009sdog}.
 Just as the DQG utilizes a modified quadtree refinement, SDOG extends this refinement to 3D, creating a modified octree refinement.
 The resulting cells are relatively uniform in both size and shape, having a bounded maximum difference in volume.
-Because of these properties, SDOG has been used for the modelling of large-scale geospatial objects~\cite{yu2012large-scale} and multi-scale visualization of the lithosphere~\cite{yu2012lithosphere}.
+Because of these properties, SDOG has been used for the modelling of large-scale geospatial objects~\cite{yu2012large-scale} and multi-scale visualizations of the lithosphere~\cite{yu2012lithosphere}.
+While the maximum variation in SDOG cell volume is bounded, it is still large enough for cells of the same size to appear at multiple resolutions of the grid system.
 We provide a more detailed explanation of SDOG and its specific refinement method in \cref{chap:sdog}.
+
+
 Another approach similar to SDOG is the Sphere Shell Space 3D Grid, which uses a similarly modified octree refinement of cells but is constructed from multiple spherical shells as opposed to a single sphere~\cite{gang2013sphere}.
-Likewise, Wang et al. also apply a similar process to a great circle arc quaternary triangular mesh (QTM) to create a 3D DGGS~\cite{wang2013global}.
-These methods all use a similar refinement strategy to handle cell degeneration toward the centre of the grid; however, the terminology used to describe this type of refinement is inconsistent between works.
-In this thesis, we propose the term \textit{semiregular degenerate refinement} to describe this class of methods.
+Wang et al. also apply a similar process to a great circle arc quaternary triangular mesh (QTM) to create a 3D DGGS~\cite{wang2013global} with significantly better volume-preservation than SDOG.
+While these methods all produce 3D DGGS's with much better compactness and cell uniformity than the simple radial extensions described earlier, the authors do not generalize their methods to work for other 2D DGGS's.
+The best DGGS depends on the specific needs of the application, so allowing any 2D DGGS to serve as the basis for a 3D one is the most versatile approach.
+In \cref{chap:extension}, we generalize this type of radial extension for use with \textit{any} 2D DGGS.
+
 
 \section{3D DGGS Refinement Strategies} \label{chap:3:refinement}
+
+
 
 \subsection{Regular Refinement} \label{chap:3:regular}
 
