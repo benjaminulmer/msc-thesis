@@ -12,11 +12,15 @@ Thus, queries that give these relationships for a given cell are another essenti
 
 
 This chapter completes the 3D DGGS's described in the preceding chapters by providing encoding, decoding, and indexing operations for the SDOG modifications and grid extension method.
-Different types of geometry typically require their own encoding algorithms.
+However, different types of geometry typically require their own encoding algorithms.
 In this thesis, we focus on point encoding as it is the most fundamental, with the encoding of more complex geometries built off this operation.
 While SDOG already has hierarchical coding algorithms~\cite{yu2009sdog, yu2009coding} that are trivially adapted to work with the modified grids, we derive constant time alternatives that work for both the conventional grid and our modifications.
 For completeness, we also describe algorithms for performing neighbour, parent, and child queries.
 For the grid extension method, we derive these operations in such a way as to ensure interoperability and consistency between the 3D and input DGGS.
+
+
+The content of \cref{chap:7:extension} is taken from our \textit{IJGI} article, with a slightly modified presentation.
+We also provide additional details on layer operations that are not present in the original article.
 
 
 \section{SDOG}
@@ -31,7 +35,7 @@ We focus on the hierarchical scheme, as grid \textit{systems} are the main focus
 	\caption[Four resolutions of Morton codes]{
 		The first four resolutions of Morton codes for a quadtree.
 		(a)--(d) show resolutions 1--4, respectively.
-		Modified from~~\cite{morton-multiple}; original image courtesy of David Eppstein -- CC BY-SA 3.0
+		Modified from~\cite{morton-multiple}; original image courtesy of David Eppstein -- CC BY-SA 3.0
 	}
 	\label{fig:morton-multiple}
 \end{figure}
@@ -75,7 +79,7 @@ While these are not constant-time operation in general, magic numbers and lookup
 
 
 While Morton codes have many desirable properties, due to the semiregular degenerate nature of SDOG, they must be modified for use with the grid system.
-First, Morton coding for a cell's children is done as if refinement is entirely regular.
+First, we apply Morton coding for a cell's children as if refinement was entirely regular.
 For NG cells, refinement \textit{is} regular, and no modifications are needed.
 However, for SG and LG cells, some of these codes will refer to the same cell.
 In these cases, we merge duplicate codes with the lower value kept.
@@ -94,7 +98,7 @@ We use this property to implicitly obtain $k$ in any case where it is not provid
 We first give a brief overview of the hierarchical coding algorithms for SDOG, as these will be the baseline for evaluating our proposed ones.
 Hierarchical coding works by traversing the grid system one resolution at a time, using the refinement rules for the relevant cell at each iteration.
 As a result, these types of algorithms are linear on the level of refinement.
-However, because they use refinement rules directly, they are trivially modified to work for our SDOG modifications by simply changing the refinement used in the algorithms accordingly.
+Furthermore, because they use refinement rules directly, they are trivially modified to work for our SDOG modifications by simply changing the refinement used in the algorithms accordingly.
 
 
 \subsubsection{Encoding}
@@ -178,9 +182,9 @@ The three coordinates of $p$ are then normalized within the range of the octant 
 We then calculate the shell and zone that contain $p$ the same as in \cref{chap:mapping}: $s = \lfloor \log_{0.5} \hat{r} \rfloor$ and $z = \lfloor \log_{0.5} ( 1 - \hat{\varphi} ) \rfloor$.
 
 
-The number of latitude division will be $2^k$ divided by $2^s$; however, the number of divisions will always be at least one.
+The number of latitude division is $2^k$ divided by $2^s$; however, the number of divisions will always be at least one.
 Thus, we introduce variable $k_\varphi = \min ( s, k )$.
-Similarly, the number of longitude division will $2^k$ divided by $2^{s+z}$, but again, will always be at least one.
+Similarly, the number of longitude division is $2^k$ divided by $2^{s+z}$, but again, will always be at least one.
 We introduce a second variable $k_\lambda = \min ( s + z, k )$.
 
 
@@ -245,7 +249,7 @@ Finally, we decode longitude:
 \hat{\lambda}_\mathrm{min} = \frac{\lambda_i}{2^{k - k_\lambda}}.
 \end{equation*}
 %
-The last step is get the bounds of the octant from the octant code and convert the normalized values to actual ones.
+The last step is to get the bounds of the octant from the octant code and convert the normalized values to actual ones.
 
 
 \subsubsection{For Modified SDOG}
@@ -264,7 +268,7 @@ We also used these implementations to experimentally verify the correctness of t
 
 The combination of two algorithmic approaches (hierarchical vs. direct) and four grids (SDOG and the three modifications in \cref{chap:sdog}) result in eight total algorithms to compare for both encoding and decoding.
 For simplicity, we only benchmark the DMC portion of coding.
-We first generate one million points randomly distributed within an SDOG octant.
+First, we generate one million points randomly distributed within an SDOG octant.
 For each resolution being benchmarked, we then time each of the encoding algorithms using the generated points.
 The resulting indices are then used to time each of the decoding algorithms in the same manner.
 We time resolutions $1 \le k \le 21$, as 21 is the highest resolution \textit{without} an octant code that can be represented by a 64-bit integer.
@@ -337,7 +341,7 @@ A final note is that runtime for direct decoding of the modified grids grows unt
 The reason for this is subtle.
 In the decoding algorithm, values of $s$ and $z$ are calculated from the bounds of the cell being decoded.
 Therefore, their values are bounded by $k$.
-However, $s$ and $z$ are used as exponents when calculating $\ell$ and $u$ values, and in many implementations, calculating powers is faster for lower exponents.
+However, $s$ and $z$ are used as exponents when calculating $\ell$ and $u$ values, and in many implementations, calculating powers is faster for lower exponents (specifically, exponents of zero, one, and two).
 Thus, low values of $k$ have lower maximum (and average) exponents and, therefore, slightly lower runtime.
 This same effect does not appear in the encoding algorithms since $s$ and $z$ are calculated directly from $p$ with no respect to $k$.
 
@@ -398,8 +402,8 @@ Uniquely identifying each of these components is sufficient to identify every ce
 	\includegraphics[width=0.6\textwidth]{prismatoid-indexing.pdf}
 	\caption[Separation of surface and layer indices for the grid extension method]{
 		Indices from the input DGGS identify cells in the 3D DGGS with the same bases but different radii.
-		Likewise, each layer of the 3D DGGS contains contains all cells with the same radii but different bases.
-		Thus, these two pieces of information combined are sufficient to uniquely identify any cell in the 3D DGGS.
+		Likewise, each layer of the 3D DGGS contains all cells with the same radii but different bases.
+		Thus, these two pieces of information combined are sufficient to identify any cell in the 3D DGGS uniquely.
 		Here we show a single cell---highlighted in purple---along with all the cells that share a surface index (red) and a layer index (blue)
 	}
 	\label{fig:prismatoid-indexing}
@@ -432,11 +436,10 @@ Thus, layer encoding will calculate these values from $\hat{r}$ and layer decodi
 
 \subsection{Encoding}
 The level of refinement $k$ is an input into encoding; therefore, only $s$ and $j$ need to be computed.
-The value of $s$ can be carried forward from the radial mapping function evaluation.
-In order to calculate $j$, the number of layers in the shell is first needed.
-The number of layers in a shell depends on the refinement level, the layering sequence, and the number of extra radial splits (see \cref{chap:extension}).
-Once again, the level of refinement is an input, and the other variables are constant for any given 3D DGGS.
-Therefore, the number of layers is
+The value of $s$ is carried forward from the radial mapping function evaluation.
+In order to calculate $j$, the number of layers in the shell is first needed; this depends on the refinement level, the layering sequence, and the number of extra radial splits (see \cref{chap:extension}).
+The refinement level is an input, and the other variables are constant for any given 3D DGGS.
+The number of layers is
 %
 \begin{equation*}
 n_\ell = \left( x+1 \right) \prod_{i = s}^{k - 1} \ell_i.
@@ -472,7 +475,7 @@ For each of the operations, we describe how to calculate the output layer parame
 
 \paragraph{Parent}
 Trivially, the parent layer is in the previous resolution of the 3D DGGS, so $k' = k - 1$.
-For calculating $s$ and $j$, there are two cases, which correspond with the parent layer being central or normal, respectively.
+For calculating $s$ and $j$, there are two cases, which correspond with the parent layer being central or normal.
 If $s = k-1$ or $s = -1$, then the parent layer is a central layer. In this case, $s' = -1$ and $j' = 0$.
 Otherwise, the parent layer is normal with $s' = s$ and $j' = \lfloor j / \ell_k \rfloor$.
 
@@ -526,7 +529,7 @@ In the case that the value of $k_s$ for $i_\ell^-$ is some number $m$ less than 
 
 
 \section{Summary}
-There exist several critical operations that enable the integration, analysis, and visualization of data in a DGGS.
+Several critical operations enable the integration, analysis, and visualization of data in a DGGS.
 By providing point encoding, cell decoding, and grid traversal queries for the 3D DGGS's presented earlier in the thesis, we allow them to serve as fully functioning grid systems.
 While there exist more advanced DGGS operations, the ones discussed in this chapter are the most fundamental and operate as a key component in defining more complex queries and analysis.
 For our modifications to SDOG, the combination of the mapping functions derived in \cref{chap:mapping} and our direct encoding and decoding algorithms allow for efficient constant-time performance of these operations.
