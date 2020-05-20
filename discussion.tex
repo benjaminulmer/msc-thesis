@@ -4,22 +4,55 @@ More specifically---of the grids we propose---how do they compare and in which s
 This thesis looks at two approaches for creating different 3D DGGS's: modifications to SDOG refinement and a 2D DGGS grid extension technique.
 We present these two approaches as separate methods, with some similarities between the two shown in the radial mapping functions.
 However, SDOG itself can be generated from the grid extension method, with the input DGGS being DQG.
-Furthermore, our modifications to SDOG can also be generated, where the input DGGS is DQG with the latitude modifications of SDOG, and the 3D DGGS uses the corresponding radial mappings.
+Furthermore, our modifications to SDOG can also be generated, where the input DGGS is DQG with the corresponding latitude modifications, and the 3D DGGS uses the corresponding radial mapping.
 
 
 Comparing our modified SDOG grids, the volume method is a good choice if volume preservation is a high priority in the 3D DGGS.
-While this method significantly sacrifices compactness, this is a necessary tradeoff to achieve volume preservation in SDOG. Additionally, encoding and decoding are not significantly less efficient than those for conventional SDOG (when using our direct algorithms).
+While this method significantly sacrifices compactness, this is a necessary tradeoff to achieve volume preservation in SDOG. Additionally, when using our direct algorithms, encoding and decoding are not significantly less efficient than those for conventional SDOG.
 In comparison, the balanced method can create a grid with more acceptable tradeoffs between cell volume and compactness, but the algorithms are less efficient than for the volume method.
 Finally, the latitude method is unlikely to be worth using over conventional SDOG due to the marginal volume preservation gains compared to the efficiency losses in encoding and decoding
 
 
-For the grid extension in general, several properties of the 3D DGGS are derived from---or fully determined by---the input DGGS.
+For the grid extension in general, several properties of the 3D DGGS are derived from---or entirely determined by---the input DGGS.
 For example, area preservation in the input DGGS determines if volume preservation in the 3D one is possible, and the surface refinement factor determines the complexity of radial refinement.
-Thus, choosing the correct 2D DGGS is the most important step in creating the ideal 3D DGGS for a given application.
-Regarding DQG (and thus SDOG), some of the main benefits are the efficient coding algorithms and the use of spherical coordinates for defining the grid (which means no conversions to and from cartesian coordinates are needed).
-However, degenerate connectivity on the surface (as opposed to only with changing altitude) and polar singularities make this approach less ideal in situations where uniform coverage of the entire Earth needed.
+Thus, choosing the correct 2D DGGS is the most critical step in creating the ideal 3D DGGS for a given application.
+Regarding DQG---and thus SDOG---some of the main benefits are the efficient coding algorithms and the use of spherical coordinates for defining the grid, which means no conversions to and from Cartesian coordinates are needed.
+However, degenerate connectivity on the surface (as opposed to only with changing altitude) and polar singularities make this approach less ideal in situations where uniform coverage of the entire Earth is needed.
 
 
 Finally, while we took care to ensure the grid extension method is general and supports any input DGGS, it works better for some than others.
 As mentioned above, non-1:4 refinement factors introduce extra complexity in radial refinement; similarly, accommodating arbitrary aspect ratios also introduces complexities to refinement.
 These added complications are the main obstacle to more elegant grid coding and traversal, and are the reason the input DGGS's used in \cref{chap:usecases} all have a 1:4 surface refinement factor.
+
+\subsection{Maximum Grid Radius}
+Another crucial component not yet discussed in this thesis is how to chose an appropriate maximum radius for a 3D DGGS.
+The most obvious consideration is to ensure this value is large enough to support the range of altitudes expected in the intended use case.
+However, the maximum radius also determines which regions of the grid contain which altitude, and most importantly, where the boundaries between shells reside.
+Ideally, these shell boundaries should not be near critical altitudes with large amounts of data.
+Having the important altitudes on or near shell boundaries means regions directly above and below will have varying cell shape, potentially varying cell size, and degenerate connectivity; this is not ideal.
+Therefore, the maximum grid radius should be chosen such that important regions are in or near the middle of shells.
+If multiple altitudes are considered important, this may not always be possible to achieve for them all.
+For only one altitude, though, this is easily done.
+
+Let $R_d$ be the specific radius (in most applications, the Earth's surface) we want in the middle of a shell.
+Recall that boundaries of shells (in physical space) are located at integer powers of $\alpha$ times $R_\mathrm{max}$ (refer back to \cref{fig:sdog-shells,fig:prismatoid-shells}).
+Therefore, the middle of shell zero is located at
+%
+\begin{equation*}
+\left( \alpha + \frac{1}{2} (1 -\alpha) \right) R_\mathrm{max} = \frac{ \alpha + 1 }{2} R_\mathrm{max},
+\end{equation*}
+%
+and multiplying this by $a^s$ gives the middle of shell $s$.
+From this we obtain
+%
+\begin{equation*}
+R_d = \frac{ \alpha^s \left( \alpha + 1 \right) }{2} R_\mathrm{max}
+\end{equation*}
+%
+which we solve for $R_\mathrm{max}$ to get
+%
+\begin{equation*}
+R_\mathrm{max} = \frac{2 R_d}{ \alpha^s \left( \alpha + 1 \right) }.
+\end{equation*}
+%
+Then, we simply solve for smallest $s$ that results in value greater than or equal to maximum radius needed to support.
