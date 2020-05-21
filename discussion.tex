@@ -24,7 +24,7 @@ Finally, while we took care to ensure the grid extension method is general and s
 As mentioned above, non-1:4 refinement factors introduce extra complexity in radial refinement; similarly, accommodating arbitrary aspect ratios also introduces complexities to refinement.
 These added complications are the main obstacle to more elegant grid coding and traversal, and are the reason the input DGGS's used in \cref{chap:usecases} all have a 1:4 surface refinement factor.
 
-\subsection{Maximum Grid Radius}
+\section{Maximum Grid Radius}
 Another crucial component not yet discussed in this thesis is how to chose an appropriate maximum radius for a 3D DGGS.
 The most obvious consideration is to ensure this value is large enough to support the range of altitudes expected in the intended use case.
 However, the maximum radius also determines which regions of the grid contain which altitude, and most importantly, where the boundaries between shells reside.

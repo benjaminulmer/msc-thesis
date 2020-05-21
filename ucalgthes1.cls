@@ -527,7 +527,7 @@
 \setcounter{topnumber}{2}
 \def\topfraction{.7}
 \setcounter{bottomnumber}{1}
-\def\bottomfraction{.3}
+\def\bottomfraction{.5}
 \setcounter{totalnumber}{3}
 \def\textfraction{.2}
 \def\floatpagefraction{.5}

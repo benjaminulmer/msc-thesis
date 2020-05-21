@@ -1,49 +1,39 @@
 \chapter{Extending 2D DGGS's to Three Dimensions} \label{chap:extension}
 While SDOG and its variants proposed in the previous chapter have many desirable properties, it may not be the ideal 3D DGGS in all circumstances.
-The varying uses for a DGGS means each application has different needs of the DGGS it employs.
-As such, no single DGGG---2D or 3D---is ideal for every use case.
-Therefore, there is a need for many different DGGS's, each with unique properties and intended use cases.
+The varying uses of a DGGS means each application has different needs of the DGGS it employs.
+As such, no single DGGS---2D or 3D---is ideal for every use case.
+Therefore, there is a need for different DGGS's, each with unique properties and intended uses.
 
 
-Addressing the needs of different applications, researchers have developed a large variety of different 2D DGGS currently available; the creation of new 3D DGGS's should build off these existing methods.
-A natural way to do so is with a method to extend a DGGS to 3D, as seen in~\cite{xie2013interactive} and~\cite{sirdeshmukh2019utilizing}.
-However, existing extension methods are not generalizable to any possible DGGS and fail to address cell degeneration toward the centre of the grid.
+Addressing the differing needs of applications, researchers have developed a large assortment of 2D DGGS currently available.
+The creation of new 3D DGGS's should build off these existing methods, both to leverage existing research and to ensure interoperability of data between 2D and 3D DGGS's.
+A natural way to do so is with a method to extend a DGGS to 3D, as explored in \cref{chap:3:earthCentric}~\cite{xie2013interactive,sirdeshmukh2019utilizing,wang2013global}.
+However, existing extension methods do not generalize to any possible DGGS, and most fail to address the central singularity in the grid.
 In this chapter, we aim to address these shortcomings.
 We present a general method for extending \textit{any} existing DGGS, referred to as the input DGGS, to the third dimension using a semiregular degenerate refinement strategy.
-This extension is done with care to allow the efficient and straightforward transference of data between 2D and 3D while preserving---as best as possible---desirable properties of the input DGGS in the 3D one.
-\Cref{fig:extension} shows an overview of the method.
+This extension is done with care to allow the efficient and straightforward transference of data between 2D and 3D while preserving desirable properties of the input DGGS in the 3D one.
 This chapter discusses only the creation of grid geometry; we discuss mapping and coding in \cref{chap:mapping,chap:coding}, respectively.
-
-
-\begin{figure}[ht!]
-	\centering
-	\includegraphics[width=\textwidth]{grid-extension-overview.pdf}
-	\caption[Overview of the grid extension method]{
-		An overview of how the input DGGS is used to define the geometry of the 3D DGGS.
-		The faces of the initial polyhedron of the input DGGS are first extruded to create the prismatoid base cells of the 3D DGGS.
-		For refinement, the bases of these prismatoid cells are refined using the same refinement scheme as the input DGGS and combined with a radial refinement.
-		A semiregular degenerate refinement is suggested; however, regular refinement is also possible
-	}
-	\label{fig:extension}
-\end{figure}
 
 
 The content of this chapter is taken from the article "General Method for Extending Discrete Global Grid Systems to Three Dimensions," authored by Benjamin Ulmer, John Hall, and Faramarz Samavati, which appeared in the journal \textit{ISPRS International Journal of Geo-Information (IJGI)} in a special issue on Global Grid Systems~\cite{ulmer2020general}.
 Slight modifications have been made to maintain consistent terminology with the rest of the thesis.
 
 
+\begin{figure}[ht!]
+	\centering
+	\includegraphics[width=\textwidth]{grid-extension-overview.pdf}
+	\caption[Overview of the grid extension method]{
+		An overview of how the input DGGS is used to define the geometry of the 3D DGGS
+	}
+	\label{fig:extension}
+\end{figure}
+
+
 \section{Prismatoid Grid Generation and Refinement} \label{chap:5:grid}
-Using the input DGGS as a specification, our goal is to define the key elements of the corresponding 3D DGGS logically and consistently.
-Below, we discuss the approach for generating the initial discretization and define regular and semiregular degenerate refinement methods. 
-
-
-\subsection{Initial 3D Discretization} \label{chap:5:discretization}
-Let $R_\mathrm{min}$ and $R_\mathrm{max}$ be the minimum and maximum radii that are to be supported by the 3D DGGS, respectively.
-The initial 3D discretization, then, is generated from two copies of the initial discretization of the input DGGS at these radii with their edges connected.
-For an input DGGS defined directly on the sphere, the radius is well defined.
-For a polyhedron-based DGGS, we need to define this radius.
-Since the polyhedron is serving as an approximation of the sphere, we define the radius of a polyhedron to be the radius of its circumscribed sphere.
-Thus, all points on a polyhedron have the same `radius' (\cref{fig:layers}).
+Using the input DGGS as a specification, our goal is to define an initial discretization and refinement for the corresponding 3D DGGS logically and consistently.
+\Cref{fig:extension} shows an overview of our method.
+To create an initial discretization, the faces of the initial polyhedron of the input DGGS are extruded to create prismatoid base cells for the 3D DGGS.
+For refinement, the bases of these prismatoid cells are refined using the same scheme as the input DGGS and combined with a radial refinement.
 
 
 \begin{figure}[ht!]
@@ -56,6 +46,15 @@ Thus, all points on a polyhedron have the same `radius' (\cref{fig:layers}).
 	}
 	\label{fig:layers}
 \end{figure}
+
+
+\subsection{Initial 3D Discretization} \label{chap:5:discretization}
+Let $R_\mathrm{min}$ and $R_\mathrm{max}$ be the minimum and maximum radii that are to be supported by the 3D DGGS, respectively.
+The initial 3D discretization, then, is generated from two copies of the initial discretization of the input DGGS at these radii with their edges connected.
+For an input DGGS defined directly on the sphere, the radius is well defined.
+For a polyhedron-based DGGS, we need to define this radius.
+Since the polyhedron is serving as an approximation of the sphere, we define the radius of a polyhedron to be the radius of its circumscribed sphere.
+Thus, all points on a polyhedron have the same `radius' (\cref{fig:layers}).
 
 
 If the minimum radius of the 3D DGGS is zero, the base cells are pyramids; otherwise, they are frusta.
@@ -82,15 +81,15 @@ For simplicity, we initially assume the surface refinement factor is 1:4; a gene
 
 \Cref{fig:regular} demonstrates the regular method for refining prismatoid cells.
 The bases of the cells are refined using the surface refinement and the resulting edges extruded to meet.
-At the same time, a radial split is placed at the midpoint of the two bases.
+At the same time, a radial split is placed at the midpoint of the upper and lower bases.
 This refinement results in an inner and outer layer of cells, each containing the same number of cells as one another.
 The outer layer is always composed of frustum cells, whereas the inner layer has the same shape as the cells that were being refined.
 Defining the refinement in terms of layers of cells as opposed to individual cells allows for native accommodation of non-congruent surface refinements.
 
 
 \subsection{Semiregular Degenerate Prismatoid Refinement} \label{chap:5:semireg}
-While the regular prismatoid refinement proposed above is simple, it has the same issues near the central singularity as other Earth-centric 3D DGGS's.
-To address this issue, we define a semiregular degenerate refinement for the prismatoid cells.
+While the regular prismatoid refinement proposed above is simple, it has the same issues as other Earth-centric 3D DGGS's: reduced cell size and compactness toward the centre of the grid.
+To address these issues, we define a semiregular degenerate refinement for the prismatoid cells.
 Aiding in this, we classify the layers of the grid as either central or normal.
 We use $r_\mathrm{min}$ and $r_\mathrm{max}$ to refer to the minimum and maximum radius of a layer, respectively.
 As with the polyhedra used for the initial discretization, these radii are equal to the radii of the circumscribing spheres.
@@ -100,7 +99,7 @@ Furthermore, the initial discretization is entirely composed of this central lay
 We continue our assumption of a 1:4 surface refinement factor from before.
 
 
-\begin{figure}[ht!]
+\begin{figure}[t!]
 	\centering
 	\includegraphics[width=\textwidth]{semireg-refinement.pdf}
 	\caption[Semiregular degenerate prismatoid refinement]{
@@ -137,14 +136,26 @@ This regular refinement results in two normal layers, both of which have $k_s$ e
 
 
 \subsection{Other Surface Refinement Factors} \label{chap:5:factors}
-While it is possible to use the above refinement methods for surface refinement factors other than 1:4, doing so results in a potentially significant issue that should be addressed.
+While it is possible to use the above refinement methods for surface refinement factors other than 1:4, doing so results in an issue that should be addressed.
 First, we introduce the idea of a one-dimensional (1D) refinement factor, which we find by taking the square root of the surface (2D) one.
 For example, the 1D refinement factor of a 1:4 surface refinement scheme (\cref{fig:regular,fig:semiregular}) is 1:2.
 While the surface refinement scheme need not be uniform across the two dimensions, the 1D refinement factor gives an idea of the \textit{average} refinement expected along each dimension.
 
 
+\begin{figure}[ht!]
+	\centering
+	\includegraphics[width=0.75\textwidth]{unequal-factors.pdf}
+	\caption[Demonstration of refinement with unequal factors in different dimensions]{
+		Refinement with a 1:2 factor in one dimension and 1:3 in the other (1:6 overall).
+		(a)--(c) show refinement levels 0--2, respectively.
+		See how cells, which started perfectly square, become increasingly skinny with each application of refinement
+	}
+	\label{fig:unequal-factors}
+\end{figure}
+
+
 To create uniform cells, it is clear that the refinement factor along the radial dimension for regular prismatoid refinement should be equal to the 1D refinement factor.
-If this is not the case, then the width of cells relative to their depth is not constant between refinement levels, since one dimension is refined more quickly.
+If this is not the case, then the width of cells relative to their depth is not constant between refinement levels, since one dimension is refined more quickly (\cref{fig:unequal-factors}).
 For a surface refinement factor of 1:4, the single radial split used matches this exactly (one split creates two new layers).
 For other surface refinement factors, the 1D and radial refinement factors are not necessarily equal, and cell shape will degenerate---becoming either increasingly narrow or wide---as refinement continues.
 
@@ -224,15 +235,12 @@ To address this issue, we introduce two modifications that can be made to prisma
 
 To decrease the aspect ratio of cells in the grid, we must increase the number of applications of the surface refinement relative to the number of radial splits.
 Since further applications of the prismatoid refinement will maintain the expected cell aspect ratio---a result of the surface and expected radial refinement factors being equal---this only needs to be done the first time a layer would have the bases of its cells refined with the surface scheme.
-Thus, for semiregular prismatoid refinement, this is done while refining the outer normal layer that results from refining central layers.
-
-
-Likewise, to increase the aspect ratio of cells, we need to decrease the number of times the surface refinement scheme is applied relative to the number of radial splits.
+Thus, for semiregular prismatoid refinement, this is done while refining the outer normal layer that results from refining central layers. Likewise, to increase the aspect ratio of cells, we need to decrease the number of times the surface refinement scheme is applied relative to the number of radial splits.
 We accomplish this by \textit{not} applying the surface refinement to a layer the first time it would usually be done, and if needed, applying additional radial splits at the same time.
 These modifications would be done at the same time as the method for decreasing the aspect ratio for the same reasons.
 
 
-Therefore, given some target cell aspect ratio $a$, we must determine which of the above methods to use.
+Given some target cell aspect ratio $a$, we must determine which of the above methods to use.
 To do this, we must first quantify the width and depth of a cell.
 More specifically, we need to define the average width and depth of cells in a layer, since refinement is performed by layer and not by cell.
 Depth comes trivially from the radial extent of the layer ($r_\mathrm{max} - r_\mathrm{min}$).
@@ -249,16 +257,16 @@ Let $\upsilon$ be the percentage of $r_\mathrm{max}$ occupied by this region and
 %
 We provide more detail on how $\upsilon$ is calculated in \cref{chap:6:radial}.
 Likewise, the average cell width in this region is the surface area of the sphere divided by the number of cells (assuming no extra radial splits).
-Let $n$ be the number of faces on the input polyhedron and $w$ be the number of times the surface refinement is applied, then the number of cells is $n f^{2w}$, and the average cell width is
+Let $n$ be the number of faces on the input polyhedron and $w$ be the number of times the surface refinement is applied, then the number of cells is $n f^{\ 2w}$, and the average cell width is
 %
 \begin{equation*}
-\sqrt{ \frac{ 4 \pi r_\mathrm{max}^2 }{ n f^{2 w} } } = \frac{2 r_\mathrm{max}}{f^w} \sqrt\frac{\pi}{n}.
+\sqrt{ \frac{ 4 \pi r_\mathrm{max}^2 }{ n f^{\ 2 w} } } = \frac{2 r_\mathrm{max}}{f^{\ w}} \sqrt\frac{\pi}{n}.
 \end{equation*}
 %
 We now equate these using the desired aspect ratio to solve for $x$ and $w$, giving
 %
 \begin{equation*}
-a \frac{\upsilon}{x+1} = \frac{2}{f^w} \sqrt\frac{\pi}{n}.
+a \frac{\upsilon}{x+1} = \frac{2}{f^{\ w}} \sqrt\frac{\pi}{n}.
 \end{equation*}
 %
 As to not violate our prior assumptions, when solving for one variable the other is set to zero; this ensures only one of the two strategies for modifying the aspect ratio is employed.
