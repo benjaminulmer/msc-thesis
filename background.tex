@@ -257,8 +257,8 @@ Thus, an LLG is neither a compact nor uniform DGG.
 	\centering
 	\includegraphics[width=0.4\textwidth]{llg.pdf}
 	\caption[A latitude-longitude grid]{
-		\textbf{Placeholder and temporary caption} A latitude-longitude grid (LLG) with 24 longitudinal division and 12 latitudinal divisions.
-		Note how cells become increasingly narrow toward poles, resulting in reduced size and compactness as compared to cells more near the equator
+		A latitude-longitude grid (LLG) with 24 longitudinal division and 12 latitudinal divisions.
+		Cells become increasingly narrow toward the poles, resulting in reduced size and compactness as compared to cells more near the equator
 	}
 	\label{fig:llg}
 \end{figure}
@@ -287,7 +287,7 @@ Furthermore, these types of grids have more expensive operations, often requirin
 
 
 \subsection{Polyhedral Grids} \label{chap:2:polyhedral}
-As opposed to defining the grid directly in spherical space, a more recent and increasingly popular approach is to use a polyhedron as an initial approximation of the sphere.
+As opposed to defining the grid directly in spherical space, a more recent and increasingly popular approach is to use a polyhedron as an initial approximation of the sphere (\cref{fig:poly-grid}).
 The most common choices for these polyhedra are the Platonic solids, as they are perfectly regular; however, other choices are also possible.
 Mapping back and forth between the Earth and polyhedron is accomplished using a polyhedral map projection and its inverse, respectively.
 From this, a planar refinement of the polyhedron faces creates the cell hierarchy for a DGGS.
@@ -295,15 +295,26 @@ This style of grid avoids degeneracies in the grid at the poles, providing a mor
 Furthermore, the use of an area-preserving projection in conjunction with an area-preserving refinement of the polyhedron allows for an equal area grid without a significant reduction in cell compactness.
 
 
-\begin{figure}[ht!]
+\begin{figure*}[ht!]
 	\centering
-	\includegraphics[width=0.30\textwidth]{polyhedron-grid.pdf}
+	\begin{subfigure}[]{0.5\textwidth}
+		\centering
+		\includegraphics[width=0.8\textwidth]{ico-2-f.png}
+		\caption{}
+	\end{subfigure}%
+	%
+	\begin{subfigure}[]{0.5\textwidth}
+		\centering
+		\includegraphics[width=0.8\textwidth]{ico-2-s.png}
+		\caption{}
+	\end{subfigure}
+
 	\caption[An icosahedron-based grid]{
-		\textbf{Placeholder and temporary caption} A simple triangular grid based on a regular icosahedron.
-		Probably also show projection between polyhedron domain and spherical domain
+		A triangular grid based on a regular icosahedron with vertices (a) on the icosahedron and (b) on the sphere.
+		Cells are relatively uniform in shape and size regardless of their location on the globe
 	}
 	\label{fig:poly-grid}
-\end{figure}
+\end{figure*}
 
 
 One of the earliest polyhedron-based DGGS's is the Sphere Quadtree, proposed by Fekete in 1990~\cite{fekete1990sphere}.
