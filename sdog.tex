@@ -75,25 +75,25 @@ S(k) = 1 \in \mathcal{O}(1).
 \end{equation*}
 %
 We know each LG cell produces two new LG cells, and that the SG cell produces one new LG cell.
-From this we say
+From this, we say
 %
 \begin{equation*}
 L(k) = 2L(k-1) + 1 \quad\text{and}\quad L(1) = 1.
 \end{equation*}
 %
 Similarly, each NG cell produces eight new NG cells, each LG cell produces four, and the SG cell produces two.
-Thus
+Thus,
 %
 \begin{equation*}
 N(k) = 8N(k-1) + 4L(k-1) + 2 \quad\text{and}\quad N(1) = 2.
 \end{equation*}
 %
-$L(k)$ is a linear non-homogeneous recurrence which can be solved with standard techniques \cite{bellman1963differential}.
+$L(k)$ is a linear non-homogeneous recurrence which can be solved with standard techniques~\cite{bellman1963differential}.
 Solving and substituting into $N(k)$, we get another linear non-homogeneous recurrence, which can be solved similarly.
-Finally, we get the closed forms:
+Finally, we get the closed forms
 %
 \begin{equation*}
-L(k) = 2^{k} - 1 \in \mathcal{O}(2^k)
+L(k) = 2^{k} - 1 \in \mathcal{O}(2^k),
 \end{equation*}
 %
 \begin{equation*}
@@ -114,7 +114,7 @@ Note that we use the geographic convention for spherical coordinates in this the
 Let the subscripts $\mathrm{max}$ and $\mathrm{min}$ denote the maximum and minimum of a given spherical coordinate for an SDOG cell; then, the volume is \cite{yu2009sdog}
 %
 \begin{equation} \label{eq:volume}
-V = \frac{1}{3} \left( \lambda_\mathrm{max} - \lambda_\mathrm{min} \right) \left(r_\mathrm{max}^{\,3} - r_\mathrm{min}^{\,3} \right) \left(\sin\varphi_\mathrm{max} - \sin\varphi_\mathrm{min} \right).
+\frac{1}{3} \left( \lambda_\mathrm{max} - \lambda_\mathrm{min} \right) \left(r_\mathrm{max}^{\,3} - r_\mathrm{min}^{\,3} \right) \left(\sin\varphi_\mathrm{max} - \sin\varphi_\mathrm{min} \right).
 \end{equation}
 
 
@@ -249,9 +249,9 @@ Shell $n$ has a volume proportional to
 %
 so the ratio of the volumes of shell $n+1$ and $n$ is
 %
-\begin{equation*} \label{eq:shellVolume}
+\begin{equation} \label{eq:shellVolume}
 \frac{ \alpha^{3 \left(n + 1 \right)} - \alpha^{3\left( n + 2 \right)} }{ \alpha^{3n} - \alpha^{3 \left( n + 1 \right)} } = \frac{ \alpha^{3} \alpha^{3n} \left( 1 - \alpha^{3} \right) }{ \alpha^{3n} \left( 1 - \alpha^{3} \right) } = \alpha^{3}.
-\end{equation*}
+\end{equation}
 %
 From the self similar nature of SDOG refinement, we know that the cells in shell $n$ are simply the cells of shell $n+1$ refined once.
 We also know that, in the limit, an SDOG grid at one level higher of refinement will have eight times as many cells as the previous resolution ($\lim_{k \to \infty} T(k+1) / T(k)  = 8 $).
@@ -354,14 +354,14 @@ That is, given a splitting surface, we need to be able to determine the correspo
 For the radial splitting surfaces, we propose the function
 %
 \begin{equation} \label{eq:radBlend}
-r_{s} = \sqrt[t]{ p r_\mathrm{max}^{\,t} + \left( 1 - p \right) r_\mathrm{min}^{\,t} }
+r_{s} = \sqrt[t]{ p r_\mathrm{max}^{\,t} + \left( 1 - p \right) r_\mathrm{min}^{\,t} },
 \end{equation}
 %
 where $1 \leq t \leq 3$ blends between compactness at $t = 1$ (equivalent to midpoint) and volume preservation at $t=3$ (equivalent to \cref{eq:radVol}).
 For the latitudinal splitting surfaces, we propose
 %
 \begin{equation} \label{eq:latBlend}
-\varphi_{s} = h \arcsin \left( p \sin \left( \frac{1}{h} \varphi_\mathrm{max} \right) + \left( 1 - p \right) \sin \left( \frac{1}{h} \varphi_\mathrm{min} \right) \right)
+\varphi_{s} = h \arcsin \left( p \sin \left( \frac{1}{h} \varphi_\mathrm{max} \right) + \left( 1 - p \right) \sin \left( \frac{1}{h} \varphi_\mathrm{min} \right) \right),
 \end{equation}
 %
 where $1 \leq h \leq \infty$ blends between volume preservation at $h = 1$ (equivalent to \cref{eq:latVol}) and compactness as $h \rightarrow \infty$ (equivalent to midpoint).

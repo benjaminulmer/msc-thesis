@@ -1,16 +1,16 @@
 \chapter{Mapping Functions for SDOG and the Extension Method} \label{chap:mapping}
-The previous two chapters discussed methods for creating hierarchical grid geometry to be used in a 3D DGGS.
+The previous two chapters reported methods for creating hierarchical grid geometry to be used in a 3D DGGS.
 However, grid geometry on its own is not sufficient for functioning as a DGGS.
-Geospatial data, which represents locations in on a globe reference, need to be mapped to the domain of the grid system and vice versa.
+Geospatial data, which represent locations on a globe reference, need to be mapped to the domain of the grid system and vice versa.
 In a 2D DGGS, this is handled by the projection method and its inverse.
-A projection $P$ maps the surface of a sphere (reference domain) to the grid domain; the inverse $P^{-1}$ does the opposite.
+A projection $P$ maps the surface of a sphere or ellipsoid (reference domain) to the grid domain; the inverse $P^{-1}$ does the opposite.
 A 3D DGGS requires a similar operation but instead maps the volume of a ball (reference domain) to some other volume (grid domain).
 We refer to these mapping functions by $M$ to distinguish them from their 2D projection counterparts.
 
 
 Since our modifications of SDOG have the same grid domain as the reference space, such mappings are not strictly required; despite this, they can still be useful.
 As we will explore in \cref{chap:coding}, the regularity of midpoint refinement in SDOG allows for efficient encoding and decoding algorithms---this is not the case for our modifications.
-However, a mapping between SDOG and the modified grids allows for efficient encoding and decoding to be done with the conventional grid with inputs and outputs converted between the two representations.
+However, a mapping between conventional SDOG and the modified grids allows for efficient encoding and decoding to be done with the conventional grid, with inputs and outputs converted between the two representations.
 
 
 On the other hand, for 3D DGGS's resulting from the extension of a polyhedron-based 2D DGGS, it is clear such mappings \textit{are} needed.
@@ -46,7 +46,7 @@ Below, we derive these parameterization and interpolation functions for the radi
 		Overview of mapping between grid and reference domains for a semiregular degenerate refinement grid.
 		The upper and lower values of the regular region containing the point are first calculated in both domains.
 		The point is then parameterized between these two values in the appropriate space (reference for forward, grid for inverse).
-		Finally, an interpolation functions convert this parameter into a value in the other domain (grid for forward, reference for inverse)
+		Finally, an interpolation function converts this parameter into a value in the other domain (grid for forward, reference for inverse)
 	}
 	\label{fig:mapping}
 \end{figure}
@@ -60,11 +60,11 @@ Also, recall that for the grid extension method, a radius in the grid domain is 
 
 We first note the similarities and differences between SDOG and the grid extension method in the radial dimension.
 Referring back to \cref{fig:sdog-shells} for SDOG and comparing it to \cref{fig:prismatoid-shells} for the extension method, we see radial splits have the same effect and structure.
-Therefore, \cref{eq:shellVolume} also holds for the grid extension method.
+Therefore, in comparing the volume of shells, \cref{eq:shellVolume} also holds for the grid extension method.
 However, the refinement factor for the extension method is not always 1:8, as it depends on the surface refinement factor; thus, the best placement for the split is not necessarily $\alpha = 1/2$.
-Instead, we want $\alpha^3 = 1 / f^{\ 3}$ which is satisfied when $\alpha = 1/f$.
+Instead, we want $\alpha^3 = 1 / f^{\ 3}$ (where $f$ is once again the 1D refinement factor) which is satisfied when $\alpha = 1/f$.
 Therefore, the SDOG mappings will be a special case of the extension ones where $f = 2$.
-We derive the general mappings below in terms of $\alpha$, starting with the inverse.
+We derive the general mappings below in terms of $\alpha$, starting with the inverse mappings.
 
 
 \begin{figure}[ht!]
@@ -139,6 +139,8 @@ Note that the output of both \cref{eq:radialInv,eq:radialForw} are normalized an
 
 
 The results of this mapping for different values of $t$ applied to the grid extension method are shown in \cref{fig:prismatoid-mappings}.
+Generally speaking, the value of $t$ has the same effect for the grid extension method as for SDOG, blending between compactness and volume preservation.
+Setting $t=1$ ensures that each shell has volume proportional to the number of cells it contains; however, it does little to preserve volume and keeps cells as compact as possible.
 When $t=3$, all cells in the same shell have perfect volume preservation assuming the input DGGS is \textit{area} preserving.
 Depending on the layering sequence, however, volume will not necessarily be preserved between cells in different shells.
 Additionally, just as with SG and LG cells in SDOG, the central layer will never have volume preservation with the others.
@@ -150,6 +152,8 @@ We accomplish this by setting the value of $\nu$ in \cref{eq:extraSplits,eq:extr
 
 
 \subsection{Latitude Mappings for SDOG} \label{chap:6:latitude}
+While the grid extension method only requires a radial mapping, our SDOG modifications also modify latitude splitting surfaces.
+Therefore, a set of latitude mappings is also required.
 Just as with the radial mappings, our goal is to define a function $M_\varphi(\varphi)$ that maps a reference latitude to one in the grid domain. Likewise, we consider latitude to be normalized with $\hat{\varphi} = \pm (2\varphi) / \pi$, where the sign is equal to the sign of the latitude.
 
 
@@ -232,6 +236,7 @@ Just as with the inverse, the volume method is most efficient (one sin), the lat
 
 \section{Summary}
 The use of mapping functions allows for geospatial data---which represent physical locations---to be located within the domain of a 3D DGGS.
+This operation is necessary for encoding and decoding data.
 Furthermore, these mappings allow for achieving properties such as volume preservation in the resulting grid system.
 This chapter provides two similar sets of mapping functions that operate independently from each other on radius and latitude, respectively.
 Both the forward and the inverse of the functions provided are closed-form (no iterative solves) and operate in constant time regardless of the inputs.
