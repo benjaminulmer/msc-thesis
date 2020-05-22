@@ -2,7 +2,7 @@
 The mappings described in the previous chapter are only one part of the process for associating geospatial data to cells of a 3D DGGS.
 With geospatial data mapped to the domain of the grid system, the set of cells associated with the geometry of the data---and the indices of said cells---must be obtained.
 As described earlier, this entire process is known as grid encoding.
-Likewise, there needs to be a process to obtain the geometry of a cell (in grid space) from its index, so that the geometry can be mapped to the corresponding cell geometry in physical space.
+Likewise, there needs to be a process to obtain the geometry of a cell (in grid space) from its index, so that the geometry can be mapped to the corresponding cell geometry in reference space.
 This process is known as grid decoding.
 
 
@@ -176,7 +176,7 @@ Therefore, all that we need for direct coding is the shell and zone that contain
 
 
 \subsubsection{Encoding}
-The inputs and outputs of direct encoding are the same as their hierarchical counterpart.
+The inputs and outputs of direct encoding are the same as its hierarchical counterpart.
 First, we find the octant that contains $p$.
 The three coordinates of $p$ are then normalized within the range of the octant with $\hat{r} = r / R_\mathrm{max}$, $\hat{\varphi} = \pm (2\varphi) / \pi$, and $\hat{\lambda} = 2 (\lambda - \lambda_0) / \pi$ where $\lambda_0$ is the minimum longitude of the octant.
 We then calculate the shell and zone that contain $p$ the same as in \cref{chap:mapping}: $s = \lfloor \log_{0.5} \hat{r} \rfloor$ and $z = \lfloor \log_{0.5} ( 1 - \hat{\varphi} ) \rfloor$.
@@ -216,11 +216,11 @@ We now decode the coordinate indices one at a time.
 As the number of radial division is never modified, we start by decoding the radial index: 
 %
 \begin{equation*}
-\hat{r}_\mathrm{max} = 1 - \frac{r_i}{2^k}, \quad \text{and}
+\hat{r}_\mathrm{max} = 1 - \frac{r_i}{2^k} \quad \text{and}
 \end{equation*}
 %
 \begin{equation*}
-\hat{r}_\mathrm{min} = 1 - \frac{r_i + 1}{2^k}
+\hat{r}_\mathrm{min} = 1 - \frac{r_i + 1}{2^k}.
 \end{equation*}
 %
 With this, we can now determine the shell that contains the cell being decoded.
@@ -229,7 +229,7 @@ Just as with encoding, we define $k_\varphi = \min ( s, k )$.
 We now have the needed information to decode latitude:
 %
 \begin{equation*}
-\hat{\varphi}_\mathrm{max} = \frac{\varphi_i + 1}{2^{k - k_\varphi}}, \quad \text{and}
+\hat{\varphi}_\mathrm{max} = \frac{\varphi_i + 1}{2^{k - k_\varphi}} \quad \text{and}
 \end{equation*}
 %
 \begin{equation*}
@@ -242,7 +242,7 @@ Again, the same as encoding, we define $k_\lambda = \min ( s + z, k )$.
 Finally, we decode longitude:
 %
 \begin{equation*}
-\hat{\lambda}_\mathrm{max} = \frac{\lambda_i + 1}{2^{k - k_\lambda}}, \quad \text{and}
+\hat{\lambda}_\mathrm{max} = \frac{\lambda_i + 1}{2^{k - k_\lambda}} \quad \text{and}
 \end{equation*}
 %
 \begin{equation*}

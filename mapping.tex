@@ -1,14 +1,14 @@
 \chapter{Mapping Functions for SDOG and the Extension Method} \label{chap:mapping}
 The previous two chapters discussed methods for creating hierarchical grid geometry to be used in a 3D DGGS.
 However, grid geometry on its own is not sufficient for functioning as a DGGS.
-Geospatial data, which represents locations in physical space, need to be mapped to the domain of the grid system and vice versa.
+Geospatial data, which represents locations in on a globe reference, need to be mapped to the domain of the grid system and vice versa.
 In a 2D DGGS, this is handled by the projection method and its inverse.
-A projection $P$ maps the surface of a sphere (physical domain) to the grid domain; the inverse $P^{-1}$ does the opposite.
-A 3D DGGS requires a similar operation but instead maps the volume of a ball (physical domain) to some other volume (grid domain).
+A projection $P$ maps the surface of a sphere (reference domain) to the grid domain; the inverse $P^{-1}$ does the opposite.
+A 3D DGGS requires a similar operation but instead maps the volume of a ball (reference domain) to some other volume (grid domain).
 We refer to these mapping functions by $M$ to distinguish them from their 2D projection counterparts.
 
 
-Since our modifications of SDOG have the same grid domain as the physical space, such mappings are not strictly required; despite this, they can still be useful.
+Since our modifications of SDOG have the same grid domain as the reference space, such mappings are not strictly required; despite this, they can still be useful.
 As we will explore in \cref{chap:coding}, the regularity of midpoint refinement in SDOG allows for efficient encoding and decoding algorithms---this is not the case for our modifications.
 However, a mapping between SDOG and the modified grids allows for efficient encoding and decoding to be done with the conventional grid with inputs and outputs converted between the two representations.
 
@@ -23,7 +23,7 @@ the second is a set of latitude mappings for SDOG, which operate on similar prin
 We do not provide mappings for the surface coordinates in the grid extension method, as the projection scheme of the input DGGS is responsible for this.
 We present the inverse mappings first, as the geometric intuition for the role of these operations is more apparent than the forward.
 For SDOG, the inverse takes conventional SDOG and maps it to the modified grids presented in \cref{chap:sdog}.
-For the grid extension method, the inverse takes the prismatoid grid and maps it to the corresponding grid in physical space.
+For the grid extension method, the inverse takes the prismatoid grid and maps it to the corresponding grid in reference space.
 We then derive the forward mappings from the inverses.
 
 
@@ -34,7 +34,7 @@ The exact derivations and formulations are modified, but the core principles and
 \section{Mapping Functions} \label{chap:6:functions}
 The mapping functions for semiregular degenerate refinement have two primary objectives: shift the boundaries of the regular regions of the grid and warp the interiors of these regions.
 \Cref{fig:mapping} demonstrates how we accomplish this for a generic semiregular degenerate refinement grid when mapping a point.
-The boundaries of the regular region that contain a point are first determined in both the grid and physical domains.
+The boundaries of the regular region that contain a point are first determined in both the grid and reference domains.
 A parameterization function then parameterizes the location of the point relative to the two boundaries in its current domain, and an interpolation function converts said parameter into a location in the other domain.
 Below, we derive these parameterization and interpolation functions for the radial and latitudinal coordinate mappings.
 
@@ -43,17 +43,17 @@ Below, we derive these parameterization and interpolation functions for the radi
 	\centering
 	\includegraphics[width=\textwidth]{mapping.pdf}
 	\caption[Overview of mapping for semiregular degenerate refinement grids]{
-		Overview of mapping between grid and physical domains for a semiregular degenerate refinement grid.
+		Overview of mapping between grid and reference domains for a semiregular degenerate refinement grid.
 		The upper and lower values of the regular region containing the point are first calculated in both domains.
-		The point is then parameterized between these two values in the appropriate space (physical for forward, grid for inverse).
-		Finally, an interpolation functions convert this parameter into a value in the other domain (grid for forward, physical for inverse)
+		The point is then parameterized between these two values in the appropriate space (reference for forward, grid for inverse).
+		Finally, an interpolation functions convert this parameter into a value in the other domain (grid for forward, reference for inverse)
 	}
 	\label{fig:mapping}
 \end{figure}
 
 
 \subsection{Radial Mappings} \label{chap:6:radial}
-Our goal is to define a function $M_r(r)$ that maps a physical radius to a radius in the grid domain.
+Our goal is to define a function $M_r(r)$ that maps a reference radius to a radius in the grid domain.
 Consider radius to be normalized with $\hat{r} = r / R_\mathrm{max}$.
 Also, recall that for the grid extension method, a radius in the grid domain is defined as the radius of the polyhedron's circumscribing sphere.
 
@@ -78,16 +78,16 @@ We derive the general mappings below in terms of $\alpha$, starting with the inv
 	\label{fig:prismatoid-shells}
 \end{figure}
 
-In order to achieve the desired results of the mapping, radii at powers of $1/2$ in grid space should be mapped to corresponding powers of $\alpha$ in the physical domain.
+In order to achieve the desired results of the mapping, radii at powers of $1/2$ in grid space should be mapped to corresponding powers of $\alpha$ in the reference domain.
 For a given value of $\hat{r}$ in the grid domain, we need to find the appropriate powers that bound the point.
 Looking at \cref{fig:sdog-shells,fig:prismatoid-shells}, we see these are simply the shell number and shell number plus one for the upper and lower, respectively.
 The shell that contains $\hat{r}$ is given by $s = \lfloor \log_{0.5} \hat{r} \rfloor$.
-Therefore, the actual radii in both physical and grid space are obtained by raising $\alpha$ and $0.5$ to these powers.
-We use $\ell$ to refer to the lower value and $u$ the upper one---subscripts $g$ and $p$ refer to the grid and physical domain, respectively.
+Therefore, the actual radii in both reference and grid space are obtained by raising $\alpha$ and $0.5$ to these powers.
+We use $\ell$ to refer to the lower value and $u$ the upper one---subscripts $g$ and $r$ refer to the grid and reference domain, respectively.
 Thus,
 %
 \begin{equation*}
-\ell_p = \alpha^{s + 1}, \quad u_p = \alpha^s, \quad \ell_g = 0.5^{s + 1}, \quad \text{and} \quad u_g = 0.5^s.
+\ell_r = \alpha^{s + 1}, \quad u_r = \alpha^s, \quad \ell_g = 0.5^{s + 1}, \quad \text{and} \quad u_g = 0.5^s.
 \end{equation*}
 %
 
@@ -98,12 +98,12 @@ Since radial splits are spaced uniformly in the grid domain, we use a linear par
 d = \frac{ \hat{r} - \ell_g }{ u_g - \ell_g }.
 \end{equation}
 %
-For the interpolation function, how $d$ is interpolated between $\ell_p$ and $u_p$ affects volume preservation.
+For the interpolation function, how $d$ is interpolated between $\ell_r$ and $u_r$ affects volume preservation.
 A linear interpolation gives conventional SDOG and the latitude method (which are identical radially), cubic gives the volume method, and a power of $t$ gives the balanced method.
 Thus, the general function defined on $t$ is
 %
 \begin{equation} \label{eq:radialInv}
-M_r^{-1}(\hat{r}) = \sqrt[t]{ d u_p^{t} + \left( 1 - d \right) \ell_p^{t} },
+M_r^{-1}(\hat{r}) = \sqrt[t]{ d u_r^{t} + \left( 1 - d \right) \ell_r^{t} },
 \end{equation}
 %
 which is a simply a general form of \cref{eq:radBlend}.
@@ -114,7 +114,7 @@ Inverting the interpolation functions gives the corresponding parameterization f
 Solving \cref{eq:radialInv} for $d$ gives us
 %
 \begin{equation} \label{eq:radialForwD}
-d = \frac{ \hat{r}^{\,t} - \ell_p^{\,t} }{ u_p^{\,t} - \ell_p^{\,t} }
+d = \frac{ \hat{r}^{\,t} - \ell_r^{\,t} }{ u_r^{\,t} - \ell_r^{\,t} }
 \end{equation}
 %
 and solving \cref{eq:radialInvD} for $\hat{r}$ yields
@@ -144,24 +144,24 @@ Depending on the layering sequence, however, volume will not necessarily be pres
 Additionally, just as with SG and LG cells in SDOG, the central layer will never have volume preservation with the others.
 
 
-For the grid extension method, these mappings also have the side effect of changing the aspect ratio of cells in grid space as compared to in physical space.
-Therefore, when determining the refinement parameters needed to achieve the desired aspect ratio, we should consider the cells in physical space as opposed to grid space.
+For the grid extension method, these mappings also have the side effect of changing the aspect ratio of cells in grid space as compared to in reference space.
+Therefore, when determining the refinement parameters needed to achieve the desired aspect ratio, we should consider the cells in reference space as opposed to grid space.
 We accomplish this by setting the value of $\nu$ in \cref{eq:extraSplits,eq:extraSurface} to be $(1 - \alpha)$.
 
 
 \subsection{Latitude Mappings for SDOG} \label{chap:6:latitude}
-Just as with the radial mappings, our goal is to define a function $M_\varphi(\varphi)$ that maps a physical latitude to one in the grid domain. Likewise, we consider latitude to be normalized with $\hat{\varphi} = \pm (2\varphi) / \pi$, where the sign is equal to the sign of the latitude.
+Just as with the radial mappings, our goal is to define a function $M_\varphi(\varphi)$ that maps a reference latitude to one in the grid domain. Likewise, we consider latitude to be normalized with $\hat{\varphi} = \pm (2\varphi) / \pi$, where the sign is equal to the sign of the latitude.
 
 
 The derivation follows the same steps as the radial mappings.
 Referencing \cref{fig:sdog-zones}, zones increase with increasing latitude as opposed to shells which increase with \textit{decreasing} radius.
 Thus, the zone that contains $\hat{\varphi}$ is $z = \lfloor \log_{0.5} ( 1 - \hat{\varphi} ) \rfloor$.
 We then calculate values of $\ell$ and $u$ just as with the radial mapping but accounting for the opposite direction.
-Additionally, for the physical domain values, these are the sine of angles as opposed to angles themselves, since \cref{eq:latVol} operates on the sine of angles.
+Additionally, for the reference domain values, these are the sine of angles as opposed to angles themselves, since \cref{eq:latVol} operates on the sine of angles.
 The final values are then
 %
 \begin{equation*}
-\ell_p = 1 - 0.25^{z}, \quad u_p = 1 - 0.25^{z + 1}, \quad \ell_g = 1 - 0.5^z, \quad \text{and} \quad u_g = 1 - 0.5^{z + 1}.
+\ell_r = 1 - 0.25^{z}, \quad u_r = 1 - 0.25^{z + 1}, \quad \ell_g = 1 - 0.5^z, \quad \text{and} \quad u_g = 1 - 0.5^{z + 1}.
 \end{equation*}
 %
 
@@ -173,24 +173,24 @@ d = \frac{ \hat{\varphi} - \ell_g }{ u_g - \ell_g }.
 \end{equation}
 %qgi
 
-Similarly, for the interpolation function, how $d$ is interpolated between $\ell_p$ and $u_p$ affects volume preservation.
+Similarly, for the interpolation function, how $d$ is interpolated between $\ell_r$ and $u_r$ affects volume preservation.
 A linear interpolation gives the latitude method, sine gives the volume method, and a scaled sine by $h$ gives the balanced method.
 Thus, the general formulation defined on $h$ is
 %
 \begin{equation} \label{eq:latInv}
-M_\varphi^{-1}(\hat{\varphi}) = h \arcsin \left( d \sin \left( \frac{1}{h} \arcsin u_p \right) + \left( 1 - d \right) \sin \left( \frac{1}{h} \arcsin \ell_p \right) \right).
+M_\varphi^{-1}(\hat{\varphi}) = h \arcsin \left( d \sin \left( \frac{1}{h} \arcsin u_r \right) + \left( 1 - d \right) \sin \left( \frac{1}{h} \arcsin \ell_r \right) \right).
 \end{equation}
 %
 This simplifies to
 %
 \begin{equation*}
-M_\varphi^{-1}(\hat{\varphi}) = d \arcsin u_p  + \left( 1 - d \right) \arcsin \ell_p
+M_\varphi^{-1}(\hat{\varphi}) = d \arcsin u_r  + \left( 1 - d \right) \arcsin \ell_r
 \end{equation*}
 %
 for the latitude method as $h \rightarrow \infty$ and
 %
 \begin{equation*}
-M_\varphi^{-1}(\hat{\varphi}) = \arcsin \left( d u_p + \left( 1 - d \right) \ell_p \right)
+M_\varphi^{-1}(\hat{\varphi}) = \arcsin \left( d u_r + \left( 1 - d \right) \ell_r \right)
 \end{equation*}
 %
 for the volume method when $h = 1$.
@@ -201,7 +201,7 @@ Once again, we derive the forward mapping by inverting the inverse.
 Solving \cref{eq:latInv} for $d$ yields
 %
 \begin{equation} \label{latForwD}
-d = \frac{ \sin \left( \frac{1}{h} \hat{\varphi} \right) - \sin \left( \frac{1}{h} \arcsin \ell_p \right) }{ \sin \left( \frac{1}{h} \arcsin u_p \right) - \sin \left( \frac{1}{h} \arcsin \ell_p \right) }
+d = \frac{ \sin \left( \frac{1}{h} \hat{\varphi} \right) - \sin \left( \frac{1}{h} \arcsin \ell_r \right) }{ \sin \left( \frac{1}{h} \arcsin u_r \right) - \sin \left( \frac{1}{h} \arcsin \ell_r \right) }
 \end{equation}
 %
 and solving \cref{eq:latInvD} for $\hat{\varphi}$ provides
@@ -217,13 +217,13 @@ Just as with the radial mappings, the output of \cref{eq:latInv,eq:latForw} are 
 \Cref{latForwD} simplifies to
 %
 \begin{equation*}
-d = \frac{ \hat{\varphi} - \arcsin \ell_p }{ \arcsin u_p - \arcsin \ell_p}
+d = \frac{ \hat{\varphi} - \arcsin \ell_r }{ \arcsin u_r - \arcsin \ell_r}
 \end{equation*}
 %
 for the latitude method as $h \rightarrow \infty$ and
 %
 \begin{equation*}
-d = \frac{ \sin \hat{\varphi} - \ell_p }{ u_p - \ell_p }
+d = \frac{ \sin \hat{\varphi} - \ell_r }{ u_r - \ell_r }
 \end{equation*}
 %
 for the volume method when $h = 1$.
