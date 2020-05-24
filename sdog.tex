@@ -350,18 +350,19 @@ In order to achieve different tradeoffs between compactness and volume preservat
 \Cref{eq:radVol,eq:latVol} give ideal placements for volume preservation as compared to the conventional midpoint functions which result in better compactness.
 Therefore, using different functions that blend between these two extremes allows for a more balanced tradeoff.
 There are endless possibilities for these functions; however, as will be required for coding in \cref{chap:mapping}, they should be easily invertible.
-That is, given a splitting surface, we need to be able to determine the corresponding value of $p$.
+That is, given a splitting surface, we need to be able to determine the parameter $d$ between given maximum and minimum values that results in said splitting surface.
+For the purpose of calculating splitting surfaces during refinement, $d = 1/2$.
 For the radial splitting surfaces, we propose the function
 %
 \begin{equation} \label{eq:radBlend}
-r_{s} = \sqrt[t]{ p r_\mathrm{max}^{\,t} + \left( 1 - p \right) r_\mathrm{min}^{\,t} },
+r_{s} = \sqrt[t]{ d r_\mathrm{max}^{\,t} + \left( 1 - d \right) r_\mathrm{min}^{\,t} },
 \end{equation}
 %
 where $1 \leq t \leq 3$ blends between compactness at $t = 1$ (equivalent to midpoint) and volume preservation at $t=3$ (equivalent to \cref{eq:radVol}).
 For the latitudinal splitting surfaces, we propose
 %
 \begin{equation} \label{eq:latBlend}
-\varphi_{s} = h \arcsin \left( p \sin \left( \frac{1}{h} \varphi_\mathrm{max} \right) + \left( 1 - p \right) \sin \left( \frac{1}{h} \varphi_\mathrm{min} \right) \right),
+\varphi_{s} = h \arcsin \left( d \sin \left( \frac{1}{h} \varphi_\mathrm{max} \right) + \left( 1 - d \right) \sin \left( \frac{1}{h} \varphi_\mathrm{min} \right) \right),
 \end{equation}
 %
 where $1 \leq h \leq \infty$ blends between volume preservation at $h = 1$ (equivalent to \cref{eq:latVol}) and compactness as $h \rightarrow \infty$ (equivalent to midpoint).

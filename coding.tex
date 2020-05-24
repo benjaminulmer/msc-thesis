@@ -66,6 +66,7 @@ For a fixed-width representation of indices, a leaded bit set to one marks the s
 One benefit of Morton codes over more local space-filling curves---such as the Hilbert curve---is the ease at which a multi-dimensional index is encoded and vice versa.
 As demonstrated in \cref{fig:morton-interleave}, the Morton code is obtained simply by interleaving the bits of the coordinate indices; likewise, unweaving the bits of a Morton code gives the coordinate indices.
 While these are not constant-time operation in general, magic numbers and lookup tables allow them to be done efficiently and in constant time for a fixed bit width~\cite{libmorton18}.
+We employ this interleaving and unweaving in our direct algorithms for efficient conversion between index and coordinate indices.%TODO
 
 
 \begin{figure}[ht!]
@@ -94,8 +95,15 @@ Likewise, given an index with width $\omega$, the refinement level of that cell 
 We use this property to implicitly obtain $k$ in any case where it is not provided.
 
 
+Consequence of DMC is not every value is a valid index; some values are not used in indexing scheme.
+Utilization of indices is about 38\% (8/21 in the limit).
+Compared to an indexing scheme that does use every possible value, DMC indexing requires more bits to index same number of cells (level of refinement).
+Worst case DMC requires 3 extra bits for some $k$ compared to fully utilized indexing (DMC adds bits to index in groups of 3).
+This is the tradeoff for other desirable properties of DMC indexing.%TODO
+
+
 \subsection{Hierarchical Algorithms}
-We first give a brief overview of the hierarchical coding algorithms for SDOG, as these will be the baseline for evaluating our proposed ones.
+We first give a brief overview of the hierarchical coding algorithms for SDOG, as these are the baseline for evaluating our proposed ones.
 Hierarchical coding works by traversing the grid system one resolution at a time, using the refinement rules for the relevant cell at each iteration.
 As a result, these types of algorithms are linear on the level of refinement.
 Furthermore, because they use refinement rules directly, they are trivially modified to work for our SDOG modifications by simply changing the refinement used in the algorithms accordingly.
@@ -161,14 +169,19 @@ The input is an index $i$; the output is the cell boundaries of $i$.
 
 
 \subsection{Direct Algorithms}
-For a uniform grid, the coordinate indices of the cell that contain a point are obtained trivially in constant time.
+While hierarchical algorithms straightforward and simple to implement, linear growth means slow for high values of $k$.
+We can leverage uniform refinement of SDOG to develop direct algorithms instead.
+We introduce modifications of conventional direct indexing that work for conventional SDOG.%TODO
+
+
+For a uniform grid, the coordinate indices of the cell that contain a point are obtained trivially in constant time.%TODO expand here
 Likewise, the maximum and minimum coordinates of a cell are also easily computed from a coordinate index.
 For these operations, the necessary variables are the number of cells and the range of values in each coordinate dimension.
 We also know that the semiregular regions of SDOG are uniform when using conventional refinement rules.
 Thus, if we determine the relevant semiregular region and the needed properties of said region, we can apply direct coding algorithms for SDOG, with bit interleaving and unweaving giving the full DMC.
 
 
-Under regular octree-based refinement, the number of cells in each coordinate direction is $2^k$.
+Under regular octree-based refinement, the number of cells in each coordinate dimension at $k$ levels of refinement is $2^k$.
 Each increasing shell in SDOG halves the number of cells in the latitude and longitude coordinates.
 Furthermore, each increasing zone further halves the number of cells in the longitude coordinate.
 Since a DMC is relative to an octant, the range of coordinate values for direct coding are the ranges of the octant itself.
@@ -182,9 +195,9 @@ The three coordinates of $p$ are then normalized within the range of the octant 
 We then calculate the shell and zone that contain $p$ the same as in \cref{chap:mapping}: $s = \lfloor \log_{0.5} \hat{r} \rfloor$ and $z = \lfloor \log_{0.5} ( 1 - \hat{\varphi} ) \rfloor$.
 
 
-The number of latitude division is $2^k$ divided by $2^s$; however, the number of divisions will always be at least one.
+The number of latitude division is $2^k$ divided by $2^s$; however, the number of divisions is always at least one.
 Thus, we introduce variable $k_\varphi = \min ( s, k )$.
-Similarly, the number of longitude division is $2^k$ divided by $2^{s+z}$, but again, will always be at least one.
+Similarly, the number of longitude division is $2^k$ divided by $2^{s+z}$, but again, is always at least one.
 We introduce a second variable $k_\lambda = \min ( s + z, k )$.
 
 
@@ -255,13 +268,13 @@ The last step is to get the bounds of the octant from the octant code and conver
 \subsubsection{For Modified SDOG}
 These direct algorithms only work for conventional SDOG due to the requirement of uniform spacing of grid divisions.
 As described in \cref{chap:mapping}, however, the mapping functions allow these algorithms to be used with the modified grids by mapping them to conventional SDOG.
-For encoding, the point $p$ must be forward mapped before encoding.
-For decoding, the output ranges must be inverse mapped after decoding.
+For encoding, the point $p$ must be forward mapped before encoding ($\operatorname{encode}(M(p))$).
+For decoding, the output ranges must be inverse mapped after decoding ($M^{-1}(\operatorname{decode}(i))$)
 In both cases, there is overlap in the computations done by the coding algorithm and associated mapping functions, so care should be taken during implementation to avoid redundant computation.
 
 
 \subsection{Runtime Comparison}
-To evaluate the usefulness of our direct coding algorithms, we should compare their runtime against the hierarchical counterparts.
+To evaluate the usefulness of our direct coding algorithms, we compare their runtime against the hierarchical counterparts.
 To do so, we have implemented the four algorithms and the mapping functions presented in \cref{chap:mapping} in C++.
 We also used these implementations to experimentally verify the correctness of the direct algorithms by comparing their output to the hierarchical ones.
 
@@ -359,7 +372,7 @@ The use of Morton interleaving makes parent queries trivial. The parent of $i$ i
 \paragraph{Children}
 The children of an SDOG cell depend on the cell type.
 A cell is SG if $r_i = 2^k - 1$, LG if $\varphi_i = 2^{k - k_\varphi} - 1$, and otherwise it is NG.
-Let $C$ be the set of child codes for the cell type of $i$ (refer to Figure~X), then the children of $i$ are $\{ \operatorname{append}(i, c) \ | \ c \in C \}$
+Let $C$ be the set of child codes for the cell type of $i$ (refer to \cref{fig:sdog-dmc}), then the children of $i$ are $\{ \operatorname{append}(i, c) \ | \ c \in C \}$
 
 
 \paragraph{Neighbours}
@@ -367,7 +380,8 @@ Neighbours are by far the most complicated of the three operations due to the nu
 First, we obtain the coordinate indices of $i$ just as with decoding.
 In general, the coordinate indices of the neighbours of an SDOG cell are $\{ (\lambda_i', \varphi_i', r_i') \ | \ x' \in x \pm 1 \}$, which are then interleaved and combined with the octant code for the full index.
 However, specific cells in SDOG require a modified formulation for certain neighbours.
-Below we list how to detect these edge cases and how to modify the neighbour calculation accordingly.
+Special care is needed for cells that border the edge of an octant or the boundaries of shells and zones.
+Below we list how to detect these cases and how to modify the neighbour calculation accordingly; cases 1--4 handle octant boundaries and 5--8 handle shell and zone boundaries.
 %
 \begin{enumerate}
 	\item If $\lambda_i = 2^{k - k_\lambda} - 1$, then $\lambda_i + 1$ is in a neighbouring octant.

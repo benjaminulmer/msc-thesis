@@ -43,7 +43,7 @@ Below, we derive these parameterization and interpolation functions for the radi
 	\centering
 	\includegraphics[width=\textwidth]{mapping.pdf}
 	\caption[Overview of mapping for semiregular degenerate refinement grids]{
-		Overview of mapping between grid and reference domains for a semiregular degenerate refinement grid.
+		Overview of the general mapping technique we use for a semiregular degenerate refinement grid.
 		The upper and lower values of the regular region containing the point are first calculated in both domains.
 		The point is then parameterized between these two values in the appropriate space (reference for forward, grid for inverse).
 		Finally, an interpolation function converts this parameter into a value in the other domain (grid for forward, reference for inverse)
@@ -99,14 +99,12 @@ d = \frac{ \hat{r} - \ell_g }{ u_g - \ell_g }.
 \end{equation}
 %
 For the interpolation function, how $d$ is interpolated between $\ell_r$ and $u_r$ affects volume preservation.
-A linear interpolation gives conventional SDOG and the latitude method (which are identical radially), cubic gives the volume method, and a power of $t$ gives the balanced method.
-Thus, the general function defined on $t$ is
+To obtain the different SDOG modificaitons, we generalize \cref{eq:radBlend} to get
 %
 \begin{equation} \label{eq:radialInv}
-M_r^{-1}(\hat{r}) = \sqrt[t]{ d u_r^{t} + \left( 1 - d \right) \ell_r^{t} },
+M_r^{-1}(\hat{r}) = \sqrt[t]{ d u_r^{t} + \left( 1 - d \right) \ell_r^{t} }.
 \end{equation}
 %
-which is a simply a general form of \cref{eq:radBlend}.
 
 
 Now, we derive the forward mapping by inverting the inverse.
@@ -178,8 +176,7 @@ d = \frac{ \hat{\varphi} - \ell_g }{ u_g - \ell_g }.
 %qgi
 
 Similarly, for the interpolation function, how $d$ is interpolated between $\ell_r$ and $u_r$ affects volume preservation.
-A linear interpolation gives the latitude method, sine gives the volume method, and a scaled sine by $h$ gives the balanced method.
-Thus, the general formulation defined on $h$ is
+To obtain the different SDOG modificaitons, we generalize \cref{eq:latBlend} to get
 %
 \begin{equation} \label{eq:latInv}
 M_\varphi^{-1}(\hat{\varphi}) = h \arcsin \left( d \sin \left( \frac{1}{h} \arcsin u_r \right) + \left( 1 - d \right) \sin \left( \frac{1}{h} \arcsin \ell_r \right) \right).
