@@ -169,19 +169,25 @@ The input is an index $i$; the output is the cell boundaries of $i$.
 
 
 \subsection{Direct Algorithms}
-While hierarchical algorithms straightforward and simple to implement, linear growth means slow for high values of $k$.
-We can leverage uniform refinement of SDOG to develop direct algorithms instead.
-We introduce modifications of conventional direct indexing that work for conventional SDOG.%TODO
+While hierarchical algorithms are straightforward and simple to implement, their linear growth means they are inefficient for high values of $k$.
+Instead, the uniform refinement of SDOG can be leveraged for direct version of encoding and decoding.
+We introduce modifications of conventional direct indexing methods to work for SDOG.
 
 
-For a uniform grid, the coordinate indices of the cell that contain a point are obtained trivially in constant time.%TODO expand here
+For a uniform grid, the coordinate indices of the cell that contain a point are obtained trivially in constant time.
 Likewise, the maximum and minimum coordinates of a cell are also easily computed from a coordinate index.
-For these operations, the necessary variables are the number of cells and the range of values in each coordinate dimension.
-We also know that the semiregular regions of SDOG are uniform when using conventional refinement rules.
-Thus, if we determine the relevant semiregular region and the needed properties of said region, we can apply direct coding algorithms for SDOG, with bit interleaving and unweaving giving the full DMC.
+For these operations, the necessary variables are the number of cells ($n$) and the range of values in each coordinate dimension.
+Let $\hat{c}$ be a coordinate value normalized withing the respective range, then the coordinate index of the cell containing $\hat{c}$ is $c_i = \lfloor \hat{c} \cdot n \rfloor$.
+Similarly, the normalized maximum and minimum coordinate values of a cell are obtained from the index with
+$\hat{c}_\mathrm{max} = (c_i + 1) \cdot n$ and $\hat{c}_\mathrm{min} = c_i \cdot n$, respectively.
 
 
-Under regular octree-based refinement, the number of cells in each coordinate dimension at $k$ levels of refinement is $2^k$.
+We know that the semiregular regions of SDOG are uniform when using conventional refinement rules.
+Therefore, if we determine the relevant semiregular region and its needed properties---the number of cells and range of values---we can apply direct coding algorithms for SDOG, with bit interleaving and unweaving giving the full DMC.
+
+
+In SDOG, the number of cells in the different coordinate dimensions varies for different regions of the grid.
+Under regular refinement, the number of cells in each coordinate dimension at $k$ levels of refinement is $2^k$.
 Each increasing shell in SDOG halves the number of cells in the latitude and longitude coordinates.
 Furthermore, each increasing zone further halves the number of cells in the longitude coordinate.
 Since a DMC is relative to an octant, the range of coordinate values for direct coding are the ranges of the octant itself.

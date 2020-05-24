@@ -358,7 +358,7 @@ Indices are also used to traverse through the grid with neighbour relationships 
 
 In a given scheme, indices may have different representations depending on the context, with (injective) functions that convert between different representations.
 As an example, for a regular quadrilateral grid, a natural choice for assigning unique identifiers to each cell is with a 2D coordinate-based index~\cite{mahdavi2015survey}.
-This choice allows straightforward and constant-time algorithms for several operations: encoding of points represented in the same coordinate system, decoding of cells to obtain the minimum and maximum in each dimension, and retrieving the index of neighbouring cells in the grid.
+This choice allows straightforward and constant-time algorithms for several operations: encoding of points represented in the same coordinate system, decoding of cells to obtain the maximum and minimum in each dimension, and retrieving the index of neighbouring cells in the grid.
 However, standard row-major and column-major linearizations of these coordinates may not be ideal for storing data associated with said indices.
 When performing grid operations, it is more likely to require additional data from a nearby region than from a distant region.
 Therefore, nearby cells should ideally have similar indices to decrease the number of cache misses and disk seeks; row-major and column-major orderings do not have this property.

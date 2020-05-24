@@ -49,7 +49,7 @@ For refinement, the bases of these prismatoid cells are refined using the same s
 
 
 \subsection{Initial 3D Discretization} \label{chap:5:discretization}
-Let $R_\mathrm{min}$ and $R_\mathrm{max}$ be the minimum and maximum radii that are to be supported by the 3D DGGS, respectively.
+Let $R_\mathrm{max}$ and $R_\mathrm{min}$ be the maximum and minimum radii that are to be supported by the 3D DGGS, respectively.
 The initial 3D discretization, then, is generated from two copies of the initial discretization of the input DGGS at these radii with their edges connected.
 For an input DGGS defined directly on the sphere, the radius is well defined.
 For a polyhedron-based DGGS, we need to define this radius.
@@ -91,7 +91,7 @@ Defining the refinement in terms of layers of cells as opposed to individual cel
 While the regular prismatoid refinement proposed above is simple, it has the same issues as other Earth-centric 3D DGGS's: reduced cell size and compactness toward the centre of the grid.
 To address these issues, we define a semiregular degenerate refinement for the prismatoid cells.
 Aiding in this, we classify the layers of the grid as either central or normal.
-We use $r_\mathrm{min}$ and $r_\mathrm{max}$ to refer to the minimum and maximum radius of a layer, respectively.
+We use $r_\mathrm{max}$ and $r_\mathrm{min}$ to refer to the maximum and minimum radius of a layer, respectively.
 As with the polyhedra used for the initial discretization, these radii are equal to the radii of the circumscribing spheres.
 Central layers are those that border the central singularity of the grid ($r_\mathrm{min} = 0$), and all other layers are considered normal.
 By definition, at any resolution of the 3D DGGS, there is only one central layer.
