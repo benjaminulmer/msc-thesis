@@ -42,7 +42,7 @@ For refinement, the bases of these prismatoid cells are refined using the same s
 	\caption[How the radius of a polyhedron is defined]{
 		We define the radius of a polyhedron as the radius of its circumscribing sphere.
 		In this figure, all points on a solid line of a given colour have the same radius as they all have the same circumscribing sphere (i.e. lie on the same polyhedron).
-		The corresponding spheres are shown in the same colours but with a dashed line
+		The corresponding spheres are shown in the same colours but with a dashed line.
 	}
 	\label{fig:layers}
 \end{figure}
@@ -104,7 +104,8 @@ We continue our assumption of a 1:4 surface refinement factor from before.
 	\includegraphics[width=\textwidth]{semireg-refinement.pdf}
 	\caption[Semiregular degenerate prismatoid refinement]{
 		Semiregular degenerate prismatoid refinement as applied to a single pyramid cell (a) once and (b) twice.
-		In (b), the number of times the surface refinement has been applied ($k_s$) is shown for each layer; see how the radial refinements of central layers separate regions of the grid with different values of $k_s$}
+		In (b), the number of times the surface refinement has been applied ($k_s$) is shown for each layer; see how the radial refinements of central layers separate regions of the grid with different values of $k_s$.
+	}
 	\label{fig:semiregular}
 \end{figure}
 
@@ -124,7 +125,7 @@ We require this surface resolution in \cref{chap:coding} for grid encoding, deco
 	\caption[Comparison of regular and semiregular degenerate prismatoid refinement]{
 		Three levels of successive applications of regular (top) and semiregular degenerate (bottom) prismatoid refinement.
 		Only the side of a single pyramid starting cell is shown to highlight the behaviour of the two schemes at different radii.
-		Note how cells degenerate towards the centre with regular refinement, whereas this issue is not present in the semiregular degenerate scheme
+		Note how cells degenerate towards the centre with regular refinement, whereas this issue is not present in the semiregular degenerate scheme.
 	}
 	\label{fig:semireg-vs-reg}
 \end{figure}
@@ -148,7 +149,7 @@ While the surface refinement scheme need not be uniform across the two dimension
 	\caption[Demonstration of refinement with unequal factors in different dimensions]{
 		Refinement with a 1:2 factor in one dimension and 1:3 in the other (1:6 overall).
 		(a)--(c) show refinement levels 0--2, respectively.
-		See how cells, which started perfectly square, become increasingly skinny with each application of refinement
+		See how cells, which started perfectly square, become increasingly skinny with each application of refinement.
 	}
 	\label{fig:unequal-factors}
 \end{figure}
@@ -190,7 +191,7 @@ We use this equation iteratively to find the best number of layers for successiv
 		Our proposed layering sequences for different surface refinement factors.
 		Each number in the sequence is how many layers \textit{normal} layers should split into at the corresponding level of refinement.
 		An overline indicates that the sequence repeats indefinitely.
-		For semiregular prismatoid refinement, since the initial discretization has no normal layers, these sequences are used starting with the \textit{second} level of refinement
+		For semiregular prismatoid refinement, since the initial discretization has no normal layers, these sequences are used starting with the \textit{second} level of refinement.
 	}
 	\begin{tabular}{@{} c l @{}}
 		\toprule
@@ -213,7 +214,7 @@ We use this equation iteratively to find the best number of layers for successiv
 	\includegraphics[width=\textwidth]{semireg-hexagons.pdf}
 	\caption[Semiregular prismatoid refinement for hexagons]{
 		Semiregular prismatoid refinement applied to a hexagonal base cell using a 1:3 surface refinement scheme (a) once and (c) twice; (b) is the same image as (c), but with the surface cells of the previous refinement level shown for reference.
-		Note that in the second level of refinement, normal layers have two radial refinements as opposed to one
+		Note that in the second level of refinement, normal layers have two radial refinements as opposed to one.
 	}
 	\label{fig:hexagons}
 \end{figure}
@@ -317,7 +318,7 @@ w = \log_{f} \left( \frac{2}{a \upsilon} \sqrt{ \frac{\pi}{n}} \right).
 		A demonstration of how refinement can be modified to affect the aspect ratio of cells.
 		All figures show a starting pyramid cell from a grid with 200 cells in its initial discretization.
 		Central layer with five extra radial splits ($a = 3$ to get $x = 5$) at (a) one level of refinement and (b) three levels.
-		Central layer with two applications of the surface refinement scheme ($a = 1/8$ to get $w = 2$) at (c) one level of refinement and (d) three levels
+		Central layer with two applications of the surface refinement scheme ($a = 1/8$ to get $w = 2$) at (c) one level of refinement and (d) three levels.
 	}
 	\label{fig:extraDPS}
 \end{figure*}

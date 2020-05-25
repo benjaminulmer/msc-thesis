@@ -35,7 +35,7 @@ We focus on the hierarchical scheme, as grid \textit{systems} are the main focus
 	\caption[Four resolutions of Morton codes]{
 		The first four resolutions of Morton codes for a quadtree.
 		(a)--(d) show resolutions 1--4, respectively.
-		Modified from~\cite{morton-multiple}; original image courtesy of David Eppstein -- CC BY-SA 3.0
+		Modified from~\cite{morton-multiple}; original image courtesy of David Eppstein -- CC BY-SA 3.0.
 	}
 	\label{fig:morton-multiple}
 \end{figure}
@@ -57,7 +57,7 @@ For a fixed-width representation of indices, a leaded bit set to one marks the s
 		Third resolution Morton codes and their respective coordinate indices.
 		Note how the Morton codes are obtained by interleaving the bits of the coordinate indices.
 		In this figure, the $x$ coordinate is traversed first by the curve, so it is the lowest order bit in the Morton code.
-		Image courtesy of David Eppstein~\cite{morton-interleave} -- CC BY-SA 3.0
+		Image courtesy of David Eppstein~\cite{morton-interleave} -- CC BY-SA 3.0.
 	}
 	\label{fig:morton-interleave}
 \end{figure}
@@ -73,7 +73,7 @@ We employ this interleaving and unweaving in our direct coding algorithms for ef
 	\centering
 	\includegraphics[width=\textwidth]{sdog-dmc.pdf}
 	\caption[Degenerate Morton codes for the different SDOG cell types]{
-		Degenerate Morton codes for (a) SG cells, (b) LG cells, and (c) NG cells.
+		Degenerate Morton codes for (a) SG cells, (b) LG cells, and (c) NG cells
 	}
 	\label{fig:sdog-dmc}
 \end{figure}
@@ -425,7 +425,7 @@ Uniquely identifying each of these components is sufficient to identify every ce
 		Indices from the input DGGS identify cells in the 3D DGGS with the same bases but different radii.
 		Likewise, each layer of the 3D DGGS contains all cells with the same radii but different bases.
 		Thus, these two pieces of information combined are sufficient to identify any cell in the 3D DGGS uniquely.
-		Here we show a single cell---highlighted in purple---along with all the cells that share a surface index (red) and a layer index (blue)
+		Here we show a single cell---highlighted in purple---along with all the cells that share a surface index (red) and a layer index (blue).
 	}
 	\label{fig:prismatoid-indexing}
 \end{figure}
@@ -446,7 +446,7 @@ Similarly, combining layer and surface indices into a single index depends heavi
 	\caption[Pipeline for encoding and decoding with the grid extension method]{
 		Pipeline for splitting encoding and decoding into surface (top) and radial (bottom) components.
 		These two components are entirely independent except for the surface resolution ($k_s$) of the layer being provided to the surface component during encoding.
-		Refer to \cref{chap:mapping} for details on the mapping function ($M_r$) used in the radial component
+		Refer to \cref{chap:6:radial} for details on the mapping function ($M_r$) used in the radial component.
 	}
 	\label{fig:prismatoid-coding}
 \end{figure}

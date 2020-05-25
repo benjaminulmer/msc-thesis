@@ -25,7 +25,7 @@ These octants are taken to be the most coarse cells of the grid and are then ref
 	\caption[Different views of an SDOG octant]{
 		One octant of an SDOG grid after four levels of refinement viewed (a) at an angle, (b) from the front, and (c) from the side.
 		Compared to a 3D LLG, cells are more uniform in size and have better compactness.
-		Refer to \cref{chap:4:results} for a detailed analysis of the volume and compactness properties of SDOG
+		Refer to \cref{chap:4:results} for a detailed analysis of the volume and compactness properties of SDOG.
 	}
 	\label{fig:sdog}
 \end{figure}
@@ -36,7 +36,7 @@ These octants are taken to be the most coarse cells of the grid and are then ref
 	\includegraphics[width=\textwidth]{sdog-refinement.pdf}
 	\caption[Splitting surfaces used in SDOG refinement]{
 		Location and extent of splitting surfaces in SDOG refinement for (a) SG cells, (b) LG cells, and (c) NG cells.
-		Only NG cells have all three splitting surfaces fully refine the cell into eight children, and make up the majority of cells as the grid becomes increasingly refined
+		Only NG cells have all three splitting surfaces fully refine the cell into eight children, and make up the majority of cells as the grid becomes increasingly refined.
 	}
 	\label{fig:sdog-refinement}
 \end{figure}
@@ -164,7 +164,7 @@ Using midpoints to refine cells makes for a simple refinement scheme, but it mak
 	\centering
 	\includegraphics[width=0.85\textwidth]{sdog-volume.pdf}
 	\caption[Visualization of cell volumes in SDOG]{
-		Cell volumes in an octant after four applications of conventional SDOG refinement
+		Cell volumes in an octant after four applications of conventional SDOG refinement.
 	}
 	\label{fig:sdog-volume}
 \end{figure}
@@ -176,7 +176,7 @@ Using midpoints to refine cells makes for a simple refinement scheme, but it mak
 	\caption[How functions determine the location of SDOG splitting surfaces]{
 		Each SDGO cell represents a range in each spherical coordinate; each splitting surface's location is expressed as a function of the maximum and minimum of the respective range.
 		Here we show only an NG cell; however, the same applies to SG and LG cells.
-		The functions $f$, $g$, and $h$ serve as placeholders for any valid function that results in the output being strictly between the two inputs
+		The functions $f$, $g$, and $h$ serve as placeholders for any valid function that results in the output being strictly between the two inputs.
 	}
 	\label{fig:functions}
 \end{figure}
@@ -244,7 +244,7 @@ From \cref{eq:longVol}, it is clear a longitudinal splitting surface at the midp
 	\caption[Spherical shells that result from SDOG refinement]{
 		Spherical shells created by the radial splitting surfaces of SG cells.
 		At $k$ levels of refinement there are $k$ shells and one inner SG cell.
-		These shells are similar and should have volume proportional to the number of cells they contain
+		These shells are similar and should have volume proportional to the number of cells they contain.
 	}
 	\label{fig:sdog-shells}
 \end{figure}
@@ -289,7 +289,7 @@ Therefore, we require that the volume on each side of the regular splitting surf
 		Spherical zones created by the latitudinal splitting surfaces of SG and LG cells.
 		At $k$ levels of refinement, there are $k$ zones and one upper stack of LG cells in the outermost shell.
 		Each successively smaller shell has one fewer zone than the previous until reaching the innermost SG cell.
-		Zones in the same shell are not exactly similar, but are regular grid regions and should have volume proportional to the number of cells they contain
+		Zones in the same shell are not exactly similar, but are regular grid regions and should have volume proportional to the number of cells they contain.
 	}
 	\label{fig:sdog-zones}
 \end{figure}
@@ -311,7 +311,7 @@ Then, setting the ratio between zone $n+1$ and $n$ to be equal to $1/4$ gives us
 	\caption[Visualization of cell volumes in the volume modification]{
 		Results of the volume method after four applications of refinement.
 		All NG cells have exactly the same volume, with the LG and SG cells having a lower volume.
-		Notice how the resulting NG cells are stretched and squashed in order to ensure they all have equal volume
+		Notice how the resulting NG cells are stretched and squashed in order to ensure they all have equal volume.
 	}
 	\label{fig:modified-volume}
 \end{figure}
@@ -333,7 +333,7 @@ In order to address this issue, we use different splitting surfaces to achieve a
 	\includegraphics[width=0.85\textwidth]{lat-volume.pdf}
 	\caption[Visualization of cell volumes in the latitude modification]{
 		Results of the latitude method after four applications of refinement.
-		Since only latitude splitting surface for SG and LG cells have been modified, the results are similar to that of conventional SDOG
+		Since only latitude splitting surface for SG and LG cells have been modified, the results are similar to that of conventional SDOG.
 	}
 	\label{fig:latitude-volume}
 \end{figure}
@@ -351,7 +351,7 @@ Thus, this method offers only a slight improvement with regards to volume preser
 	\includegraphics[width=0.85\textwidth]{bal-volume.pdf}
 	\caption[Visualization of cell volumes in the balanced modification]{
 		Results of the balanced method after four applications of refinement.
-		NG cells are still stretched and squashed in order to better preserve volume; however, the effect is less pronounced than in the volume method
+		NG cells are still stretched and squashed in order to better preserve volume; however, the effect is less pronounced than in the volume method.
 	}
 	\label{fig:balanced-volume}
 \end{figure}
@@ -426,7 +426,7 @@ We use the mean and SD of sphericity for all cells in the grid to evaluate compa
 	\includegraphics[width=0.8\textwidth]{volume-ratio.pdf}
 	\caption[Graph of volume ratio for the different grids]{
 		Volume ratio for the different grids at increasing levels of refinement.
-		Note that for the volume method, the volume ratio does not change with refinement level
+		Note that for the volume method, the volume ratio does not change with refinement level.
 	}
 	\label{fig:vr}
 \end{figure}
