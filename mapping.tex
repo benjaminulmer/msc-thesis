@@ -13,7 +13,7 @@ As we will explore in \cref{chap:coding}, the regularity of midpoint refinement 
 However, a mapping between conventional SDOG and the modified grids allows for efficient encoding and decoding to be done with the conventional grid, with inputs and outputs converted between the two representations.
 
 
-On the other hand, for 3D DGGS's resulting from the extension of a polyhedron-based 2D DGGS, the grid domain is not the same as the reference one.
+On the other hand, for 3D DGGS's resulting from the extension of a polyhedron-based 2D DGGS, the grid domain is \textit{not} the same as the reference one.
 For these grids, such mappings are necessary.
 Beyond their necessity, though, these mappings also allow for other properties of the grid system to be achieved. Most notably, volume preservation can be improved with appropriate mapping functions.
 
@@ -21,8 +21,9 @@ Beyond their necessity, though, these mappings also allow for other properties o
 \begin{figure}[ht!]
 	\centering
 	\includegraphics[width=0.77340\textwidth]{map-overview-sdog.pdf}
-	\caption[Title]{
-		Caption go here
+	\caption[The role of mapping functions for the SDOG modifications]{
+		For the SDOG modifications, mapping is handled by a radial ($M_r$) and latitude ($M_\varphi$) mapping function.
+		The grid domain corresponds to conventional SDOG and the reference domain to the modified grid.
 	}
 	\label{fig:map-overview-sdog}
 \end{figure}
@@ -31,8 +32,9 @@ Beyond their necessity, though, these mappings also allow for other properties o
 \begin{figure}[ht!]
 	\centering
 	\includegraphics[width=\textwidth]{map-overview-prism.pdf}
-	\caption[Title]{
-		Caption go here
+	\caption[The role of mapping functions for the grid extension method]{
+		For the grid extension method, mapping is handled by the projection of the input DGGS ($P$) and a radial mapping function ($M_r$).
+		The grid domain corresponds to the grid as described in \cref{chap:extension}, whereas the reference domain grid is only obtained by inverse mapping the grid domain.
 	}
 	\label{fig:map-overview-prism}
 \end{figure}
@@ -41,7 +43,7 @@ Beyond their necessity, though, these mappings also allow for other properties o
 In this chapter, we present two sets of mapping functions for use with our SDOG modifications and grid extension method:
 the first is a set of radial mappings used for both approaches;
 the second is a set of latitude mappings for SDOG, which operate on similar principles as the radial ones.
-An overview of how we use these functions with the SDOG modifications and grid extension method is demonstrated in \cref{X,Y}, respectively.
+An overview of how we use these functions with the SDOG modifications and grid extension method is demonstrated in \cref{fig:map-overview-sdog,fig:map-overview-prism}, respectively.
 We do not provide mappings for the surface coordinates in the grid extension method, as the projection scheme of the input DGGS is responsible for this.
 We present the inverse mappings first, as the geometric intuition for the role of these operations is more apparent than the forward.
 For SDOG, the inverse takes conventional SDOG and maps it to the modified grids presented in \cref{chap:sdog}.
