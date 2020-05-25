@@ -66,7 +66,7 @@ For a fixed-width representation of indices, a leaded bit set to one marks the s
 One benefit of Morton codes over more local space-filling curves---such as the Hilbert curve---is the ease at which a multi-dimensional index is encoded and vice versa.
 As demonstrated in \cref{fig:morton-interleave}, the Morton code is obtained simply by interleaving the bits of the coordinate indices; likewise, unweaving the bits of a Morton code gives the coordinate indices.
 While these are not constant-time operation in general, magic numbers and lookup tables allow them to be done efficiently and in constant time for a fixed bit width~\cite{libmorton18}.
-We employ this interleaving and unweaving in our direct algorithms for efficient conversion between index and coordinate indices.%TODO
+We employ this interleaving and unweaving in our direct coding algorithms for efficient conversion between a combined index and coordinate indices.
 
 
 \begin{figure}[ht!]
@@ -179,7 +179,7 @@ Likewise, the maximum and minimum coordinates of a cell are also easily computed
 For these operations, the necessary variables are the number of cells ($n$) and the range of values in each coordinate dimension.
 Let $\hat{c}$ be a coordinate value normalized withing the respective range, then the coordinate index of the cell containing $\hat{c}$ is $c_i = \lfloor \hat{c} \cdot n \rfloor$.
 Similarly, the normalized maximum and minimum coordinate values of a cell are obtained from the index with
-$\hat{c}_\mathrm{max} = (c_i + 1) \cdot n$ and $\hat{c}_\mathrm{min} = c_i \cdot n$, respectively.
+$\hat{c}_\mathrm{max} = (c_i + 1) / n$ and $\hat{c}_\mathrm{min} = c_i / n$, respectively.
 
 
 We know that the semiregular regions of SDOG are uniform when using conventional refinement rules.
@@ -274,9 +274,9 @@ The last step is to get the bounds of the octant from the octant code and conver
 \subsubsection{For Modified SDOG}
 These direct algorithms only work for conventional SDOG due to the requirement of uniform spacing of grid divisions.
 As described in \cref{chap:mapping}, however, the mapping functions allow these algorithms to be used with the modified grids by mapping them to conventional SDOG.
-For encoding, the point $p$ must be forward mapped before encoding ($\operatorname{encode}(M(p))$).
-For decoding, the output ranges must be inverse mapped after decoding ($M^{-1}(\operatorname{decode}(i))$)
-In both cases, there is overlap in the computations done by the coding algorithm and associated mapping functions, so care should be taken during implementation to avoid redundant computation.
+For encoding, the point $p$ must be forward mapped before encoding, making the full operation $\operatorname{encode}(M(p))$.
+For decoding, the output ranges must be inverse mapped after decoding, making the full operation $M^{-1}(\operatorname{decode}(i))$.
+In both cases, there is overlap in the computations done by the coding algorithm and associated mapping functions (e.g. calculating $s$ and $z$), so care should be taken during implementation to avoid redundant computations.
 
 
 \subsection{Runtime Comparison}
@@ -348,7 +348,7 @@ However, benchmarking on a variety of platforms in different conditions would be
 	}
 	\begin{tabular}{@{} c c c c c @{}}
 		\toprule
-		         & SDOG & Latitude & Balanced & Volume \\ \midrule
+		& SDOG & Latitude & Balanced & Volume \\ \midrule
 		Encoding & 6    & 7        & 4        & 3      \\
 		Decoding & 11   & 13       & 5        & 5      \\ \bottomrule
 	\end{tabular}
@@ -414,7 +414,7 @@ For our grid extension method, encoding and decoding operations are defined for 
 Doing so not only simplifies the definition of these operations (by deferring work to the input DGGS) but also facilitates the simple transference of data between the input DGGS and its 3D counterpart.
 To accomplish this, we split encoding and decoding into a surface and radial component.
 Referring to \cref{fig:prismatoid-indexing}, we justify such a split by noting that two components define each cell in a 3D DGGS: the cell of the input DGGS that defines its base(s) and the layer of the grid that contains it.
-Uniquely identifying each of these components is sufficient to identify every cell in the grid uniquely; furthermore, each of these components is determined almost entirely independently.
+Uniquely identifying each of these components is sufficient to identify every cell in the grid uniquely; furthermore, each of these components is determined almost entirely independently of one another.
 
 
 \begin{figure}[htp!]
@@ -434,9 +434,9 @@ Uniquely identifying each of these components is sufficient to identify every ce
 The surface component of coding is handled entirely by the input DGGS and, therefore, is not discussed here.
 For the radial component, encoding and decoding make use of the forward and inverse radial mapping functions provided in \cref{chap:6:radial}, respectively.
 We also provide a parameterization for identifying the layers of a 3D DGGS, and operations for encoding and decoding this parameterization.
-We do \textit{not} discuss methods for converting this parameterization into a single index or for combining surface and layer indices into a single index (nor do we provide the inverse for either of these operations).
-For the former, the varying complexity of the layer structure in a 3D DGGS---combined with the competing goals of an indexing scheme---makes defining a general method for doing so challenging.
-For the latter, this operation depends heavily on the input DGGS and layer indexing and cannot be easily defined in general.
+To maintain the generality of our algorithms, we work exclusively with this parameterization instead of discussing techniques for linearizing it into a single index.
+This is because the varying complexity of the layer structure in a 3D DGGS---combined with the competing goals of an indexing scheme---makes defining a general method for doing so challenging.
+Similarly, combining layer and surface indices into a single index depends heavily on the input DGGS and should respect the priorities (e.g. good locality, maximum efficiency) of its indexing scheme.
 
 
 \begin{figure}[htp!]
@@ -444,18 +444,19 @@ For the latter, this operation depends heavily on the input DGGS and layer index
 	\includegraphics[width=\textwidth]{3d-coding.pdf}
 	\caption[Pipeline for encoding and decoding with the grid extension method]{
 		Pipeline for splitting encoding and decoding into surface (top) and radial (bottom) components.
-		These two components are entirely independent except for the surface resolution ($k_s$) of the layer being provided to the surface component during encoding
+		These two components are entirely independent except for the surface resolution ($k_s$) of the layer being provided to the surface component during encoding.
+		Refer to \cref{chap:mapping} for details on the mapping function ($M_r$) used in the radial component
 	}
 	\label{fig:prismatoid-coding}
 \end{figure}
 
 
 Layers of our 3D DGGS's can be parameterized by the shell they reside in ($s$), the integer index of the layer relative to the shell ($j$), and the level of refinement ($k$); we denote the central layer with $s = -1$.
-Thus, layer encoding will calculate these values from $\hat{r}$ and layer decoding will calculate $\hat{r}_\mathrm{max}$ and $\hat{r}_\mathrm{min}$ from these values.
+Thus, layer encoding calculates these values from $\hat{r}$ and layer decoding calculates $\hat{r}_\mathrm{max}$ and $\hat{r}_\mathrm{min}$ from these values.
 
 
 \subsection{Encoding}
-The level of refinement $k$ is an input into encoding; therefore, only $s$ and $j$ need to be computed.
+The level of refinement $k$ is an input into encoding; therefore, only the shell $s$ and the integer index $j$ need to be computed.
 The value of $s$ is carried forward from the radial mapping function evaluation.
 In order to calculate $j$, the number of layers in the shell is first needed; this depends on the refinement level, the layering sequence, and the number of extra radial splits (see \cref{chap:extension}).
 The refinement level is an input, and the other variables are constant for any given 3D DGGS.
@@ -551,7 +552,7 @@ In the case that the value of $k_s$ for $i_\ell^-$ is some number $m$ less than 
 \section{Summary}
 Several critical operations enable the integration, analysis, and visualization of data in a DGGS.
 By providing point encoding, cell decoding, and grid traversal queries for the 3D DGGS's presented earlier in the thesis, we allow them to serve as fully functioning grid systems.
-While there exist more advanced DGGS operations, the ones discussed in this chapter are the most fundamental and operate as a key component in defining more complex queries and analysis.
+While there exist more advanced DGGS operations, the ones discussed in this chapter are the most fundamental and operate as a key component in defining more complex queries and analyses.
 For our modifications to SDOG, the combination of the mapping functions derived in \cref{chap:mapping} and our direct encoding and decoding algorithms allow for efficient constant-time performance of these operations.
 This improved efficiency is especially noticeable at high refinement levels for the balanced and volume methods, where the direct approaches are an order of magnitude faster than their hierarchical counterparts.
 For the grid extension method, the operations we provide are completely general and work for any valid 3D DGGS resulting from the method.
