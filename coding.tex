@@ -183,7 +183,8 @@ $\hat{c}_\mathrm{max} = (c_i + 1) / n$ and $\hat{c}_\mathrm{min} = c_i / n$, res
 
 
 We know that the semiregular regions of SDOG are uniform when using conventional refinement rules.
-Therefore, if we determine the relevant semiregular region and its needed properties---the number of cells and range of values---we can apply direct coding algorithms for SDOG, with bit interleaving and unweaving giving the full DMC.
+Therefore, if we determine the relevant semiregular region and its needed properties---the number of cells and range of values---we can apply direct coding algorithms for SDOG using spherical coordinates (refer back to \cref{fig:sph-elements}).
+Then, bit interleaving and unweaving give the full DMC.
 
 
 In SDOG, the number of cells in the different coordinate dimensions varies for different regions of the grid.
@@ -197,7 +198,7 @@ Therefore, all that we need for direct coding is the shell and zone that contain
 \subsubsection{Encoding}
 The inputs and outputs of direct encoding are the same as its hierarchical counterpart.
 First, we find the octant that contains $p$.
-The three coordinates of $p$ are then normalized within the range of the octant with $\hat{r} = r / R_\mathrm{max}$, $\hat{\varphi} = \pm (2\varphi) / \pi$, and $\hat{\lambda} = 2 (\lambda - \lambda_0) / \pi$ where $\lambda_0$ is the minimum longitude of the octant.
+The three coordinates of $p$ are then normalized within the range of the octant with $\hat{r} = r / R_\mathrm{max}$, $\hat{\varphi} = \pm (2\varphi) / \pi$, and $\hat{\lambda} = 2 (\lambda - \lambda_0) / \pi$, where $\lambda_0$ is the minimum longitude of the octant.
 We then calculate the shell and zone that contain $p$ the same as in \cref{chap:mapping}: $s = \lfloor \log_{0.5} \hat{r} \rfloor$ and $z = \lfloor \log_{0.5} ( 1 - \hat{\varphi} ) \rfloor$.
 
 
@@ -279,7 +280,7 @@ For decoding, the output ranges must be inverse mapped after decoding, making th
 In both cases, there is overlap in the computations done by the coding algorithm and associated mapping functions (e.g. calculating $s$ and $z$), so care should be taken during implementation to avoid redundant computations.
 
 
-\subsection{Runtime Comparison}
+\subsection{Runtime Comparison} \label{chap:7:runtime}
 To evaluate the usefulness of our direct coding algorithms, we compare their runtime against the hierarchical counterparts.
 To do so, we have implemented the four algorithms and the mapping functions presented in \cref{chap:mapping} in C++.
 We also used these implementations to experimentally verify the correctness of the direct algorithms by comparing their output to the hierarchical ones.

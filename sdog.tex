@@ -107,9 +107,20 @@ T(k) = S(k) + L(k) + N(k) = \frac{1}{21} \left( 7 \cdot 2^{k} + 8^{k+1} + 6 \rig
 As far as we are aware, these formulations have not been provided in any of the preexisting literature on SDOG.
 
 
+\begin{figure}[ht!]
+	\centering
+	\includegraphics[width=0.6\textwidth]{sph-elements.pdf}
+	\caption[Overview of how an SDOG cell is defined by a range of spherical coordinates]{
+		An SDOG cell is defined by a range in each spherical coordinate: latitude $\varphi$, longitude $\lambda$, and radius $r$.
+		Because of this, volume and surface area are easily derived from the volume and area elements of spherical coordinates.
+	}
+	\label{fig:sph-elements}
+\end{figure}
+
+
 \subsection{Geometry of SDOG Cells} \label{chap:4:geom}
 In order to measure the volume preservation properties of SDOG and its modifications, it is necessary to be able to measure the volume of individual cells in the grid.
-Since each SDOG cell represents a range of each spherical coordinate (latitude $\varphi$, longitude $\lambda$, and radius $r$), calculating the volume of an individual cell is a straightforward task.
+Referring to \cref{fig:sph-elements}, an SDOG cell represents a range of each spherical coordinate (latitude $\varphi$, longitude $\lambda$, and radius $r$); therefore, calculating the volume of an individual cell is a straightforward task.
 Note that we use the geographic convention for spherical coordinates in this thesis.
 Let the subscripts $\mathrm{max}$ and $\mathrm{min}$ denote the maximum and minimum of a given spherical coordinate for an SDOG cell; then, the volume is \cite{yu2009sdog}
 %

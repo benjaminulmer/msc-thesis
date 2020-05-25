@@ -1,9 +1,13 @@
 \chapter{Use Cases for the Extension Method} \label{chap:usecases}
-We evaluate the grid extension method as described in \cref{chap:extension,chap:mapping,chap:coding} through a series of use cases for the 3D DGGS's.
+Evaluation of our SDOG modifications is done quantitatively through an analysis of volume preservation and compactness (\cref{chap:4:results}) and runtime performance of coding algorithms (\cref{chap:7:runtime}).
+For the grid extension method---as there is no single resulting 3D DGGS to analyze---we perform evaluation through a series of use cases for 3D DGGS's.
 These use cases are not state-of-the-art implementations; however, they demonstrate the robustness and versatility of the approach and its ability to support different target applications, data sets, and input DGGS's.
 For each use case, we chose an input DGGS and parameters for the system that resulted in a 3D DGGS with desirable properties for said application.
 The data encodings in these use cases are all defined using the fundamental operations of the 3D DGGS.
-The content of this chapter is from our \textit{IJGL} article~\cite{ulmer2020general}, with an expanded description of the implementation.
+
+
+The content of this chapter is taken from our \textit{IJGL} article~\cite{ulmer2020general}.
+Additional details on each use case have been added, along with an expanded description of implementation details.
 
 
 \section{Use Cases}
@@ -17,7 +21,9 @@ Further implementation details are provided in \cref{chap:8:impl}.
 \subsection{Aircraft and Satellite Paths} \label{chap:8:sats}
 The first use case we examine is tracking aircraft and spacecraft trajectories, such as commercial and private flights, drones, satellites, and rockets.
 Such a system could be used to increase the efficiency of collision queries using the hierarchy of the grid system, similar to the approaches of~\cite{miao2019low, zhai2019collision}.
-The main benefit our 3D DGGS would offer over existing grids for such a system is the ability to have cells located at low and high altitudes in the same resolution have close to equal shape and size.
+The main benefit our 3D DGGS's would offer over existing grids for such a system is the ability to have cells located at low and high altitudes in the same resolution have close to equal shape and size.
+This use case clearly demonstrates the ability for 3D DGGS's to support datasets with arbitrarily large ranges of altitudes; in this case, from 11~km to X~km.
+It also shows how geospatial data represented as vector polylines is encoded and rasterized in a 3D DGGS.
 
 
 \begin{figure}[ht!]
@@ -25,43 +31,27 @@ The main benefit our 3D DGGS would offer over existing grids for such a system i
 	\includegraphics[width=\textwidth]{satellites.pdf}
 	\caption[Flight path and satellite orbit use case showing several sample trajectories]{
 		Flight paths and satellite orbits rasterized in a 3D DGGS.
-		All paths and orbits are rasterized at the same grid resolution of (a) 7, (b) 10, and (c) 13
+		All paths and orbits are rasterized at the same grid resolution of (a) 7, (b) 10, and (c) 13.
+		The width and depth of cells at these resolutions are roughly X~km, Y~km, and Z~km, respectively.
 	}
 	\label{fig:satellites}
 \end{figure}
 
 
-\Cref{fig:satellites} shows several generated flight paths and satellite orbits represented in a 3D DGGS at increasing resolutions.
+\Cref{fig:satellites} shows several flight paths and satellite orbits represented in a 3D DGGS at increasing resolutions.
+The paths used in this use case are generated and do not correspond to real data.
+However, the altitudes used for satellites and aircraft \text{are} accurate:
+flight paths are at an altitude of 11~km (typical commercial cruising altitude); the lowest satellite is at X~km (ISS orbit); the two middle satellites are at Y~km (something orbit); and the highest satellite is at Z~km (something orbit).  
 The input DGGS for this example uses a rhombic triacontahedron as the initial polyhedron, standard 1:4 quadrilateral refinement, and a simple normalization projection.
 The 3D DGGS has a target aspect ratio of one, a radial mapping exponent of one, and a maximum radius of 10.66$R$ (67,957~km).
 These parameters were chosen to ensure that cells are relatively uniform and compact without significantly sacrificing the simplicity and efficiency of operations.
 
-\subsection{Urban Planning}
-The second use case is a volume-preserving 3D grid for urban planning and management.
-A volume-preserving grid is useful for quickly estimating the volume of features rasterized in the grid by multiplying the number of cells in the raster by their shared volume.
-This use case also shows the ability of our 3D DGGS to handle small scale data in addition to the much larger scale data showcased in the previous one.
-
-
-\begin{figure}[ht!]
-	\centering
-	\includegraphics[width=\textwidth]{buildings.pdf}
-	\caption[Urban planning use case showing various rasterized buildings]{
-		A collection of buildings from the University of Calgary rasterized in a 3D DGGS at resolution 21.
-		In (a), both interior and boundary cells are shown, whereas (b) and (c) show only boundary and interior cells, respectively
-	}
-	\label{fig:urbanplanning}
-\end{figure}
-
-
-\Cref{fig:urbanplanning} shows several buildings represented in a 3D DGGS, with the building geometries obtained from Open Street Map~\cite{osm}.
-The input DGGS for this example uses a disdyakis triacontahedron as the initial polyhedron, a non-standard 1:4 triangle refinement, and the vertex-oriented great circle slice and dice projection~\cite{van2006slice} to preserve area~\cite{hall2020disdyakis}.
-The 3D DGGS has a target aspect ratio of one, a radial mapping exponent of three to achieve perfect volume preservation (excluding the central layer), and a maximum radius of 1.33$R$ (8495~km).
-
 
 \subsection{Atmospheric Properties}
-The final use case we look at is using a 3D DGGS to resample atmospheric forecasts, such as those generated by numerical weather prediction models~\cite{ncepncar, era5}.
-These datasets typically have a much higher vertical resolution than surface resolution, due to how quickly properties such as temperature and wind speed tend to change in these two dimensions.
-To accommodate this with our 3D DGGS, we specify an appropriate aspect ratio for cells to ensure that the vertical and surface resolution matches that of the input data as closely as possible.
+The second use case we look at is using a 3D DGGS to resample atmospheric forecasts, such as those generated by numerical weather prediction models~\cite{ncepncar, era5}.
+These datasets typically have a much higher vertical resolution than surface resolution, due to how quickly properties such as temperature and wind speed tend to change in the surface versus radial dimensions.
+To accommodate this difference in resolution with our 3D DGGS, we specify an appropriate aspect ratio for cells to ensure that the vertical and surface resolution matches that of the input data as closely as possible.
+This use case also demonstrates how raster data is interpolated and assigned to cells in a DGGS. 
 
 
 \begin{figure}[ht!]
@@ -69,6 +59,7 @@ To accommodate this with our 3D DGGS, we specify an appropriate aspect ratio for
 	\includegraphics[width=\textwidth]{atmosphere.pdf}
 	\caption[Atmospheric properties resampling use case showing vertical wind speed]{
 		Vertical wind speed (mbar/s) sampled into a 3D DGGS at resolution 9.
+		Cells at this resolution are roughly X~km in width and Y~km in depth, which closely matches the resolution of the data.
 		Negative velocity, which corresponds to an upward wind, is shown in red.
 		Positive velocity, which corresponds to a downward wind, is shown in blue.
 		Velocities with magnitude less than 0.25 mbars/s are not shown to reduce clutter and highlight regions with the highest speeds.
@@ -83,8 +74,33 @@ The input DGGS for this example is the same as the one used for the aircraft and
 However, this 3D DGGS has a target aspect ratio of 31.7, a radial mapping exponent of one, and a maximum radius of 1.33$R$ (8495~km).
 
 
+\subsection{Urban Planning}
+The final use case is a volume-preserving 3D grid for urban planning and management.
+A volume-preserving grid is useful for quickly estimating the volume of features rasterized in the grid by multiplying the number of cells in the raster by their shared volume.
+This use case also shows the ability of our 3D DGGS to handle small scale data in addition to the much larger scale data showcased in the previous two.
+
+
+\begin{figure}[ht!]
+	\centering
+	\includegraphics[width=\textwidth]{buildings.pdf}
+	\caption[Urban planning use case showing various rasterized buildings]{
+		A collection of buildings from the University of Calgary rasterized in a 3D DGGS at resolution 21.
+		At this resolution, cells are roughly X~km in width and depth.
+		In (a), both interior and boundary cells are shown, whereas (b) and (c) show only boundary and interior cells, respectively
+	}
+	\label{fig:urbanplanning}
+\end{figure}
+
+
+\Cref{fig:urbanplanning} shows several buildings represented in a 3D DGGS, with the building footprints obtained from Open Street Map~\cite{osm}.
+To obtain full 3D geometry for the buildings, we extrude the polygon footprints vertically to create prisms; we estimate the height of the buildings as we could not find available data on this.
+The input DGGS for this example uses a disdyakis triacontahedron as the initial polyhedron, a non-standard 1:4 triangle refinement, and the vertex-oriented great circle slice and dice projection~\cite{van2006slice} to preserve area~\cite{hall2020disdyakis}.
+The 3D DGGS has a target aspect ratio of one, a radial mapping exponent of three to achieve perfect volume preservation (excluding the central layer), and a maximum radius of 1.33$R$ (8495~km).
+
+
 \section{Implementation} \label{chap:8:impl}
-\Cref{fig:uml} shows a class diagram for the C++ implementation of the grid extension method. \textit{DGGS2D} specifies the operations that must be provided by a conventional DGGS.
+\Cref{fig:uml} shows a class diagram for the C++ implementation of the grid extension method.
+\textit{DGGS2D} specifies the operations that must be provided by a conventional DGGS.
 It is an abstract class templated on a type to use as the index for the grid and specifies operations for encoding (pointToCell), decoding (cellToVerts), and standard indexing operations (neighbours, parents, and children).
 Additionally, it provides information regarding the number of cells in the grid at a given resolution (numberOfCells) and the factor of the employed refinement (getRefinementFactor).
 These are used by the 3D DGGS to obtain $n$ and $f$, respectively. QuadDGGS and TriDGGS are provided as two example \textit{DGGS2D} implementations that could exist, which use QuadIndex and TriIndex as their index types, respectively.
