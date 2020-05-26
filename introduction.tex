@@ -150,8 +150,8 @@ The extent of these splitting surfaces (and the number of resulting children cel
 We perform the modifications by analyzing the placement of these splitting surfaces and finding ideal new locations that result in cells of the most uniform volume possible given certain constraints.
 
 
-The second approach is a general method for creating a 3D DGGS that uses a conventional polyhedron-based DGGS as a starting point and specification.
-First, we create the initial 3D discretization by extruding the faces of the initial polyhedron of the input DGGS into prismatoid cells.
+The second approach is a general method for creating a 3D DGGS that uses a conventional 2D DGGS as a starting point and specification.
+First, we create the initial 3D discretization by extruding the faces of the initial discretization of the input DGGS into prismatoid cells.
 Bases of prismatoid cells are then refined using the same refinement scheme as the input DGGS and combined with a radial refinement.
 Such an approach for creating a 3D DGGS allows the research, development, and data integration achieved with conventional DGGS to readily be leveraged with the 3D one.
 We take care to perform the extension in such a way that it achieves the desired properties of the 3D DGGS regardless of the 2D one used.
