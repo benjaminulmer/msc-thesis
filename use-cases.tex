@@ -11,7 +11,7 @@ Additional details on each use case have been added, along with an expanded desc
 
 
 \section{Use Cases}
-Three use cases were chosen to evaluate the method: aircraft and satellite paths, urban planning, and atmospheric properties.
+Three use cases were chosen to evaluate the method: aircraft and satellite paths, atmospheric properties, and urban planning.
 To create the use cases, we have implemented the extension method as a C++ class integrated with a research toolset used for designing and testing different conventional DGGS's.
 In this toolset, the operations provided by a DGGS are specified by an abstract class that each implementation extends.
 The 3D DGGS class takes an input DGGS as well as values for the target aspect ratio ($a$), exponent for the radial mapping ($t$), and the radial range of the grid ($R_\mathrm{max}$) as input during construction.
@@ -59,7 +59,7 @@ This use case also demonstrates how raster data is interpolated and assigned to 
 	\includegraphics[width=\textwidth]{atmosphere.pdf}
 	\caption[Atmospheric properties resampling use case showing vertical wind speed]{
 		Vertical wind speed (mbar/s) sampled into a 3D DGGS at resolution 9.
-		At this resolution, cells in the atmosphere are approximately 16~km in width and 0.5~km in depth, which closely matches the resolution of the data.
+		At this resolution, cells in the atmosphere are approximately 16~km in width and 0.5~km in depth, closely matching the resolution of the data.
 		Negative velocity, which corresponds to an upward wind, is shown in red.
 		Positive velocity, which corresponds to a downward wind, is shown in blue.
 		Velocities with magnitude less than 0.25 mbars/s are not shown to reduce clutter and highlight regions with the highest speeds.
@@ -99,6 +99,8 @@ The 3D DGGS has a target aspect ratio of one, a radial mapping exponent of three
 
 
 \section{Implementation} \label{chap:8:impl}
+Paragraph here
+
 \Cref{fig:uml} shows a class diagram for the C++ implementation of the grid extension method.
 \textit{DGGS2D} specifies the operations that must be provided by a conventional DGGS.
 It is an abstract class templated on a type to use as the index for the grid and specifies operations for encoding (pointToCell), decoding (cellToVerts), and standard indexing operations (neighbours, parents, and children).

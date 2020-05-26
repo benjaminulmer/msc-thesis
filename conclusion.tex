@@ -12,7 +12,7 @@ First, we showed how modifying the location of splitting surfaces can improve vo
 Building on this, we derived a general method for extending an arbitrary 2D DGGS to the third dimension.
 To define coding operations for these two approaches, we first derived a set of radial and latitude mapping functions.
 These mappings allowed us to define coding algorithms that operate in a more uniform grid space while still having volume preservation in reference space.
-For SDOG, we also presented direct coding algorithms that run in constant time in comparison to the linear time of their hierarchical counterparts.
+For SDOG, we also presented direct coding algorithms that run in constant time compared to the linear time of their hierarchical counterparts.
 Additionally, we presented neighbour, child, and parent operations for SDOG and the grid extension method in general.
 The grid extension method has been fully implemented and used to demonstrate three potential use cases of 3D DGGS using three different grid systems.
 Given an input DGGS, creating the 3D DGGS is instant and only requires three parameters clearly defined and explored in this thesis.
@@ -27,7 +27,7 @@ Finally, the algorithms provided in \cref{chap:coding} are efficient, and the us
 
 \section{Limitations and Future Work}
 The field of research around 3D DGGS's is relatively young and unexplored, especially compared to the rich body of research for their 2D counterparts.
-While this thesis provides important contributions to this developing field, there are still many significant future works to be done.
+While this thesis provides important contributions to this developing field, there are still many significant future works.
 There are also related future works for Digital Earth applications as a whole---beyond just the 3D DGGS---that should be explored.
 
 
@@ -49,13 +49,13 @@ The method also has its limitations:
 
 	\item Finally, we do not explore how our 3D DGGS's could be used as a simulation tool.
 	While we focus on the task of data integration in this thesis, DGGS's are also used as hierarchical simulation meshes.
-	The degenerate connectivity introduced by semiregular degenerate refinement poses a challenge for many simulation methods; further research is needed to properly address this shortcoming.
+	The degenerate connectivity introduced by semiregular degenerate refinement poses a challenge for many simulation methods; further research is needed to address this shortcoming properly.
 \end{itemize}
 
 
 Looking beyond the 3D DGGS, the next natural evolution of the DGGS is better support for dynamic and time-varying data.
 Similar to how storing altitude as an attribute is undesirable in certain applications, the same is true for time information.
-Therefore, a 4D DGGS that partitions time along with space is needed.
+Therefore, a 4D DGGS that partitions time, along with space, is needed.
 Just as this thesis presents a method for extending a 2D DGGS to 3D, similar techniques may be possible for the time dimension.
 However, similar to how the radial dimension has unique properties that must be accommodated, the same is true for the time dimension.
 Refining time at the same time as space is refined may not even make sense for certain applications.

@@ -1,6 +1,6 @@
 \chapter{Efficient Encoding, Decoding, and Indexing} \label{chap:coding}
 The mappings described in the previous chapter are only one part of the process for associating geospatial data to cells of a 3D DGGS.
-With geospatial data mapped to the domain of the grid system, the set of cells associated with the geometry of the data---and the indices of said cells---must be obtained.
+With geospatial data mapped to the grid system's domain, the set of cells associated with the geometry of the data---and the indices of said cells---must be obtained.
 As described earlier, this entire process is known as grid encoding.
 Likewise, there needs to be a process to obtain the geometry of a cell (in grid space) from its index, so that the geometry can be mapped to the corresponding cell geometry in reference space.
 This process is known as grid decoding.
@@ -98,9 +98,9 @@ We use this property to implicitly obtain $k$ in any case where it is not provid
 It is worth noting that because DMC combines codes for degenerate cells, not every integer is a valid index.
 For DMC, the utilization of indices is approximately 38\% of all possible values ($8/21$ in the limit).
 Compared to an indexing scheme that uses every possible integer as an index (maximal), DMC based indexing for SDOG requires more bits to index the same level of refinement.
-However, if using a fixed width representation of indices, this is only a downside if the size of the integer cannot support the needed resolution; in this case, a maximal index could potentially allow a higher level of refinement to be represented.
+However, if using a fixed-width representation of indices, this is only a downside if the size of the integer cannot support the needed resolution; in this case, a maximal index could potentially allow representing a higher level of refinement.
 For a 64 bit integer, though, the maximum level of refinement for both DMC based indexing and a maximal one is 21.
-Furthermore, 128 bits provided enough indices for 41 levels of refinement with DMC, at which point the size of cells in on the order of micrometers.
+Furthermore, 128 bits provided enough indices for 41 levels of refinement with DMC, at which point the size of cells in on the order of micrometres.
 For these reasons, we believe the wasted indices are not a significant issue with DMC indexing in practice.
 
 
@@ -438,8 +438,8 @@ The surface component of coding is handled entirely by the input DGGS and, there
 For the radial component, encoding and decoding make use of the forward and inverse radial mapping functions provided in \cref{chap:6:radial}, respectively.
 We also provide a parameterization for identifying the layers of a 3D DGGS, and operations for encoding and decoding this parameterization.
 To maintain the generality of our algorithms, we work exclusively with this parameterization instead of discussing techniques for linearizing it into a single index.
-This is because the varying complexity of the layer structure in a 3D DGGS---combined with the competing goals of an indexing scheme---makes defining a general method for doing so challenging.
-Similarly, combining layer and surface indices into a single index depends heavily on the input DGGS and should respect the priorities (e.g. good locality, maximum efficiency) of its indexing scheme.
+We do so because the varying complexity of the layer structure in a 3D DGGS---combined with the competing goals of an indexing scheme---makes defining a general method for linearization challenging.
+Similarly, combining layer and surface indices into a single index depends heavily on the input DGGS and should respect the priorities (e.g. good locality, maximum efficiency) of its indexing scheme, and therefore, is also difficult to do in general.
 
 
 \begin{figure}[htp!]
