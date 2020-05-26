@@ -2,7 +2,7 @@
 One of the goals of this thesis is to produce 3D DGGS's with cells of as equal volume as possible.
 The first approach we use to achieve this goal is modifying SDOG refinement in order to improve its volume-preserving properties.
 While SDOG cells are relatively uniform in size, there is still significant variation that could be reduced.
-We chose to use SDOG as a starting point over other options for two main reasons:
+We chose to use SDOG as a starting point over other options for two main reasons.
 First, since SDOG uses a semiregular degenerate refinement, it already satisfies the primary goal of the thesis---that is, support for unbounded ranges of altitude.
 Second, the use of spherical coordinates in SDOG refinement allows for efficient coding operations, which we discuss in \cref{chap:coding}.
 
@@ -19,7 +19,7 @@ These octants are taken to be the most coarse cells of the grid and are then ref
 \Cref{fig:sdog} shows an SDOG octant after four applications of refinement.
 
 
-\begin{figure}[ht!]
+\begin{figure}[t!]
 	\centering
 	\includegraphics[width=\textwidth]{sdog.pdf}
 	\caption[Different views of an SDOG octant]{
@@ -31,7 +31,7 @@ These octants are taken to be the most coarse cells of the grid and are then ref
 \end{figure}
 
 
-\begin{figure}[ht!]
+\begin{figure}[t!]
 	\centering
 	\includegraphics[width=\textwidth]{sdog-refinement.pdf}
 	\caption[Splitting surfaces used in SDOG refinement]{
@@ -88,7 +88,7 @@ Thus,
 N(k) = 8N(k-1) + 4L(k-1) + 2 \quad\text{and}\quad N(1) = 2.
 \end{equation*}
 %
-$L(k)$ is a linear non-homogeneous recurrence which can be solved with standard techniques~\cite{bellman1963differential}.
+From here, we note $L(k)$ is a linear non-homogeneous recurrence which can be solved with standard techniques~\cite{bellman1963differential}.
 Solving and substituting into $N(k)$, we get another linear non-homogeneous recurrence, which can be solved similarly.
 Finally, we get the closed forms
 %
@@ -164,7 +164,7 @@ Using midpoints to refine cells makes for a simple refinement scheme, but it mak
 	\centering
 	\includegraphics[width=0.85\textwidth]{sdog-volume.pdf}
 	\caption[Visualization of cell volumes in SDOG]{
-		Cell volumes in an octant after four applications of conventional SDOG refinement.
+		Cell volumes in an octant after four applications of conventional SDOG refinement
 	}
 	\label{fig:sdog-volume}
 \end{figure}
@@ -187,10 +187,9 @@ Let $c_{s}$ be the location of the splitting surface, where $c$ is one of $\left
 One way to express the location of the splitting surfaces used for refinement is as a convex combination of maximum and minimum values:
 %
 \begin{equation*}
-c_{s} = \alpha c_\mathrm{max} + \left( 1-\alpha \right) c_\mathrm{min}, \quad \alpha \in \left( 0, 1 \right),
+c_{s} = \alpha c_\mathrm{max} + \left( 1-\alpha \right) c_\mathrm{min}, \quad \alpha \in \left( 0, 1 \right).
 \end{equation*}
 %
-where we call $\alpha$ the splitting factor.
 Conventional SDOG used midpoints (i.e. $\alpha = 1/2$) for each spherical coordinate during refinement, regardless of cell type.
 While a convex combination is the most straightforward, any function of the maximum and minimum such that the result is strictly between the two is a valid method for determining the location of the splitting surfaces.
 Thus, the location of splitting surfaces is modified by changing this function, either by using a different value of $\alpha$ or by using a different function altogether.
@@ -200,7 +199,8 @@ Furthermore, the function used can be different for each cell type and spherical
 A useful function for improving volume preservation is one that results in one of the new ranges having a specific percentage of the volume of the original range.
 Each spherical coordinate has a different effect on volume; therefore, this function is different for each.
 We start with the radial splitting surface.
-Referring to \cref{eq:volume}, let $p \in (0,1)$ be the percentage we wish for the lower range to have, then
+Referring to \cref{eq:volume}, let $p \in (0,1)$ be the percentage we wish for the lower range to have.
+Then,
 %
 \begin{equation*}
 p \left( r_\mathrm{max}^{\,3} - r_\mathrm{min}^{\,3} \right) = r_{s}^{\,3} - r_\mathrm{min}^{\,3}
@@ -282,7 +282,7 @@ We call these the regular splitting surfaces.
 Therefore, we require that the volume on each side of the regular splitting surfaces be equal, or in other words, we set $p = 1/2$ for these splitting surfaces.
 
 
-\begin{figure}[ht!]
+\begin{figure}[t!]
 	\centering
 	\includegraphics[width=0.9859\textwidth]{sdog-zones.pdf}
 	\caption[Spherical zones that result from SDOG refinement]{
@@ -305,7 +305,7 @@ First, we note zone $n$ has a volume equal to $\left( 1 - p \right)^{n} p$ that 
 Then, setting the ratio between zone $n+1$ and $n$ to be equal to $1/4$ gives us $p = 3/4$, which we use directly in \cref{eq:latVol} to find the appropriate splitting surface locations.
 
 
-\begin{figure}[ht!]
+\begin{figure}[htp!]
 	\centering
 	\includegraphics[width=0.85\textwidth]{vol-volume.pdf}
 	\caption[Visualization of cell volumes in the volume modification]{
@@ -328,7 +328,7 @@ Cells are stretched and squashed to achieve this volume preservation, which redu
 In order to address this issue, we use different splitting surfaces to achieve a better balance between volume preservation and cell compactness.
 
 
-\begin{figure}[ht!]
+\begin{figure}[htp!]
 	\centering
 	\includegraphics[width=0.85\textwidth]{lat-volume.pdf}
 	\caption[Visualization of cell volumes in the latitude modification]{
@@ -346,7 +346,7 @@ Comparing this grid to conventional SDOG (refer back to \cref{fig:sdog-volume}),
 Thus, this method offers only a slight improvement with regards to volume preservation, while also only slightly sacrificing cell compactness.
 
 
-\begin{figure}[ht!]
+\begin{figure}[tp!]
 	\centering
 	\includegraphics[width=0.85\textwidth]{bal-volume.pdf}
 	\caption[Visualization of cell volumes in the balanced modification]{
@@ -357,7 +357,7 @@ Thus, this method offers only a slight improvement with regards to volume preser
 \end{figure}
 
 
-In order to achieve different tradeoffs between compactness and volume preservation, modifying the regular splitting surfaces is necessary.
+In order to achieve varying tradeoffs between compactness and volume preservation, modifying the regular splitting surfaces is necessary.
 \Cref{eq:radVol,eq:latVol} give ideal placements for volume preservation as compared to the conventional midpoint functions which result in better compactness.
 Therefore, using different functions that blend between these two extremes allows for a more balanced tradeoff.
 There are endless possibilities for these functions; however, as will be required for coding in \cref{chap:mapping}, they should be easily invertible.
@@ -396,7 +396,8 @@ Specifically, we should measure the effect our changes have on the compactness o
 To measure this, we use the notion of sphericity, which quantifies how closely the shape of an object approximates a sphere~\cite{wadell1935volume}.
 Sphericity is defined as the ratio between the surface area of a sphere with the same volume as the object and the surface area of the object itself.
 Therefore, a perfect sphere will have a sphericity of one, and any other object will have sphericity strictly less than one.
-Formally, given an object $\omega$ and a sphere $s$ such that $\operatorname{vol}(s) = \operatorname{vol}(\omega)$, the sphericity of $\omega$, $\Psi$, is given by $\operatorname{area}(s) / \operatorname{area}(\omega)$ , or equivalently 
+Formally, given an object $\omega$ and a sphere $s$ such that $\operatorname{vol}(s) = \operatorname{vol}(\omega)$, the sphericity of $\omega$, $\Psi$, is given by $\operatorname{area}(s) / \operatorname{area}(\omega)$.
+Equivalently,
 %
 \begin{equation*}
 \Psi = \frac{\pi^{\frac{1}{3}}\left( 6\operatorname{vol}(\omega) \right)^{\frac{2}{3}}}{\operatorname{area}(\omega)}.
@@ -407,7 +408,7 @@ The sphericity of several common geometric shapes is provided in \cref{tab:spher
 We use the mean and SD of sphericity for all cells in the grid to evaluate compactness globally.
 
 
-\begin{table}[htp!]
+\begin{table}[ht!]
 	\centering
 	\caption[Sphericity of common geometric shapes]{
 		Sphericity of common geometric shapes
@@ -442,7 +443,7 @@ We use the mean and SD of sphericity for all cells in the grid to evaluate compa
 \end{figure}
 
 
-\begin{table}[htp!]
+\begin{table}[p!]
 	\centering
 	\caption[Convergence values of measures for the different grids]{
 		Convergence value of each measure for the different grids
@@ -479,7 +480,7 @@ We use the mean and SD of sphericity for all cells in the grid to evaluate compa
 \end{figure}
 
 
-\begin{table}[htp!]
+\begin{table}[p!]
 	\centering
 	\caption[Convergence values of max and min sphericity for the different grids]{
 		Convergence value of max and min sphericity for the different grids
@@ -509,7 +510,7 @@ The variation in sphericity is nearly identical between these two refinement met
 
 
 As expected, with all NG cells having equal volume, the volume method significantly improves the volume ratio and the CV of volume for all refinement levels but the first.
-As the level of refinement gets large, the CV of volume quickly approaches zero since the number of NG cells is grows faster than the number of LG and SG cells in the grid.
+As the level of refinement gets large, the CV of volume quickly approaches zero since the number of NG cells grows faster than the number of LG and SG cells in the grid.
 The cost of this improved volume preservation is a much larger reduction in the sphericity of cells and an increase in the variation of sphericity, which is also to be expected.
 
 
