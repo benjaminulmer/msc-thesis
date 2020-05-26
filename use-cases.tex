@@ -12,9 +12,8 @@ Additional details on each use case have been added, along with an expanded desc
 
 \section{Use Cases}
 Three use cases were chosen to evaluate the method: aircraft and satellite paths, atmospheric properties, and urban planning.
-To create the use cases, we have implemented the extension method as a C++ class integrated with a research toolset used for designing and testing different conventional DGGS's.
-In this toolset, the operations provided by a DGGS are specified by an abstract class that each implementation extends.
-The 3D DGGS class takes an input DGGS as well as values for the target aspect ratio ($a$), exponent for the radial mapping ($t$), and the radial range of the grid ($R_\mathrm{max}$) as input during construction.
+To create the use cases, we have implemented the extension method as a C++ class.
+This 3D DGGS class takes an input DGGS as well as values for the target aspect ratio ($a$), exponent for the radial mapping ($t$), and the radial range of the grid ($R_\mathrm{max}$) as input during construction.
 Further implementation details are provided in \cref{chap:8:impl}.
 
 
@@ -99,9 +98,12 @@ The 3D DGGS has a target aspect ratio of one, a radial mapping exponent of three
 
 
 \section{Implementation} \label{chap:8:impl}
-Paragraph here
+As mentioned previously, we have implemented the 3D DGGS's used in these use cases as a C++ class; this class is integrated with a research toolset used for designing and testing different conventional DGGS's.
+In this toolset, the operations provided by a DGGS are specified by an abstract class that each implementation extends.
+An implementation of a 2D DGGS serves as the input DGGS used during the construction of a 3D DGGS.
 
-\Cref{fig:uml} shows a class diagram for the C++ implementation of the grid extension method.
+
+\Cref{fig:uml} shows a class diagram for the C++ implementation.
 \textit{DGGS2D} specifies the operations that must be provided by a conventional DGGS.
 It is an abstract class templated on a type to use as the index for the grid and specifies operations for encoding (pointToCell), decoding (cellToVerts), and standard indexing operations (neighbours, parents, and children).
 Additionally, it provides information regarding the number of cells in the grid at a given resolution (numberOfCells) and the factor of the employed refinement (getRefinementFactor).
@@ -119,10 +121,10 @@ These are used by the 3D DGGS to obtain $n$ and $f$, respectively. QuadDGGS and 
 
 
 During construction, a DGGS3D takes a reference to a \textit{DGGS2D} (the input DGGS) along with values maxRad ($R_\mathrm{max}$), targetAR ($a$), and radialMapExp ($t$).
-This class is also templated on the type of index used by the input DGGS. DGGS3D uses the class Index3D as its index type, which is simply a tuple composed of a surface index type and a LayerIndex.
+This class is also templated on the type of index used by the input DGGS.
+DGGS3D uses the class Index3D as its index type, which is simply a tuple composed of a surface index type and a LayerIndex.
 LayerIndex is a tuple of shell ($s$), resolution ($k$), and index ($j$).
-Encoding, decoding, and index operations are defined exactly as provided in \cref{chap:7:extension}.
-
+Encoding, decoding, and index operations (including mapping functions) are implemented exactly as described in \cref{chap:mapping,chap:coding}.
 
 
 \section{Summary}
