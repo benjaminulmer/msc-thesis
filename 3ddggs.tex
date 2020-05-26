@@ -60,7 +60,7 @@ We call this type of 3D DGGS Earth-centric.
 The most fundamental Earth-centric 3D grid is a direct extension of an LLG to the third dimension (refer back to \cref{fig:3dllg}).
 In addition to diving space by latitude and longitude, a 3D LLG also divides space by equal steps in the radial dimension.
 Due to the simplicity of its construction, this type of grid has seen use in global crust modelling~\cite{bassin2000current} and exploring P-wave velocity~\cite{zhao2004global}, among other applications.
-The GeoSOT3D grid, proposed by Sun and Cheng, is a variation of the standard 3D LLG where latitude and longitude have been extended to larger virtual spaces to improve the efficiency of grid coding~\cite{sun20153d} and has been used to increase the efficiency of aircraft and UAV collision detection~\cite{miao2019low, zhai2019collision}.
+The GeoSOT3D grid, proposed by Sun and Cheng, is a variation of the standard 3D LLG where latitude and longitude have been extended to larger virtual spaces to improve the efficiency of grid coding~\cite{sun20153d}. This variation has been used to increase the efficiency of aircraft and UAV collision detection~\cite{miao2019low, zhai2019collision}.
 
 
 Similar radial extensions are also possible for many of the DGG's and DGGS's explored in \cref{chap:2:DGG}.
@@ -147,12 +147,13 @@ Such a definition describes the methods used in DQG, SDOG, Sphere Shell Space 3D
 Like regular refinement, semiregular degenerate can also be classified as uniform if splitting surfaces are located at midpoints.
 
 
-A semiregular degenerate refinement allows for more uniformly sized and compact cells as compared to a regular refinement applied to the same domain.
+Applied to a degenerate domain, semiregular degenerate refinement allows for more uniformly sized and compact cells as compared to a regular refinement.
 The main drawback of this class of refinement is the degenerate connectivity introduced between the different regular regions of the grid.
 In a non-degenerate grid, each cell will have precisely one neighbour along each edge, or no neighbours if it is on a boundary of the grid.
 In 3D, the same applies but with faces instead of edges.
 Grids resulting from semiregular degenerate refinement violate this property, with some cells having multiple neighbours along an edge/face.
 Such degenerate connectivity introduces challenges when propagating values across boundaries of cells and calculating values at vertices, as is needed for finite element methods.
-There has been work to address this challenge for conventional octrees~\cite{braun2008douar}, which have a similar issue between regions of the grid at different levels of refinement; similar methods could likely be applied to semiregular degenerate grids as well.
+There has been work to address this challenge for conventional octrees~\cite{braun2008douar}, which have a similar issue between regions of the grid at different levels of refinement.
+Similar methods could likely be applied to semiregular degenerate grids as well.
 Considering the tradeoffs of this approach, we believe the benefits outweigh the disadvantages in the context of a 3D DGGS.
 As such, semiregular degenerate refinement is the primary tool used in the remainder of this thesis to achieve the goals set out in \cref{chap:1:goals}.
