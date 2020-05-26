@@ -81,10 +81,19 @@ From this, we arrive at the primary goal of this thesis: to develop 3D DGGS's th
 A simple approach for such a 3D DGGS would be to embed the Earth in a 3D Euclidean voxel partitioning or similar space partitioning data structure, for which many efficient and well-tested algorithms exist.
 While such a system is simple in its construction, it ignores the spherical nature of the Earth.
 Cells are not aligned with the surface of the Earth, which means there is no consistent orientation of up (increasing altitude) and down (decreasing altitude) with respect to a cell.
-Likewise, traversal along the surface of the Earth is complex and requires ``zig-zagging'' up and down.
 This type of grid also provides a poor approximation for the surface of the Earth, especially at low resolutions.
+Likewise, traversal along the surface of the Earth is complex and requires ``zig-zagging'' up and down.
 While these issues are negligible for small-scale regions of the Earth, for a 3D DGGS with global coverage, the underlying grid should be sphere-based and Earth-centric.
 Cells should be aligned with the surface of the Earth and have a consistent orientation for increasing and decreasing altitude.
+
+
+The main challenges associated with Earth-centric grids are caused by cells converging toward the singularity at the centre of the Earth.
+That is, cells more near the centre of the grid become increasingly small and skinny and eventually degenerate to pyramids
+(see \cref{fig:3dllg}).
+The problem with this is two-fold, as it reduces both the compactness and volume of cells; furthermore, the resulting difference in the volumes of cells is unbounded.
+For grids with a small radial extent, these effects are negligible; however, for the range of altitudes we wish to support in this thesis, they cannot be ignored.
+It is worth noting that this same issue presents itself in traditional latitude-longitude grids at the poles, also demonstrated in \cref{fig:3dllg}.
+Addressing these issues is one of the main challenges of this thesis.
 
 
 \begin{figure}[htb!]
@@ -98,19 +107,9 @@ Cells should be aligned with the surface of the Earth and have a consistent orie
 \end{figure}
 
 
-The main challenges associated with Earth-centric grids are caused by cells converging toward the singularity at the centre of the Earth.
-That is, cells more near the centre of the grid become increasingly small and skinny and eventually degenerate to pyramids
-(see \cref{fig:3dllg}).
-The problem with this is two-fold, as it reduces both the compactness and volume of cells; furthermore, the resulting difference in the volumes of cells is unbounded.
-For grids with a small radial extent, these effects are negligible; however, for the range of altitudes we wish to support in this thesis, they cannot be ignored.
-It is worth noting that this same issue presents itself in traditional latitude-longitude grids at the poles, also demonstrated in \cref{fig:3dllg}.
-Addressing these issues is one of the main challenges of this thesis.
-
-
 \section{Goals and Scope} \label{chap:1:goals}
 In addition to the initial goal of supporting an unbounded range of altitudes, there are several other aims for a 3D DGGS we wish to explore in this thesis.
 While we discuss these in the context of a 3D DGGS, they are equally applicable to their conventional 2D counterparts.
-
 
 
 As discussed previously, the cells of a 3D DGGS need to be compact while also maintaining near-uniform volume.
@@ -124,7 +123,7 @@ Thus, we also aim to have perfectly equal volume cells in our 3D DGGS's when it 
 
 Once the cells of a 3D DGGS are defined, methods for mapping geospatial data to the appropriate set of cells are needed.
 Likewise, the inverse process of mapping data associated with a set of cells back to the corresponding regions of the Earth is needed for visualizing data on the globe.
-These two operations are referred to as grid encoding and grid decoding (or just encoding and decoding), respectively, and allow the integration of geospatial data with the grid system.
+These two operations are referred to as grid encoding and grid decoding (or just encoding and decoding), respectively, and allow integration of geospatial data with the grid system.
 With data integrated, analyses such as region growing and data aggregation require spatial neighbourhood and hierarchy traversal queries.
 Ensuring all these operations are efficient allows quick integration, processing, analysis, and visualization of data with the 3D DGGS.
 
@@ -161,7 +160,7 @@ The extension also allows for an additional property, a target aspect ratio for 
 
 For both of these approaches, we define mappings between physical points and their corresponding locations in grid space, which we use to implement efficient encoding and decoding operations.
 For the SDOG-based approach, we provide constant time encoding and decoding algorithms that outperform the standard versions of these algorithms at high levels of refinement.
-These new algorithms can be used both with conventional SDOG and, by using the provided mappings, the volume-preserving one.
+These new algorithms can be used both with conventional SDOG and---by using the provided mappings---the volume-preserving ones.
 We also provide similar algorithms for the 3D DGGS's that result from the extension method.
 
 
