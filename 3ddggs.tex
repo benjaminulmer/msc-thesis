@@ -47,7 +47,7 @@ It also introduces additional error, as the cells representing the data all have
 
 Despite the issues present with an embedded grid, for small-scale regions with negligible curvature, these issues also become negligible.
 Because of this, conventional Euclidean grids are frequently used for small-scale objects and phenomena in use cases such as rock engineering and reservoir modelling~\cite{jing2003review}.
-However, the challenges presented by an embedding approach outweigh their benefits in the context of a 3D DGGS, which needs to have global coverage.
+However, the challenges presented by an embedding approach outweigh their benefits in the context of a 3D DGGS, which needs global coverage.
 
 
 The inherent issues with an embedded 3D DGGS stem from the fact that their cells do not align with the Earth's surface and other layers.
@@ -68,7 +68,7 @@ Being composed of two component LLG's, an extension of the Yin-Yang grid to 3D c
 These 3D Yin-Yang grids have been used extensively for geodynamo and mantle convection simulation~\cite{yoshida2004application, kageyama2005geodynamo, tackley2008modelling}.
 Extensions of polyhedron-based DGGS's to 3D have also been done.
 An approach by Xie et al. stacks duplicates of a DGGS at increasing radii to create a 3D global grid for interactive volumetric ray tracing of 3D Earth data~\cite{xie2013interactive}.
-While this approach is appropriate for the intended use, it is not technically a 3D DGGS, as the radial component of the grid is separate from the cell hierarchy.
+While this approach is appropriate for the intended use, it is not technically a 3D DGGS, as the grid's radial component is separate from the cell hierarchy.
 In order to incorporate the radial component of the grid with the cell hierarchy, Sirdeshmukh et al. create a 3D (or 4D) DGGS by placing 3D (or 4D) hypercubes on the faces of the DGGS polyhedron~\cite{sirdeshmukh2019utilizing}.
 These hypercubes are then refined and traversed with a space-filling curve to create the 3D (or 4D) DGGS, which the authors use to encode point cloud data.
 
@@ -142,14 +142,14 @@ Hence, we call this semiregular degenerate refinement.
 The same principles apply in 3D for hexahedral grids; however, there are instead three intersecting \textit{faces} used in refinement.
 
 
-In general, we define a semiregular degenerate refinement to be one in which one or more splitting geometries (curves in 2D and surfaces in 3D) are stopped by another splitting geometry in the direction toward a singularity where, if not stopped, would otherwise intersect said singularity.
+In general, we define a semiregular degenerate refinement as one in which one or more splitting geometries (curves in 2D and surfaces in 3D) are stopped by another splitting geometry in the direction toward a singularity where, if not stopped, would otherwise intersect said singularity.
 Such a definition describes the methods used in DQG, SDOG, Sphere Shell Space 3D Grid, the great circle arc QTM extension, and those used in \cref{chap:extension} of this thesis.
 Like regular refinement, semiregular degenerate can also be classified as uniform if splitting surfaces are located at midpoints.
 
 
 A semiregular degenerate refinement allows for more uniformly sized and compact cells as compared to a regular refinement applied to the same domain.
 The main drawback of this class of refinement is the degenerate connectivity introduced between the different regular regions of the grid.
-In a non-degenerate grid, each cell will have precisely one neighbour along each edge, or no neighbours if the cell is on a boundary of the grid.
+In a non-degenerate grid, each cell will have precisely one neighbour along each edge, or no neighbours if it is on a boundary of the grid.
 In 3D, the same applies but with faces instead of edges.
 Grids resulting from semiregular degenerate refinement violate this property, with some cells having multiple neighbours along an edge/face.
 Such degenerate connectivity introduces challenges when propagating values across boundaries of cells and calculating values at vertices, as is needed for finite element methods.

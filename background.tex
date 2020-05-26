@@ -95,7 +95,7 @@ Another significant challenge with flat maps is the edges (or boundaries) introd
 Such edges can have a significant impact on a person's understanding of a map when phenomena cross these boundaries.
 A study by Hennerdal asked participants to predict the location and direction of an airplane crossing the boundary of different map projections~\cite{hennerdal2015beyond}.
 The study found that participants would often incorrectly place the airplane at the point of \textit{linear} peripheral continuity (the intersection of the straight line tangent to the initial aircraft location and the opposite map edge) as opposed to the correct location (\cref{fig:edge-continuity}).
-The occurrence of this mistake was most prominent with children; however, the effect was still present with adult participants. Another study by Hruby et al. measured how such edges impact the estimation of distance~\cite{hruby2016journey}.
+This mistake was most prominent with children; however, the effect was still present with adult participants. Another study by Hruby et al. measured how such edges impact the estimation of distance~\cite{hruby2016journey}.
 Two groups of participants, given either a Eurocentric or Americentirc map to memorize locations, were asked to estimate the distances between various Asian and American cities.
 While both groups overestimated distances on average, the group with the Eurocentric map (where the shortest distances crossed the map boundary), had larger estimation errors than the other group.
 These studies further show that the projection used for a map must be chosen and centred carefully to ensure readers correctly understand how the map relates to the actual Earth.
@@ -151,7 +151,7 @@ These integrations and analyses are also used to create visualizations of the un
 
 
 Since their introduction, GIS has proven to be a powerful framework for managing geospatial data.
-This power, however, is a double-edged sword; proper use of a GIS requires a significant amount of knowledge and expertise~\cite{antenucci1991geographic}.
+However, this power is a double-edged sword; proper use of a GIS requires a significant amount of knowledge and expertise~\cite{antenucci1991geographic}.
 To be used with a GIS, geospatial data must first be cleaned, remapped, processed, integrated, and distributed.
 All of these operations require familiarity with both the system used and the underlying cartographic principles.
 Furthermore, due to the frequent use of a planar coordinate system, distortion from projection can introduce errors in analysis and visualization, just as with physical maps.
@@ -170,7 +170,7 @@ Due to the reduced distortion with a globe, there has been a push toward globe-b
 One approach for doing so is to still use a flat map as the underlying representation of the Earth but map back to a globe for visualization.
 While this solves the issues of map edges and provides a more accurate reference for visual analysis, it does not address the distortion present for any analysis using the flat map and the corresponding errors introduced.
 The alternative is to do analysis directly in spherical---or even more accurately, ellipsoidal---space.
-While ellipsoidal analysis is often prohibitively complicated and expensive due to the mathematical challenges of elliptic integrals~\cite{byrd2013handbook}, techniques for spherical analysis are well understood~\cite{raskin1994spatial}.
+While ellipsoidal analysis is often prohibitively complicated and expensive due to the mathematical challenges of elliptic integrals~\cite{byrd2013handbook}, spherical analysis techniques are well understood~\cite{raskin1994spatial}.
 While spherical analyses are still significantly more involved than the planar equivalents, modern computational capabilities are making them more feasible. 
 In addition to standard methods, there are several recent works on techniques for more complex spherical analysis and operations.
 Some examples include better representations for rational points on the sphere~\cite{bahrdt2017rational}, multiresolution representations of B-spline~\cite{alderson2016multiresolution} and NURBS curves~\cite{alderson2019multiscale}, and methods for offsetting both vector and raster curves~\cite{alderson2018offsetting}.
@@ -329,9 +329,9 @@ We again refer to~\cite{mahdavi2015survey} and~\cite{alderson2020digital} for a 
 
 
 \subsection{Grid Encoding and Decoding} \label{chap:2:coding}
-For a DGG or DGGS to be useful as a tool for managing geospatial data, operations are needed that can associate said data with the appropriate set of cells.
+For a DGG or DGGS to be useful as a tool for managing geospatial data, operations are needed to associate said data with the appropriate set of cells.
 This class of operations is known as grid encoding.
-The most basic type of encoding is for points---finding the cell which contains a given point---however, operations for more complex geometry such as vector polylines and polygons is often also required~\cite{du2018duality}.
+The most basic type of encoding is for points---finding the cell which contains a given point---however, operations for more complex geometry such as vector polylines and polygons are often also required~\cite{du2018duality}.
 Likewise, the inverse process of mapping a set of cells in the grid domain to the corresponding regions of the Earth is also needed.
 These operations are, correspondingly, known as grid decoding.
 Grid encoding and decoding, as they apply to a polyhedron-based grid, are shown in \cref{fig:coding}.
@@ -376,9 +376,8 @@ There has also been work done to categorize different DGGS indexing schemes to f
 
 
 \section{Summary} \label{chap:2:summary}
-The world we live in is full of data, and maps of globes of the Earth have a long history in helping people understand and process that data.
-With maps historically favoured over globes for practical reasons, digital representations have allowed for virtual globes that more accurately represent the Earth as compared to flat maps.
-Computers have also increased the amount of geospatial data we can process, but---along with other technologies---have also led to an explosion in the amount of data available.
+The world we live in is full of data, and maps of globes of the Earth have a long history in helping people understand and process that With maps historically favoured over globes for practical reasons, digital representations have allowed for virtual globes that represent the Earth more accurately than flat maps.
+Computers have also increased the amount of geospatial data we can process, but---along with other technologies---have led to an explosion in the amount of data available.
 In handling this ever-increasing amount of data, DGG's and DGGS's have become an essential tool in addition to conventional GIS technologies.
 While there exist many different techniques for creating these global grids, those based on approximating polyhedron have become the state-of-the-art choice.
 The 3D DGGS, which we explore more in the next chapter, is the next step in this evolution for facilitating the efficient integration, analysis, and visualization of geospatial data for a volumetric Digital Earth.

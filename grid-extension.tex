@@ -32,7 +32,7 @@ Slight modifications have been made to maintain consistent terminology with the 
 \section{Prismatoid Grid Generation and Refinement} \label{chap:5:grid}
 Using the input DGGS as a specification, our goal is to define an initial discretization and refinement for the corresponding 3D DGGS logically and consistently.
 \Cref{fig:extension} shows an overview of our method.
-To create an initial discretization, the faces of the initial polyhedron of the input DGGS are extruded to create prismatoid base cells for the 3D DGGS.
+To create an initial discretization, we extend the faces of the initial polyhedron of the input DGGS resulting in prismatoid base cells for the 3D DGGS.
 For refinement, the bases of these prismatoid cells are refined using the same scheme as the input DGGS and combined with a radial refinement.
 
 
@@ -50,7 +50,7 @@ For refinement, the bases of these prismatoid cells are refined using the same s
 
 \subsection{Initial 3D Discretization} \label{chap:5:discretization}
 Let $R_\mathrm{max}$ and $R_\mathrm{min}$ be the maximum and minimum radii that are to be supported by the 3D DGGS, respectively.
-The initial 3D discretization, then, is generated from two copies of the initial discretization of the input DGGS at these radii with their edges connected.
+Then, the initial 3D discretization is generated from two copies of the initial discretization of the input DGGS at these radii with their edges connected.
 For an input DGGS defined directly on the sphere, the radius is well defined.
 For a polyhedron-based DGGS, we need to define this radius.
 Since the polyhedron is serving as an approximation of the sphere, we define the radius of a polyhedron to be the radius of its circumscribed sphere.
@@ -156,7 +156,7 @@ While the surface refinement scheme need not be uniform across the two dimension
 
 
 To create uniform cells, it is clear that the refinement factor along the radial dimension for regular prismatoid refinement should be equal to the 1D refinement factor.
-If this is not the case, then the width of cells relative to their depth is not constant between refinement levels, since one dimension is refined more quickly (\cref{fig:unequal-factors}).
+If this is not the case, then the width of cells relative to their depth is not constant between refinement levels since one dimension is refined more quickly (\cref{fig:unequal-factors}).
 For a surface refinement factor of 1:4, the single radial split used matches this exactly (one split creates two new layers).
 For other surface refinement factors, the 1D and radial refinement factors are not necessarily equal, and cell shape will degenerate---becoming either increasingly narrow or wide---as refinement continues.
 
@@ -170,8 +170,7 @@ Therefore, we propose performing a different number of radial splits at differen
 
 
 A few different methods can be used to determine the number of radial splits to perform at a given refinement level.
-The most straightforward method is to alternate between producing one layer (i.e.
-no splits) and producing a number of layers equal to the surface refinement factor.
+The most straightforward method is to alternate between producing one layer (i.e. no splits) and producing a number of layers equal to the surface refinement factor.
 When the surface refinement factor is not a prime number, a better method is to alternate between the two members of a factor pair, such as two and three for a 1:6 surface factor.
 In general, the product of the number of layers at each level of refinement should be equal to (or as close as possible to) the 1D refinement factor to the power of the number of refinement levels.
 Formally,
@@ -230,7 +229,7 @@ In the next level of refinement (not shown), normal layers would not have any ra
 The surface and radial dimensions of Earth are inherently very different, and because of this, it is often desirable for these two dimensions to be at different resolutions in a 3D DGGS.
 For our 3D DGGS's, achieving this entails changing the width of cells in the grid (surface resolution) relative to their depth (radial resolution).
 We refer to the ratio between a cell's width and depth as the \textit{aspect ratio} of the cell.
-While the refinement methods described thus far produce cells with a similar aspect ratio---both between cells in the same and different resolutions---there is no direct mechanism for controlling what this aspect ratio will be.
+While the refinement methods described thus far produce cells with a similar aspect ratio---both between cells in the same and different resolutions---there is no direct mechanism for controlling this aspect ratio.
 To address this issue, we introduce two modifications that can be made to prismatoid refinement to decrease and increase this aspect ratio.
 
 
@@ -249,7 +248,7 @@ There are many potential ways to measure the width of a cell; for our purposes, 
 This choice ensures the framework will produce consistent results for input polyhedra with the same number of faces, irrespective of the shape(s) of said faces.
 
 
-For the region of outer normal layer(s) generated by refining central layers, the average depth of cells is the total depth of the region divided by the number of layers in the region (assuming no applications of the surface refinement scheme).
+For the region of outer normal layer(s) generated by refining central layers, the average depth of cells is this region's total depth divided by the number of layers in the region (assuming no applications of the surface refinement scheme).
 Let $\upsilon$ be the percentage of $r_\mathrm{max}$ occupied by this region and $x$ be the number of extra radial splits, then the average depth of cells is
 %
 \begin{equation*}

@@ -342,7 +342,7 @@ In order to address this issue, we use different splitting surfaces to achieve a
 Looking at \cref{fig:modified-volume}, we see that the regular splitting surfaces are responsible for the majority of the reduction in cell compactness.
 Our first balanced scheme then is to leave these splitting surfaces at the midpoints and only modify the latitudinal splitting surfaces for SG and LG cells.
 \Cref{fig:latitude-volume} shows the results of this method, which we refer to as the \textit{latitude} method.
-Comparing this to conventional SDOG (refer back to \cref{fig:sdog-volume}), the two grids are nearly identical, with only slight variation in the placement of latitude splitting surfaces.
+Comparing this grid to conventional SDOG (refer back to \cref{fig:sdog-volume}), the two are nearly identical, with only slight variation in the placement of latitude splitting surfaces.
 Thus, this method offers only a slight improvement with regards to volume preservation, while also only slightly sacrificing cell compactness.
 
 
@@ -362,7 +362,7 @@ In order to achieve different tradeoffs between compactness and volume preservat
 Therefore, using different functions that blend between these two extremes allows for a more balanced tradeoff.
 There are endless possibilities for these functions; however, as will be required for coding in \cref{chap:mapping}, they should be easily invertible.
 That is, given a splitting surface, we need to be able to determine the parameter $d$ between given maximum and minimum values that results in said splitting surface.
-For the purpose of calculating splitting surfaces during refinement, $d = 1/2$.
+To calculate splitting surfaces during refinement, $d = 1/2$.
 For the radial splitting surfaces, we propose the function
 %
 \begin{equation} \label{eq:radBlend}
@@ -385,7 +385,7 @@ We refer to this method as the \textit{balanced} one.
 There are several potential methods for evaluating the volume-preserving properties of a 3D DGGS.
 When first proposed by Yu and Wu, they used the ratio between cells of the largest and smallest volume to evaluate the volume-preserving properties of SDOG~\cite{yu2009sdog}.
 This volume ratio is a useful measure for determining the worst-case difference in the volume of cells; however, it does not give any information about the distribution of said volumes.
-For example, a grid with all cells except one having equal volume, and a grid where every cell has a distinct volume, could end up having the same volume ratio.
+For example, a grid with all cells except one having equal volume and a grid where every cell has a distinct volume could have the same volume ratio.
 To get a complete understanding of volume preservation, we should also examine statistics that measure distribution.
 For this purpose, we use the coefficient of variation (CV), which is simply the ratio between the standard deviation (SD) and the mean.
 We use the CV over the SD as it a dimensionless quantity.
