@@ -80,9 +80,9 @@ For example, the Mercator projection maps straight lines to rhumb lines making i
 Therefore, it is essential to use an appropriate map projection for each intended use case, with no one projection being ideal in all circumstances.
 
 
-\begin{figure}[ht!]
+\begin{figure}[htb!]
 	\centering
-	\includegraphics[width=0.55\textwidth]{edge-continuity.jpg}
+	\includegraphics[width=0.6\textwidth]{edge-continuity.jpg}
 	\caption[Actual vs. linear peripheral continuity on a map]{
 		A demonstration of the actual and linear peripheral continuity of an object crossing the edge of a map.
 		Image taken from~\cite{hennerdal2015beyond} with permission.
@@ -159,10 +159,10 @@ Which map projection to use for which use cases must be considered carefully, wh
 
 
 \subsection{Globe-Based Digital Earth} \label{chap:2:globeDE}
-A more recent approach to a Digital Earth---and one more in line with Al Gore's initial proposal---is a globe-based Digital Earth.
+A more recent approach to a Digital Earth---one more in line with Al Gore's initial proposal---is a globe-based Digital Earth.
 While physical globes have practical drawbacks compared to a physical map, in a digital setting, these drawbacks are reduced if not completely negated.
 Modern computer graphics algorithms and hardware have made creating, storing, and displaying a virtual globe in real-time no more difficult than displaying the equivalent map.
-Interactive systems allow zooming, panning, and rotating the globe to show any region of Earth at the desired scale.
+Additionally, interactive systems allow zooming, panning, and rotating the globe to show any region of Earth at the desired scale.
 Virtual globes still cannot display the entire Earth at once; however, novel interaction techniques such as multi-view focus plus context rendering can help alleviate this limitation~\cite{sherlock2017visualizations}.
 
 
@@ -202,7 +202,7 @@ Space partitionings, particularly compact and uniform ones, are also useful for 
 
 Similarly, space partitionings of the Earth for geospatial data are also useful.
 However, due to the spherical nature of the Earth, different techniques are often used as opposed to the above methods designed for Euclidean spaces.
-A Discrete Global Grid (DGG) partitions the surface of the Earth into a set of non-overlapping cells allowing geospatial data to be associated with the appropriate cell(s).
+A Discrete Global Grid (DGG) partitions the surface of the Earth into a set of non-overlapping cells, allowing geospatial data to be associated with the appropriate cell(s).
 There exist several different approaches for creating a DGG, each with benefits and drawbacks.
 Likewise, the specific uses of a DGG vary based on the Digital Earth system.
 In some systems, a DGG only serves as a data structure for speeding up various spatial queries and analyses.
@@ -212,7 +212,8 @@ Regardless of their specific use(s), DGG's are an essential aspect of many Digit
 
 \subsection{Discrete Global Grid Systems} \label{chap:2:DGGS}
 While DGG's are a helpful tool, they only represent the Earth at one spatial resolution.
-If only working with one dataset, this is adequate; however, geospatial data comes in a wide range of resolutions, so multiple resolutions of DGG's may be needed when working with multiple datasets.
+If only working with one dataset, this is adequate.
+However, geospatial data comes in a wide range of resolutions, so multiple resolutions of DGG's may be needed when working with multiple datasets.
 This shortcoming is addressed with a hierarchy of DGG's at increasingly fine resolutions, also known as a Discrete Global Grid System (DGGS)~\cite{sahr1998discrete, sahr2003geodesic}.
 Such a hierarchy allows geospatial data at any spatial resolution to be appropriately integrated at its native resolution and used with any other dataset.
 
@@ -253,7 +254,7 @@ These singularities reduce the size and compactness of cells near the poles, res
 Thus, an LLG is neither a compact nor uniform DGG.
 
 
-\begin{figure}[ht!]
+\begin{figure}[t!]
 	\centering
 	\includegraphics[width=0.4\textwidth]{llg.pdf}
 	\caption[A latitude-longitude grid]{
@@ -295,7 +296,7 @@ This style of grid avoids degeneracies in the grid at the poles, providing a mor
 Furthermore, the use of an area-preserving projection in conjunction with an area-preserving refinement of the polyhedron allows for an equal area grid without a significant reduction in cell compactness.
 
 
-\begin{figure*}[ht!]
+\begin{figure*}[t!]
 	\centering
 	\begin{subfigure}[]{0.5\textwidth}
 		\centering
@@ -376,7 +377,8 @@ There has also been work done to categorize different DGGS indexing schemes to f
 
 
 \section{Summary} \label{chap:2:summary}
-The world we live in is full of data, and maps of globes of the Earth have a long history in helping people understand and process that With maps historically favoured over globes for practical reasons, digital representations have allowed for virtual globes that represent the Earth more accurately than flat maps.
+The world we live in is full of data, and maps of globes of the Earth have a long history in helping people understand and process that data.
+With maps historically favoured over globes for practical reasons, digital representations have allowed for virtual globes that represent the Earth more accurately than flat maps.
 Computers have also increased the amount of geospatial data we can process, but---along with other technologies---have led to an explosion in the amount of data available.
 In handling this ever-increasing amount of data, DGG's and DGGS's have become an essential tool in addition to conventional GIS technologies.
 While there exist many different techniques for creating these global grids, those based on approximating polyhedron have become the state-of-the-art choice.
