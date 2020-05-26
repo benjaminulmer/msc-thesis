@@ -386,7 +386,7 @@
 \def\subsubsection{\@startsection{subsubsection}{3}{\z@}{-3.25ex plus -1ex minus
    -.2ex}{1.0ex plus .2ex}{\itshape\normalsize\sty@subsubsection}} %removed \bfseries 2006nm
 \def\paragraph{\@startsection
-     {paragraph}{4}{\z@}{2.25ex plus 1ex minus .2ex}{-1em}{\normalsize\sty@paragraph}} %removed \bfseries 2006nm
+     {paragraph}{4}{\z@}{2.25ex plus 1ex minus .2ex}{-1em}{\itshape\normalsize\sty@paragraph}} %removed \bfseries 2006nm
 \def\subparagraph{\@startsection
      {subparagraph}{4}{\parindent}{2.25ex plus 1ex minus
      .2ex}{-1em}{\normalsize\sty@subparagraph}} %removed \bfseries 2006nm

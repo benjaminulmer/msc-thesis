@@ -374,17 +374,17 @@ However, the nature of semiregular degenerate refinement introduces a few compli
 We briefly describe how to perform each of these for a given SDOG index, $i$, below.
 
 
-\paragraph{Parent}
+\paragraph{Parent:}
 The use of Morton interleaving makes parent queries trivial. The parent of $i$ is simply $i$ with the lowest three bits removed.
 
 
-\paragraph{Children}
+\paragraph{Children:}
 The children of an SDOG cell depend on the cell type.
 A cell is SG if $r_i = 2^k - 1$, LG if $\varphi_i = 2^{k - k_\varphi} - 1$, and otherwise it is NG.
 Let $C$ be the set of child codes for the cell type of $i$ (refer to \cref{fig:sdog-dmc}), then the children of $i$ are $\{ \operatorname{append}(i, c) \ | \ c \in C \}$
 
 
-\paragraph{Neighbours}
+\paragraph{Neighbours:}
 Neighbours are by far the most complicated of the three operations due to the number of edge cases that need be handled.
 First, we obtain the coordinate indices of $i$ just as with decoding.
 In general, the coordinate indices of the neighbours of an SDOG cell are $\{ (\lambda_i', \varphi_i', r_i') \ | \ x' \in x \pm 1 \}$, which are then interleaved and combined with the octant code for the full index.
@@ -497,14 +497,14 @@ For the surface index, this comes directly from the input DGGS indexing, whereas
 For each of the operations, we describe how to calculate the output layer parameterization(s) $(s',j',k')$ from that of the input layer $(s,j,k)$.
 
 
-\paragraph{Parent}
+\paragraph{Parent:}
 Trivially, the parent layer is in the previous resolution of the 3D DGGS, so $k' = k - 1$.
 For calculating $s$ and $j$, there are two cases, which correspond with the parent layer being central or normal.
 If $s = k-1$ or $s = -1$, then the parent layer is a central layer. In this case, $s' = -1$ and $j' = 0$.
 Otherwise, the parent layer is normal with $s' = s$ and $j' = \lfloor j / \ell_k \rfloor$.
 
 
-\paragraph{Children}
+\paragraph{Children:}
 The child layers depend on if the layer in question is central or normal.
 Regardless, in both cases all children will have $k' = k + 1$.
 Recall that $s = -1$ denotes that a given layer is central.
@@ -513,7 +513,7 @@ There are also a number of child normal layers equal to one plus the number of e
 For normal layers, the children are found with $s' = s$ and $j' = \{ j \cdot \ell_k + o \ | \  o \in \mathbb{Z}, \ o \in [0, \ell_k - 1] \}$.
 
 
-\paragraph{Neighbours}
+\paragraph{Neighbours:}
 Neighbour layers are the layers above and below a given layer; they are at the same resolution, so $k' = k$.
 In most cases, the two neighbours are simply $s' = s$ and $j' = j \pm 1$; however, there are three edge cases that need to be handled.
 If $j = n_\ell - 1$, then the layer above is $s = s - 1$ and $j = 0$; if $s - 1$ is negative then the layer is on the boundary of the grid and there is no layer above it.
@@ -525,14 +525,14 @@ Finally, the central layer ($s = -1$) has no layer below it and the layer above 
 With the surface and layer operations defined, we now give the full 3D ones.
 
 
-\paragraph{Parents}
+\paragraph{Parents:}
 The parent(s) of a cell depends on if its layer and its parent layer have the same or different values of $k_s$.
 Let $i_\ell' = \operatorname{parent}(i_\ell)$; if the value of $k_s$ is the same, then the single parent is simply $(i_s, i_\ell')$.
 In most cases, the value of $k_s$ for $i_\ell'$ is some number $m$ (often one, but not always) less than that of $i_\ell$.
 In this case, the parent(s) are given by $\operatorname{parents}^m(i_s) \times i_\ell$.
 
 
-\paragraph{Children}
+\paragraph{Children:}
 The children of a cell depend on if the cell belongs to a central or normal layer.
 For normal layers, the set of children is simply $\operatorname{children}(i_s) \times \operatorname{children}(i_\ell)$.
 For central layers, the child who belongs to the new central layer must be distinguished from the other child layer(s).
@@ -541,7 +541,7 @@ Let $ N_\ell$ give the set of the other children layer indices (normal layers).
 These layers have the surface refinement applied $w$ times, so the resulting children are $\operatorname{children}^w(i_s) \times N_\ell$.
 
 
-\paragraph{Neighbours}
+\paragraph{Neighbours:}
 We split neighbours into three categories: neighbours in the same layers as the cell, neighbours in the layer above the cell, and neighbours in the layer below the cell.
 If a cell belongs to the outermost or innermost (central) layer, then it will not have neighbours in the layer above or below, respectively.
 Neighbours in the same layer are simply $\operatorname{neighbours}(i_s) \times i_\ell$.
