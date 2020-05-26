@@ -95,11 +95,13 @@ Likewise, given an index with width $\omega$, the refinement level of that cell 
 We use this property to implicitly obtain $k$ in any case where it is not provided.
 
 
-Consequence of DMC is not every value is a valid index; some values are not used in indexing scheme.
-Utilization of indices is about 38\% (8/21 in the limit).
-Compared to an indexing scheme that does use every possible value, DMC indexing requires more bits to index same number of cells (level of refinement).
-Worst case DMC requires 3 extra bits for some $k$ compared to fully utilized indexing (DMC adds bits to index in groups of 3).
-This is the tradeoff for other desirable properties of DMC indexing.%TODO
+It is worth noting that because DMC combines codes for degenerate cells, not every integer is a valid index.
+For DMC, the utilization of indices is approximately 38\% of all possible values ($8/21$ in the limit).
+Compared to an indexing scheme that uses every possible integer as an index (maximal), DMC based indexing for SDOG requires more bits to index the same level of refinement.
+However, if using a fixed width representation of indices, this is only a downside if the size of the integer cannot support the needed resolution; in this case, a maximal index could potentially allow a higher level of refinement to be represented.
+For a 64 bit integer, though, the maximum level of refinement for both DMC based indexing and a maximal one is 21.
+Furthermore, 128 bits provided enough indices for 41 levels of refinement with DMC, at which point the size of cells in on the order of micrometers.
+For these reasons, we believe the wasted indices are not a significant issue with DMC indexing in practice.
 
 
 \subsection{Hierarchical Algorithms}
