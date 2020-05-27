@@ -29,9 +29,9 @@ These schemes are both based on a modified Morton code (also known as a Z-order 
 We focus on the hierarchical scheme, as grid \textit{systems} are the main focus of this thesis.
 
 
-\begin{figure}[ht!]
+\begin{figure}[htb!]
 	\centering
-	\includegraphics[width=0.6\textwidth]{morton-multiple.pdf}
+	\includegraphics[width=0.65\textwidth]{morton-multiple.pdf}
 	\caption[Four resolutions of Morton codes]{
 		The first four resolutions of Morton codes for a quadtree.
 		(a)--(d) show resolutions 1--4, respectively.
@@ -116,7 +116,7 @@ The algorithm for hierarchical point encoding with SDOG is given in \cref{alg:en
 The input is a point $p$ and resolution $k$; the output is the index $i$ of the cell that contains $p$ at $k$.
 
 
-\begin{algorithm}
+\begin{algorithm}[htp!]
 	\caption{Hierarchical point encoding for SDOG}
 	
 	\begin{algorithmic}
@@ -145,7 +145,7 @@ The algorithm for hierarchical decoding with SDOG is given in \cref{alg:decode}.
 The input is an index $i$; the output is the cell boundaries of $i$.
 
 
-\begin{algorithm}
+\begin{algorithm}[htp!]
 	\caption{Hierarchical cell decoding for SDOG}
 	
 	\begin{algorithmic}
@@ -187,8 +187,6 @@ $\hat{c}_\mathrm{max} = (c_i + 1) / n$ and $\hat{c}_\mathrm{min} = c_i / n$, res
 We know that the semiregular regions of SDOG are uniform when using conventional refinement rules.
 Therefore, if we determine the relevant semiregular region and its needed properties---the number of cells and range of values---we can apply direct coding algorithms for SDOG using spherical coordinates (refer back to \cref{fig:sph-elements}).
 Then, bit interleaving and unweaving give the full DMC.
-
-
 In SDOG, the number of cells in the different coordinate dimensions varies for different regions of the grid.
 Under regular refinement, the number of cells in each coordinate dimension at $k$ levels of refinement is $2^k$.
 Each increasing shell in SDOG halves the number of cells in the latitude and longitude coordinates.
@@ -208,8 +206,6 @@ The number of latitude division is $2^k$ divided by $2^s$; however, the number o
 Thus, we introduce variable $k_\varphi = \min ( s, k )$.
 Similarly, the number of longitude division is $2^k$ divided by $2^{s+z}$, but again, is always at least one.
 We introduce a second variable $k_\lambda = \min ( s + z, k )$.
-
-
 Finally, we calculate coordinate indices, making sure to account for the direction of each coordinate in the DMC for SDOG.
 Let the subscript $i$ refer to the index the coordinate, then
 %
@@ -262,7 +258,9 @@ Likewise, we can now determine the zone that contains the cell.
 Opposite of radius, $\hat{\varphi}_\mathrm{max}$ now gives the higher zone if on the boundary, so we use $\hat{\varphi}_\mathrm{min}$ and get $z = \lfloor \log_{0.5} ( 1 - \hat{\varphi}_\mathrm{min} ) \rfloor$.
 Again, the same as encoding, we define $k_\lambda = \min ( s + z, k )$.
 Finally, we decode longitude:
-%
+
+% intentional break for typesetting spacing
+
 \begin{equation*}
 \hat{\lambda}_\mathrm{max} = \frac{\lambda_i + 1}{2^{k - k_\lambda}} \quad \text{and}
 \end{equation*}
@@ -341,7 +339,7 @@ Furthermore, for the modified grids using the mapping functions, this means that
 Overall, the direct algorithms are all more efficient than their hierarchical counterpart for a large enough value of $k$.
 Thus, a sophisticated implementation could determine which approach to use (hierarchical or direct) for a given input, depending on $k$.
 However, benchmarking on a variety of platforms in different conditions would be needed to determine the best values to use for the switch.
-\Cref{tab:hierarch-vs-direct} summarizes the lowest value of $k$ such that the direct algorithm is more efficient than the hierarchical for each pair of algorithms in \textit{our} benchmarking.
+\Cref{tab:hierarch-vs-direct} summarizes the lowest value of $k$ such that the direct algorithm is more efficient than the hierarchical for each pair of algorithms in \textit{our} benchmarks.
 
 
 \begin{table}[htp!]
@@ -380,7 +378,7 @@ The use of Morton interleaving makes parent queries trivial. The parent of $i$ i
 
 \paragraph{Children:}
 The children of an SDOG cell depend on the cell type.
-A cell is SG if $r_i = 2^k - 1$, LG if $\varphi_i = 2^{k - k_\varphi} - 1$, and otherwise it is NG.
+A cell is SG if $r_i = 2^k - 1$, LG if $\varphi_i = 2^{k - k_\varphi} - 1$, and is NG otherwise.
 Let $C$ be the set of child codes for the cell type of $i$ (refer to \cref{fig:sdog-dmc}), then the children of $i$ are $\{ \operatorname{append}(i, c) \ | \ c \in C \}$
 
 
@@ -433,15 +431,6 @@ Uniquely identifying each of these components is sufficient to identify every ce
 \end{figure}
 
 
-\Cref{fig:prismatoid-coding} illustrates the pipeline for our proposed split of these operations.
-The surface component of coding is handled entirely by the input DGGS and, therefore, is not discussed here.
-For the radial component, encoding and decoding make use of the forward and inverse radial mapping functions provided in \cref{chap:6:radial}, respectively.
-We also provide a parameterization for identifying the layers of a 3D DGGS, and operations for encoding and decoding this parameterization.
-To maintain the generality of our algorithms, we work exclusively with this parameterization instead of discussing techniques for linearizing it into a single index.
-We do so because the varying complexity of the layer structure in a 3D DGGS---combined with the competing goals of an indexing scheme---makes defining a general method for linearization challenging.
-Similarly, combining layer and surface indices into a single index depends heavily on the input DGGS and should respect the priorities (e.g. good locality, maximum efficiency) of its indexing scheme, and therefore, is also difficult to do in general.
-
-
 \begin{figure}[htp!]
 	\centering
 	\includegraphics[width=\textwidth]{3d-coding.pdf}
@@ -452,6 +441,18 @@ Similarly, combining layer and surface indices into a single index depends heavi
 	}
 	\label{fig:prismatoid-coding}
 \end{figure}
+
+
+\Cref{fig:prismatoid-coding} illustrates the pipeline for our proposed split of these operations.
+The surface component of coding is handled entirely by the input DGGS and, therefore, is not discussed here.
+For the radial component, encoding and decoding make use of the forward and inverse radial mapping functions provided in \cref{chap:6:radial}, respectively.
+We also provide a parameterization for identifying the layers of a 3D DGGS, and operations for encoding and decoding this parameterization.
+To maintain the generality of our algorithms, we work exclusively with this parameterization instead of discussing techniques for linearizing it into a single index.
+We do so because the varying complexity of the layer structure in a 3D DGGS---combined with the competing goals of an indexing scheme---makes defining a general method for linearization challenging.
+Similarly, combining layer and surface indices into a single index depends heavily on the input DGGS and should respect the priorities (e.g. good locality, maximum efficiency) of its indexing scheme, and therefore, is also difficult to do in general.
+
+
+
 
 
 Layers of our 3D DGGS's can be parameterized by the shell they reside in ($s$), the integer index of the layer relative to the shell ($j$), and the level of refinement ($k$); we denote the central layer with $s = -1$.
@@ -515,10 +516,10 @@ For normal layers, the children are found with $s' = s$ and $j' = \{ j \cdot \el
 
 \paragraph{Neighbours:}
 Neighbour layers are the layers above and below a given layer; they are at the same resolution, so $k' = k$.
-In most cases, the two neighbours are simply $s' = s$ and $j' = j \pm 1$; however, there are three edge cases that need to be handled.
-If $j = n_\ell - 1$, then the layer above is $s = s - 1$ and $j = 0$; if $s - 1$ is negative then the layer is on the boundary of the grid and there is no layer above it.
-If $j = 0$ then the layer below is $s' = s + 1$ and $j = n_\ell$, where $n_\ell$ is calculated with respect to the new shell (i.e. $s'$).
-Finally, the central layer ($s = -1$) has no layer below it and the layer above it is $s' = k - 1$ and $j = 0$.
+In most cases, the two neighbours are simply given by $s' = s$ and $j' = j \pm 1$; however, there are three edge cases that need to be handled.
+If $j = n_\ell - 1$, then the layer above is in the previous shell with $s' = s - 1$ and $j' = 0$; if $s - 1$ is negative, however, then the layer is on the boundary of the grid and there is no layer above it.
+If $j = 0$ then the layer below is in the next shell with $s' = s + 1$ and $j' = n_\ell$, where $n_\ell$ is calculated with respect to the new shell (i.e. $s'$).
+Finally, the central layer ($s = -1$) has no layer below it and the layer above it has $s' = k - 1$ and $j' = 0$.
 
 
 \subsubsection{Combined Operations}
