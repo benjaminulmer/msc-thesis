@@ -1,5 +1,5 @@
 \chapter{Conclusion} \label{chap:conclusion}
-With the amounts of 3D geospatial data becoming available, techniques for integrating and managing such data are becoming increasingly important.
+With a significant amount of 3D geospatial data becoming available, techniques for integrating and managing such data are becoming increasingly important.
 A recent approach for aiding in this is the 3D DGGS.
 A 3D DGGS provides an indexed multiresolution hierarchy of cells where geospatial data is associated with cells that correspond to the appropriate regions of the Earth.
 The two main classes of 3D DGGS are embedded and Earth-centric, with the latter typically preferred as they provide a more natural representation of the planet.
@@ -35,22 +35,26 @@ Despite the generality of our grid extension method, it can only create one part
 While we believe this type of 3D DGGS is useful in many applications, it is certainly not the ideal type for all.
 The method also has its limitations:
 %
-\begin{itemize}
-	\item First, we do not provide a general method for linearizing the layer parameterization ($s$, $j$, and $k$) or for combining this with the surface index of the input DGGS.
+\begin{enumerate}
+	\item We do not provide a general method for linearizing the layer parameterization ($s$, $j$, and $k$) or for combining this with the surface index of the input DGGS.
 	Indices with good locality properties are essential for a DGGS, as this helps minimize the number of cache misses and disk seeks when retrieving data.
 
-	\item Second, we only explore our grid extension method in the context of a sphere-based input DGGS.
+	\item We only explore our grid extension method in the context of a sphere-based input DGGS.
 	However, the Earth is more accurately approximated with an oblate spheroid, and correspondingly, there exist ellipsoid-based DGGS's.
 	While we believe our method would also work for ellipsoid based DGGS's, more careful exploration is needed to justify this claim.
 
-	\item Third, geospatial data represented as polylines, polygons, point clouds, 3D meshes, and other complex geometry require their own encoding algorithms beyond those for points.
+	\item Geospatial data represented as polylines, polygons, point clouds, 3D meshes, and other complex geometry require their own encoding algorithms beyond those for points.
 	We implemented encoding algorithms for polylines and polygonal prisms in \cref{chap:usecases}; however, they were only meant to serve as a proof of concept.
 	General and efficient versions of these algorithms and other operations, such as offsetting, are vital for creating a more robust 3D DGGS.
 
-	\item Finally, we do not explore how our 3D DGGS's could be used as a simulation tool.
+	\item We took care to ensure the grid extension method is general and supports any input DGGS, it works better for some than others.
+	Non-1:4 refinement factors introduce extra complexity in radial refinement; similarly, accommodating arbitrary aspect ratios also introduces complexities to refinement.
+	These added complications are the main obstacle to more elegant grid coding and traversal, and are the reason the input DGGS's used in \cref{chap:usecases} all have a 1:4 surface refinement factor.
+
+	\item We do not explore how our 3D DGGS's could be used as a simulation tool.
 	While we focus on the task of data integration in this thesis, DGGS's are also used as hierarchical simulation meshes.
 	The degenerate connectivity introduced by semiregular degenerate refinement poses a challenge for many simulation methods; further research is needed to address this shortcoming properly.
-\end{itemize}
+\end{enumerate}
 
 
 Looking beyond the 3D DGGS, the next natural evolution of the DGGS is better support for dynamic and time-varying data.
@@ -59,7 +63,7 @@ Therefore, a 4D DGGS that partitions time, along with space, is needed.
 Just as this thesis presents a method for extending a 2D DGGS to 3D, similar techniques may be possible for the time dimension.
 However, similar to how the radial dimension has unique properties that must be accommodated, the same is true for the time dimension.
 Refining time at the same time as space is refined may not even make sense for certain applications.
-Instead, separate data structures (one for space and one for time) that know how to communicate with each other may be a better solution.
+Instead, separate data structures---one for space and one for time---that know how to communicate with each other may be a better solution.
 In this case, developing general methods for linearizing surface and radial indices could also be extended to the time dimension.
 
 
