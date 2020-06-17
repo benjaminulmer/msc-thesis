@@ -84,7 +84,7 @@ Therefore, it is essential to use an appropriate map projection for each intende
 	\centering
 	\includegraphics[width=0.6\textwidth]{edge-continuity.jpg}
 	\caption[Actual vs. linear peripheral continuity on a map]{
-		A demonstration of the actual and linear peripheral continuity of an object crossing the edge of a map.
+		An aircraft crossing the edge of a map with the actual peripheral continuity (green) and the incorrect linear peripheral continuity (red).
 		Image taken from~\cite{hennerdal2015beyond} with permission.
 	}
 	\label{fig:edge-continuity}
@@ -171,7 +171,7 @@ One approach for doing so is to still use a flat map as the underlying represent
 While this solves the issues of map edges and provides a more accurate reference for visual analysis, it does not address the distortion present for any analysis using the flat map and the corresponding errors introduced.
 The alternative is to do analysis directly in spherical---or even more accurately, ellipsoidal---space.
 While ellipsoidal analysis is often prohibitively complicated and expensive due to the mathematical challenges of elliptic integrals~\cite{byrd2013handbook}, spherical analysis techniques are well understood~\cite{raskin1994spatial}.
-While spherical analyses are still significantly more involved than the planar equivalents, modern computational capabilities are making them more feasible. 
+Spherical analyses are still significantly more involved than the planar equivalents; however, modern computational capabilities are making them more feasible.
 In addition to standard methods, there are several recent works on techniques for more complex spherical analysis and operations.
 Some examples include better representations for rational points on the sphere~\cite{bahrdt2017rational}, multiresolution representations of B-spline~\cite{alderson2016multiresolution} and NURBS curves~\cite{alderson2019multiscale}, and methods for offsetting both vector and raster curves~\cite{alderson2018offsetting}.
 For these reasons, direct spherical analysis on a globe-based Digital Earth is becoming a compelling alternative to traditional GIS. For a detailed analysis of different Digital Earth systems, refer to~\cite{mahdavi2015survey} and~\cite{alderson2020digital}.

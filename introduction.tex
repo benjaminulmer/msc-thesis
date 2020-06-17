@@ -33,7 +33,7 @@ These distortions also affect the visual analysis of data by misrepresenting the
 
 
 Compared to a planar map, a globe provides a more accurate reference model for the Earth and avoids many of the above issues present with maps.
-Despite this, \textit{physical} globes have many practical challenges, the most notable being expensive manufacturing, difficult storage, and the inability to accommodate any scale conveniently.
+Despite this, \textit{physical} globes have many practical challenges, the most notable being expensive manufacturing, difficult storage, and the inability to accommodate different scales conveniently.
 Many of these drawbacks of physical globes, however, are lessened or negated in a digital setting.
 Computer graphics algorithms and hardware allow rendering of globes in real-time, storage is no different than for a digital map, and interactive systems allow zooming and panning to show any part of the Earth at any scale.
 Digital globes still cannot display the entire Earth at once; however, this is partially addressed with multi-view focus plus context rendering techniques~\cite{sherlock2017visualizations}.
@@ -88,7 +88,7 @@ Cells should be aligned with the surface of the Earth and have a consistent orie
 
 
 The main challenges associated with Earth-centric grids are caused by cells converging toward the singularity at the centre of the Earth.
-That is, cells more near the centre of the grid become increasingly small and skinny and eventually degenerate to pyramids
+That is, cells closer to the centre of the grid become increasingly small and skinny and eventually degenerate to pyramids
 (see \cref{fig:3dllg}).
 The problem with this is two-fold, as it reduces both the compactness and volume of cells; furthermore, the resulting difference in the volumes of cells is unbounded.
 For grids with a small radial extent, these effects are negligible; however, for the range of altitudes we wish to support in this thesis, they cannot be ignored.
@@ -108,7 +108,7 @@ Addressing these issues is one of the main challenges of this thesis.
 
 
 \section{Goals and Scope} \label{chap:1:goals}
-In addition to the initial goal of supporting an unbounded range of altitudes, there are several other aims for a 3D DGGS we wish to explore in this thesis.
+In addition to the initial goal of supporting an unbounded range of altitudes, there are several other properties for a 3D DGGS we aim to explore in this thesis.
 While we discuss these in the context of a 3D DGGS, they are equally applicable to their conventional 2D counterparts.
 
 

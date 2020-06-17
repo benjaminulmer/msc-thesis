@@ -2,7 +2,7 @@
 In the previous chapter, we reviewed the DGGS as a tool for integrating multiple geospatial datasets at varying resolutions.
 However, a conventional DGGS has no inbuilt mechanism for handling the altitude(s) of geospatial data.
 Instead, an extension of the data structure to the third dimension---the 3D DGGS---is needed to accommodate such 3D data natively.
-This chapter argues for the need for 3D DGGS's in certain applications by exploring the downsides of a typical data flattening approach used to integrate 3D data with a 2D DGGS.
+This chapter highlights the need for 3D DGGS's in certain applications by exploring the downsides of a typical data flattening approach used to integrate 3D data with a 2D DGGS.
 We then compare the two most common approaches used for creating a 3D DGGS: embedding and Earth-centric.
 We argue for the Earth-centric approach, proposing semiregular degenerate refinement---the primary tool used in the remainder of this thesis---as a strategy to lessen the disadvantages of this type of grid.
 
@@ -59,7 +59,7 @@ We call this type of 3D DGGS Earth-centric.
 \section{Earth-Centric Grids} \label{chap:3:earthCentric}
 The most fundamental Earth-centric 3D grid is a direct extension of an LLG to the third dimension (refer back to \cref{fig:3dllg}).
 In addition to diving space by latitude and longitude, a 3D LLG also divides space by equal steps in the radial dimension.
-Due to the simplicity of its construction, this type of grid has seen use in global crust modelling~\cite{bassin2000current} and exploring P-wave velocity~\cite{zhao2004global}, among other applications.
+Due to the simplicity of its construction, this type of grid has seen use in global crust modelling~\cite{bassin2000current} and exploring P-wave (a type of seismic wave) velocity~\cite{zhao2004global}, among other applications.
 The GeoSOT3D grid, proposed by Sun and Cheng, is a variation of the standard 3D LLG where latitude and longitude have been extended to larger virtual spaces to improve the efficiency of grid coding~\cite{sun20153d}. This variation has been used to increase the efficiency of aircraft and UAV collision detection~\cite{miao2019low, zhai2019collision}.
 
 
@@ -112,7 +112,7 @@ Given an input cell, we define a regular grid refinement as one where the child 
 A grid (or region of a grid) in a DGGS is regular if the grid (or region) has regular connectivity. 
 
 
-Look specifically at refinement for quadrilaterals, a simple way to achieve regular refinement is by splitting each input cell into four child cells with two intersecting straight lines, as shown in \cref{fig:semireg-degen}~left.
+Looking specifically at quadrilaterals, a simple way to achieve regular refinement is by splitting each input cell into four child cells with two intersecting straight lines, as shown in \cref{fig:semireg-degen}~left.
 This extends to hexahedrons, but with eight child cells created by three intersecting planes.
 A special case of this refinement is when the splitting lines (or planes) are located at cell midpoints.
 In this case, after multiple applications of refinement, the grid not only has regular connectivity but also uniform spacing of cell boundaries.
