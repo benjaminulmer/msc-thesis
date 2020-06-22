@@ -49,6 +49,7 @@
 \usepackage{booktabs}
 \usepackage{subcaption}
 \usepackage{mathspec}
+\usepackage[final]{pdfpages}
 
 \usepackage[capitalize, nameinlink, noabbrev]{cleveref}
 
@@ -114,8 +115,13 @@
 % end
 
 \appendix
+
 \bibliographystyle{ieeetr}
 %\nocite{*}
 \bibliography{sources}
+
+\chapter{Copyright Permissions}
+This appendix contains the copyright permission for the reuse of \cref{fig:edge-continuity} from~\cite{hennerdal2015beyond}.
+\includepdf[pages=-,pagecommand={},width=\paperwidth]{copyright.pdf}
 
 \end{document}
